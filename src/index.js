@@ -1,17 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { BrowserRouter as Router } from "react-router-dom";
+import { UserContextProvider } from "./components/user/authcontext";
+import { CategoryContextProvider } from "./components/category/categorycontext";
+import { ProductContextProvider } from "./components/products/productcontext";
+import { CartContextProvider } from "./components/cart/cartcontext";
+import { SnackbarProvider } from "notistack";
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <SnackbarProvider maxSnack={3}>
+        <UserContextProvider>
+          <CategoryContextProvider>
+            <ProductContextProvider>
+              <CartContextProvider>
+                <App />
+              </CartContextProvider>
+            </ProductContextProvider>
+          </CategoryContextProvider>
+        </UserContextProvider>
+      </SnackbarProvider>
+    </Router>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
