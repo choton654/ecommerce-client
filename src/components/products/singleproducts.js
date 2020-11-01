@@ -159,12 +159,15 @@ const Singleproduct = () => {
                 {state.product.photo ? (
                   state.product.photo.map((pic) => (
                     <Tab
-                      // style={{ opacity: 1 }}
+                      style={{
+                        opacity: 1,
+                        minWidth: "80px",
+                      }}
                       label={
                         <img
                           src={pic.img}
                           style={{
-                            height: "120px",
+                            height: "80px",
                             width: "80px",
                           }}
                           alt="no-image"
@@ -190,8 +193,8 @@ const Singleproduct = () => {
                       alt="no-image"
                       style={{
                         height: "400px",
-                        width: "250px",
-                        marginLeft: "6rem",
+                        width: "300px",
+                        marginLeft: "5rem",
                       }}
                     />
                   </TabPanel>
@@ -257,7 +260,9 @@ const Singleproduct = () => {
               )}
               <br />
               <Divider variant="middle" />
-
+              <Typography variant="h6" style={{ marginLeft: "20px" }}>
+                Similar products you can find
+              </Typography>
               {state.diff_product ? (
                 state.diff_product.map((prod) => (
                   <TabContext value={value} aria-label="Vertical tabs example">
@@ -265,31 +270,21 @@ const Singleproduct = () => {
                       <Tab
                         style={{
                           marginLeft: "20px",
+                          opacity: 1,
                         }}
                         label={
                           <Card
                             className={classes.cardroot}
                             style={{ background: "lightblue" }}
                           >
-                            <CardHeader
-                              avatar={
-                                <Avatar
-                                  aria-label="recipe"
-                                  className={classes.avatar}
-                                >
-                                  A
-                                </Avatar>
-                              }
-                              title={prod.name}
-                            />
                             <CardMedia
                               className={classes.media}
                               image={prod.photo[0].img}
                               onClick={(e) => {
                                 history.push(`/${prod._id}/product`);
-                                // window.location.reload();
                               }}
                               title="Product"
+                              style={{ border: "2px solid lightblue" }}
                             />
                             <CardContent
                               style={{ padding: "0px", paddingBottom: "16px" }}
@@ -315,14 +310,6 @@ const Singleproduct = () => {
                                   {prod.price}
                                 </Typography>
                               </div>
-
-                              <Typography
-                                variant="body2"
-                                color="textSecondary"
-                                component="p"
-                              >
-                                {prod.description}
-                              </Typography>
                             </CardContent>
                           </Card>
                         }

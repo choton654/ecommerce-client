@@ -37,6 +37,7 @@ const Cart = () => {
       .catch((err) => console.log(err));
   };
   const handleRemove = (productId, price) => {
+    console.log(productId);
     axios
       .post(
         `${BASE_URL}/cart/api/${userId}/removeitem`,
@@ -56,6 +57,9 @@ const Cart = () => {
   const handleShopping = () => {
     history.push("/");
   };
+  if (cartstate) {
+    console.log(cartstate);
+  }
   return (
     <Container maxWidth="lg" className={classes.root}>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
@@ -63,6 +67,7 @@ const Cart = () => {
           <Paper style={{ border: "2px solid lightblue" }}>
             {cartstate.cart &&
             cartstate.cart.cartItem &&
+            cartstate.cart.quantity &&
             cartstate.cart.quantity > 0 ? (
               cartstate.cart.cartItem.map((item) => (
                 <div>
@@ -73,7 +78,7 @@ const Cart = () => {
                     }}
                   >
                     <img
-                      src={item.productId.photo && item.productId.photo[0].img}
+                      src={item.productId && item.productId.photo[0].img}
                       alt="no-image"
                       style={{
                         height: "200px",
@@ -90,7 +95,9 @@ const Cart = () => {
                         width: "600px",
                       }}
                     >
-                      <Typography>{item.productId.name}</Typography>
+                      <Typography>
+                        {item.productId && item.productId.name}
+                      </Typography>
                       <Typography>
                         <span>Quantity</span>
                         {":"} {item.quantity}
@@ -101,7 +108,10 @@ const Cart = () => {
                         variant="contained"
                         color="primary"
                         onClick={() =>
-                          handleRemove(item.productId._id, item.price)
+                          handleRemove(
+                            item.productId && item.productId._id,
+                            item.price
+                          )
                         }
                       >
                         Remove Item

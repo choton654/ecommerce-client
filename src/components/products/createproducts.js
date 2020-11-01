@@ -20,8 +20,8 @@ import {
   Box,
   AppBar,
 } from "@material-ui/core";
-// import { TabPanel, TabContext, TabList } from "@material-ui/lab";
 import { useSnackbar } from "notistack";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -125,6 +125,21 @@ const Createproducts = () => {
         const error = err.response.data;
         dispatch({ type: "ERROR", payload: error });
       });
+  };
+  const deleteProd = (productid) => {
+    axios
+      .delete(`${BASE_URL}/product/api/${productid}/${id}/deleteproduct`, {
+        headers: {
+          Authorization: `Barer ${token}`,
+        },
+      })
+      .then((res) => {
+        const delProd = res.data.msg;
+        enqueueSnackbar(delProd, { variant: "success" });
+        dispatch({ type: "DELETE_PROD", payload: productid });
+        setValue(0);
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <Container className={classes.root}>
@@ -302,7 +317,22 @@ const Createproducts = () => {
                     >
                       {state.products.map((prod) => (
                         <Tab
-                          label={`${prod.name}`}
+                          label={
+                            <div style={{ display: "flex" }}>
+                              <Typography variant="subtitle2">
+                                <strong>{prod.name}</strong>
+                              </Typography>
+                              <DeleteForeverIcon
+                                onClick={() => deleteProd(prod._id)}
+                                fontSize="small"
+                                style={{
+                                  float: "right",
+                                  cursor: "pointer",
+                                  color: "red",
+                                }}
+                              />
+                            </div>
+                          }
                           {...a11yProps(state.products.indexOf(prod))}
                         />
                       ))}

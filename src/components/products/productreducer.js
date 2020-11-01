@@ -35,6 +35,13 @@ export const reducer = (state, action) => {
         ...state,
         filtered_prod: action.payload,
       };
+    case "DELETE_PROD":
+      return {
+        ...state,
+        products: state.products.filter(
+          (prod) => prod._id.toString() !== action.payload.toString()
+        ),
+      };
     default:
       break;
   }

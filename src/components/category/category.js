@@ -60,7 +60,7 @@ const Category = () => {
                     variant="subtitle1"
                     className={classes.paperItem}
                     style={{ cursor: "pointer" }}
-                    onClick={(event) => {
+                    onMouseOver={(event) => {
                       subCatMenuOpen(event, cat._id);
                       console.log(cat._id);
                     }}
@@ -71,7 +71,7 @@ const Category = () => {
                     anchorEl={subcatMenu}
                     anchorOrigin={{ vertical: "top", horizontal: "right" }}
                     id="primary-search-account-menu"
-                    keepMounted
+                    // keepMounted
                     transformOrigin={{ vertical: "top", horizontal: "right" }}
                     open={isSubCatMenuOpen}
                     onClose={handleSubCatMenuClose}

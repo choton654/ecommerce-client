@@ -3,7 +3,6 @@ import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../api";
 import { CategoryContext } from "./categorycontext";
-
 import {
   Grid,
   Paper,
@@ -12,7 +11,11 @@ import {
   CardContent,
   Tab,
   Tabs,
+  CardHeader,
+  CardMedia,
+  IconButton,
 } from "@material-ui/core";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useStyles } from "../layout/theme";
 import Filterproduct from "./filterproduct";
 const Subcategory = () => {
@@ -68,7 +71,7 @@ const Subcategory = () => {
     <div className={classes.root}>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
         <Grid item xs={4} sm={3}>
-          <Filterproduct prodbrand={brand} subcatid={id} />
+          <Filterproduct prodbrand={brand} subcatid={id} subcatname={name} />
         </Grid>
         <Grid item xs={8} sm={9}>
           <Paper
@@ -83,7 +86,7 @@ const Subcategory = () => {
                   paddingTop: "20px",
                 }}
               >
-                {name}
+                <strong>{name}</strong>
               </Typography>
               <div style={{ display: "flex", marginLeft: "20px" }}>
                 <Typography
@@ -128,95 +131,133 @@ const Subcategory = () => {
                   </Typography>
                 </div>
               </div>
-              {catstate.filtered_prod.length === 0
-                ? catstate.product_cat.map((product) => (
-                    <div
+              {catstate.filtered_prod.length === 0 ? (
+                <div
+                  className={classes.paper}
+                  style={{
+                    display: "flex",
+                    flexWrap: "nowrap",
+                  }}
+                >
+                  {catstate.product_cat.map((product) => (
+                    <Card
                       key={product._id}
-                      className={classes.paper}
+                      className={classes.cardroot}
                       style={{
-                        display: "flex",
-                        justifyContent: "space-between",
+                        background: "lightblue",
+                        marginLeft: "20px",
+                        cursor: "pointer",
                       }}
                     >
-                      <div
-                        style={{ display: "flex", cursor: "pointer" }}
-                        onClick={(e) => history.push(`/${product._id}/product`)}
+                      {/* <CardHeader title={product.name} /> */}
+                      <CardMedia
+                        className={classes.media}
+                        image={product.photo[0].img}
+                        onClick={(e) => {
+                          history.push(`/${product._id}/product`);
+                        }}
+                        title="Product"
+                      />
+                      <CardContent
+                        style={{ padding: "0px", paddingBottom: "16px" }}
                       >
-                        <img
-                          src={product.photo && product.photo[0].img}
-                          alt="no image"
-                          style={{ height: "200px", width: "100px" }}
-                        />
-                        <Card
-                          variant="outlined"
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            marginLeft: "20px",
-                            background: "whitesmoke",
-                          }}
-                        >
-                          <CardContent
+                        <div style={{ display: "flex" }}>
+                          <IconButton aria-label="add to favorites">
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                          </IconButton>
+                          <Typography
+                            variant="subtitle1"
+                            color="textSecondary"
+                            component="p"
                             style={{
-                              width: "300px",
-                              textAlign: "initial",
-                              paddingTop: "0px",
+                              paddingTop: "10px",
+                              marginLeft: "40px",
                             }}
                           >
-                            <Typography varient="h1">{product.name}</Typography>
-                            <Typography varient="h6">
-                              {product.description}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </div>
-                      <h1> Rs.{product.price}</h1>
-                    </div>
-                  ))
-                : catstate.filtered_prod.map((product) => (
-                    <div
-                      key={product._id}
-                      className={classes.paper}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div
-                        style={{ display: "flex", cursor: "pointer" }}
-                        onClick={(e) => history.push(`/${product._id}/product`)}
-                      >
-                        <img
-                          src={product.photo && product.photo[0].img}
-                          alt="no image"
-                          style={{ height: "200px", width: "100px" }}
-                        />
-                        <Card
-                          variant="outlined"
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            marginLeft: "20px",
-                            background: "whitesmoke",
-                          }}
+                            <span>Rs.</span>
+                            {product.price}
+                          </Typography>
+                        </div>
+
+                        <Typography
+                          variant="subtitle1"
+                          color="textSecondary"
+                          component="p"
                         >
-                          <CardContent
-                            style={{
-                              width: "300px",
-                              textAlign: "initial",
-                              paddingTop: "0px",
-                            }}
-                          >
-                            <Typography varient="h1">{product.name}</Typography>
-                            <Typography varient="h6">
-                              {product.description}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </div>
-                      <h1> Rs.{product.price}</h1>
-                    </div>
+                          {product.description}
+                        </Typography>
+                      </CardContent>
+                    </Card>
                   ))}
+                </div>
+              ) : (
+                <div
+                  className={classes.paper}
+                  style={{
+                    display: "flex",
+                    flexWrap: "nowrap",
+                  }}
+                >
+                  {catstate.filtered_prod.map((product) => (
+                    <Card
+                      key={product._id}
+                      className={classes.cardroot}
+                      style={{
+                        background: "lightblue",
+                        marginLeft: "20px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {/* <CardHeader title={product.name} /> */}
+                      <CardMedia
+                        className={classes.media}
+                        image={product.photo[0].img}
+                        onClick={(e) => {
+                          history.push(`/${product._id}/product`);
+                        }}
+                        title="Product"
+                      />
+                      <CardContent
+                        style={{ padding: "0px", paddingBottom: "16px" }}
+                      >
+                        <div style={{ display: "flex" }}>
+                          <IconButton aria-label="add to favorites">
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                            <FavoriteIcon fontSize="small" />
+                          </IconButton>
+                          <Typography
+                            variant="subtitle1"
+                            color="textSecondary"
+                            component="p"
+                            style={{
+                              paddingTop: "10px",
+                              marginLeft: "40px",
+                            }}
+                          >
+                            <span>Rs.</span>
+                            {product.price}
+                          </Typography>
+                        </div>
+
+                        <Typography
+                          variant="subtitle1"
+                          color="textSecondary"
+                          component="p"
+                        >
+                          {product.description}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </div>
           </Paper>
         </Grid>
@@ -226,3 +267,39 @@ const Subcategory = () => {
 };
 
 export default Subcategory;
+
+{
+  /* <div
+                        style={{ display: "flex", cursor: "pointer" }}
+                        onClick={(e) => history.push(`/${product._id}/product`)}
+                      >
+                        <img
+                          src={product.photo && product.photo[0].img}
+                          alt="no image"
+                          style={{ height: "200px", width: "100px" }}
+                        />
+                        <Card
+                          variant="outlined"
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            marginLeft: "20px",
+                            background: "whitesmoke",
+                          }}
+                        >
+                          <CardContent
+                            style={{
+                              width: "300px",
+                              textAlign: "initial",
+                              paddingTop: "0px",
+                            }}
+                          >
+                            <Typography varient="h1">{product.name}</Typography>
+                            <Typography varient="h6">
+                              {product.description}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      <h1> Rs.{product.price}</h1> */
+}
