@@ -11,6 +11,11 @@ export const reducer = (state, action) => {
         ...state,
         user: action.payload,
       };
+    case "USER_PROFILE":
+      return {
+        ...state,
+        user: action.payload,
+      };
     case "LOGIN":
       return {
         ...state,
@@ -25,6 +30,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+    case "ADD_ADDRESS":
+      return {
+        ...state,
+        user: action.payload,
       };
     default:
       break;

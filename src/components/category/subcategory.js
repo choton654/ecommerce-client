@@ -25,26 +25,38 @@ const Subcategory = () => {
   const { id, name } = useParams();
   const history = useHistory();
   const [choice, setChoice] = useState({
-    order: "asc",
-    sortBy: "price",
+    order: "",
+    sortBy: "",
     limit: 6,
   });
   useEffect(() => {
     if (name) {
-      catstate.filtered_prod = [];
-      getProductByChoice();
+      catstate.filtered_prod.length = 0;
+      catstate.product_by_choice.length = 0;
+      getProductByCategory();
     }
   }, [name]);
 
+  const getProductByCategory = () => {
+    axios
+      .get(`${BASE_URL}/product/api/${id}/bycategory`)
+      .then((res) => {
+        const { product } = res.data;
+        catdispatch({ type: "PRODUCT_BY_CAT", payload: product });
+      })
+      .catch((err) => {
+        const error = err.response.data;
+        catdispatch({ type: "ERROR", payload: error });
+      });
+  };
   const getProductByChoice = () => {
-    // console.log(id);
     axios
       .get(
         `${BASE_URL}/product/api/${id}/choice?order=${choice.order}&sortBy=${choice.sortBy}&limit=${choice.limit}`
       )
       .then((res) => {
         const { product } = res.data;
-        catdispatch({ type: "PRODUCT_BY_CAT", payload: product });
+        catdispatch({ type: "PRODUCT_BY_CHOICE", payload: product });
       })
       .catch((err) => {
         const error = err.response.data;
@@ -75,7 +87,7 @@ const Subcategory = () => {
         </Grid>
         <Grid item xs={8} sm={9}>
           <Paper
-            style={{ background: "whitesmoke", border: "3px solid lightblue" }}
+            style={{ background: "whitesmoke", border: "3px solid #287aed" }}
           >
             <div>
               <Typography
@@ -131,7 +143,7 @@ const Subcategory = () => {
                   </Typography>
                 </div>
               </div>
-              {catstate.filtered_prod.length === 0 ? (
+              {catstate.product_by_choice.length === 0 ? (
                 <div
                   className={classes.paper}
                   style={{
@@ -139,7 +151,7 @@ const Subcategory = () => {
                     flexWrap: "nowrap",
                   }}
                 >
-                  {catstate.product_cat.map((product) => (
+                  {catstate.filtered_prod.map((product) => (
                     <Card
                       key={product._id}
                       className={classes.cardroot}
@@ -149,7 +161,6 @@ const Subcategory = () => {
                         cursor: "pointer",
                       }}
                     >
-                      {/* <CardHeader title={product.name} /> */}
                       <CardMedia
                         className={classes.media}
                         image={product.photo[0].img}
@@ -202,17 +213,8 @@ const Subcategory = () => {
                     flexWrap: "nowrap",
                   }}
                 >
-                  {catstate.filtered_prod.map((product) => (
-                    <Card
-                      key={product._id}
-                      className={classes.cardroot}
-                      style={{
-                        background: "lightblue",
-                        marginLeft: "20px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {/* <CardHeader title={product.name} /> */}
+                  {catstate.product_by_choice.map((product) => (
+                    <Card key={product._id} className={classes.cardroot}>
                       <CardMedia
                         className={classes.media}
                         image={product.photo[0].img}
@@ -267,39 +269,3 @@ const Subcategory = () => {
 };
 
 export default Subcategory;
-
-{
-  /* <div
-                        style={{ display: "flex", cursor: "pointer" }}
-                        onClick={(e) => history.push(`/${product._id}/product`)}
-                      >
-                        <img
-                          src={product.photo && product.photo[0].img}
-                          alt="no image"
-                          style={{ height: "200px", width: "100px" }}
-                        />
-                        <Card
-                          variant="outlined"
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            marginLeft: "20px",
-                            background: "whitesmoke",
-                          }}
-                        >
-                          <CardContent
-                            style={{
-                              width: "300px",
-                              textAlign: "initial",
-                              paddingTop: "0px",
-                            }}
-                          >
-                            <Typography varient="h1">{product.name}</Typography>
-                            <Typography varient="h6">
-                              {product.description}
-                            </Typography>
-                          </CardContent>
-                        </Card>
-                      </div>
-                      <h1> Rs.{product.price}</h1> */
-}

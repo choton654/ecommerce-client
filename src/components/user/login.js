@@ -87,9 +87,7 @@ const Login = ({ openModal, close }) => {
         aria-describedby="simple-modal-description"
       >
         <Paper className={classes.paper2}>
-          <div
-            style={{ width: "50%", height: "100%", background: "lightblue" }}
-          >
+          <div style={{ width: "50%", height: "100%", background: "#287aed" }}>
             <div className={classes.modalDiv}>
               <Typography
                 variant="h5"

@@ -60,10 +60,10 @@ const Category = () => {
                     variant="subtitle1"
                     className={classes.paperItem}
                     style={{ cursor: "pointer" }}
-                    onMouseOver={(event) => {
+                    onMouseEnter={(event) => {
                       subCatMenuOpen(event, cat._id);
-                      console.log(cat._id);
                     }}
+                    // onMouseLeave={handleSubCatMenuClose}
                   >
                     <strong>{cat.name}</strong>
                   </Typography>

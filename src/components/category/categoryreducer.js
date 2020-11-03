@@ -3,7 +3,7 @@ export const initialState = {
   subcategories: [],
   product_cat: [],
   filtered_prod: [],
-  isFiltered: false,
+  product_by_choice: [],
   error: null,
 };
 
@@ -48,6 +48,23 @@ export const reducer = (state, action) => {
         ...state,
         filtered_prod: action.payload,
         isFiltered: !state.isFiltered,
+      };
+    case "PRODUCT_BY_CHOICE":
+      return {
+        ...state,
+        product_by_choice: action.payload,
+      };
+    case "ADD_PHOTO":
+      return {
+        ...state,
+        categories: state.categories.map((cat) => {
+          if (cat._id.toString() === action.payload.catid.toString()) {
+            console.log(cat)
+            return action.payload.category;
+          } else {
+            return cat;
+          }
+        }),
       };
     default:
       break;

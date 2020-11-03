@@ -17,10 +17,10 @@ export const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
+    backgroundColor: fade(theme.palette.common.white, 1),
+    // "&:hover": {
+    //   backgroundColor: fade(theme.palette.common.white, 0.25),
+    // },
     marginRight: "50px",
     width: "70%",
     [theme.breakpoints.up("md")]: {
@@ -36,6 +36,7 @@ export const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    color: "#287aed",
   },
 
   buttonWrapper: {
@@ -113,9 +114,13 @@ export const useStyles = makeStyles((theme) => ({
     height: "50px",
     width: "250px",
     paddingTop: "56.25%", // 16:9
+    border: "2px solid lightblue",
   },
   cardroot: {
-    maxWidth: 345,
+    maxWidth: 250,
+    background: "lightblue",
+    marginLeft: "20px",
+    cursor: "pointer",
   },
   large: {
     width: "260px",

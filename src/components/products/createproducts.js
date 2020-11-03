@@ -19,10 +19,12 @@ import {
   Tabs,
   Box,
   AppBar,
+  IconButton,
 } from "@material-ui/core";
 import { useSnackbar } from "notistack";
+import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-
+import Editproduct from "./editproduct";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -141,6 +143,27 @@ const Createproducts = () => {
       })
       .catch((err) => console.log(err));
   };
+  const picDelete = (picid, productid) => {
+    console.log("delete", picid, productid);
+    axios
+      .delete(`${BASE_URL}/product/api/${productid}/${id}/deletepic/${picid}`, {
+        headers: {
+          Authorization: `Barer ${token}`,
+        },
+      })
+      .then((res) => {
+        const photo = res.data.product.photo;
+        dispatch({ type: "DELETE_PROD_PIC", payload: { productid, photo } });
+      })
+      .catch((err) => console.log(err));
+  };
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const editProduct = () => {
+    setOpen(true);
+  };
   return (
     <Container className={classes.root}>
       <Grid container spacing={3} style={{ marginTop: "20px" }}>
@@ -150,7 +173,7 @@ const Createproducts = () => {
             style={{
               background: "whitesmoke",
               height: "500px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
             }}
           >
             <Typography variant="h6">Add Products</Typography>
@@ -163,6 +186,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="prodname">Name</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="prodname"
                     name="prod_name"
                     type="text"
@@ -181,6 +207,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="proddesc">Description</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="proddesc"
                     name="prod_desc"
                     type="text"
@@ -199,6 +228,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="prodprice">Price</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="prodprice"
                     name="prod_price"
                     type="text"
@@ -217,6 +249,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="prodcount">Count</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="prodcount"
                     name="prod_count"
                     type="text"
@@ -235,6 +270,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="prodbrand">Brand</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="prodbrand"
                     name="prod_brand"
                     type="text"
@@ -253,6 +291,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="category">Category</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="category"
                     name="prod_cat"
                     type="text"
@@ -271,6 +312,9 @@ const Createproducts = () => {
                 <div className={classes.userfield}>
                   <InputLabel htmlFor="prodphoto">Photo</InputLabel>
                   <Input
+                    autoFocus
+                    fullWidth
+                    margin="dense"
                     id="prodphoto"
                     name="prod_photo"
                     type="file"
@@ -298,7 +342,7 @@ const Createproducts = () => {
             style={{
               background: "whitesmoke",
               height: "500px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
             }}
           >
             <Typography variant="h6">Products List</Typography>
@@ -342,20 +386,20 @@ const Createproducts = () => {
                     <TabPanel
                       value={value}
                       index={state.products.indexOf(prod)}
-                      style={{ background: "azure" }}
+                      style={{ background: "azure", cursor: "pointer" }}
                     >
                       <div
                         style={{
                           display: "flex",
-                          justifyContent: "space-around",
+                          flexDirection: "column",
+                          background: "azure",
                         }}
                       >
                         <div
                           style={{
                             display: "flex",
                             flexDirection: "column",
-                            textAlign: "left",
-                            width: "50%",
+                            textAlign: "center",
                           }}
                         >
                           <Typography variant="h6">
@@ -373,20 +417,85 @@ const Createproducts = () => {
                           <Typography>
                             <strong>Brand:</strong> {prod.brand}
                           </Typography>
+                          <Typography>
+                            <strong>Category:</strong>{" "}
+                            {prod.category && prod.category.name}
+                          </Typography>
                         </div>
                         <div
                           style={{
-                            width: "50%",
                             display: "flex",
+                            flexFlow: "row-reverse",
+                            marginTop: "10px",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <IconButton onClick={editProduct} color="primary">
+                            <EditIcon
+                              fontSize="medium"
+                              style={{
+                                float: "right",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </IconButton>
+                          <Editproduct
+                            open={open}
+                            close={handleClose}
+                            productid={prod._id}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            flexWrap: "nowrap",
                             justifyContent: "space-evenly",
+                            marginTop: "10px",
+                            // overflowX: "scroll",
                           }}
                         >
                           {prod.photo &&
                             prod.photo.map((pic) => (
-                              <img
-                                src={pic.img}
-                                style={{ height: "100px", width: "100px" }}
-                              />
+                              <div style={{ display: "flex" }}>
+                                <img
+                                  // src={`${BASE_URL}/${pic.img}`}
+                                  src={pic.img}
+                                  style={{
+                                    height: "100px",
+                                    width: "100px",
+                                    marginLeft: "10px",
+                                  }}
+                                />
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <IconButton
+                                    style={{ marginBottom: "5px" }}
+                                    color="secondary"
+                                  >
+                                    <EditIcon
+                                      fontSize="small"
+                                      // onClick={() => picDelete(pic._id, prod._id)}
+                                    />
+                                  </IconButton>
+                                  <IconButton
+                                    style={{ marginBottom: "5px" }}
+                                    color="secondary"
+                                  >
+                                    <DeleteForeverIcon
+                                      fontSize="small"
+                                      onClick={() =>
+                                        picDelete(pic._id, prod._id)
+                                      }
+                                    />
+                                  </IconButton>
+                                </div>
+                              </div>
                             ))}
                         </div>
                       </div>

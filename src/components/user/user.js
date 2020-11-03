@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -9,13 +10,23 @@ import {
   Button,
   FormControl,
   Avatar,
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@material-ui/core";
+import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
+import EditLocationIcon from "@material-ui/icons/EditLocation";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import axios from "axios";
 import { AuthContext } from "./authcontext";
 import { useStyles } from "../layout/theme";
 import BASE_URL from "../../api";
-
+import Protectuser from "./protectuser";
 const User = () => {
+  const history = useHistory();
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
   const [isEdit1, setState1] = useState(false);
@@ -26,11 +37,27 @@ const User = () => {
   const classes = useStyles();
   const { state, dispatch } = useContext(AuthContext);
 
+  useEffect(() => {
+    singleUser();
+  }, []);
   const handleClick1 = () => {
     setState1(!isEdit1);
   };
   const handleClick2 = () => {
     setState2(!isEdit2);
+  };
+  const singleUser = () => {
+    axios
+      .get(`${BASE_URL}/user/api/${userId}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const { user } = res.data;
+        dispatch({ type: "USER_PROFILE", payload: user });
+      })
+      .catch((err) => console.log(err));
   };
   const editProfile = () => {
     axios
@@ -50,6 +77,38 @@ const User = () => {
       })
       .catch((err) => console.log(err));
   };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    history.push("/");
+    window.location.reload();
+  };
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const [address, setAddress] = useState("");
+  const handleSubmit = () => {
+    console.log(address, userId);
+    axios
+      .post(
+        `${BASE_URL}/user/api/${userId}/address`,
+        { address },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const { updatedUser } = res.data;
+        dispatch({ type: "ADD_ADDRESS", payload: updatedUser });
+      })
+      .catch((err) => console.log(err));
+    handleClose();
+  };
   return (
     <Container className={classes.root}>
       <Grid container spacing={3} style={{ marginTop: "20px" }}>
@@ -59,7 +118,7 @@ const User = () => {
             style={{
               background: "whitesmoke",
               height: "50px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -93,10 +152,78 @@ const User = () => {
             style={{
               background: "whitesmoke",
               height: "300px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            side bar
+            <div style={{ textAlign: "left" }}>
+              <MenuItem style={{ display: "flex" }}>
+                <AirportShuttleIcon fontSize="medium" color="primary" />
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  style={{ marginLeft: "20px" }}
+                >
+                  My Orders
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                style={{ display: "flex", marginTop: "5px" }}
+                onClick={handleClickOpen}
+              >
+                <EditLocationIcon fontSize="medium" color="primary" />
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  style={{ marginLeft: "20px" }}
+                >
+                  Manage Addresses
+                </Typography>
+              </MenuItem>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="form-dialog-title"
+              >
+                <DialogTitle id="form-dialog-title">Address</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    To order your products, please enter your address here. We
+                    will send updates occasionally.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Email Address"
+                    type="email"
+                    fullWidth
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmit} color="primary">
+                    Add address
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <MenuItem style={{ display: "flex", marginTop: "5px" }}>
+                <ExitToAppIcon fontSize="medium" color="primary" />
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  style={{ marginLeft: "20px" }}
+                  onClick={handleLogout}
+                >
+                  Log Out
+                </Typography>
+              </MenuItem>
+            </div>
           </Paper>
         </Grid>
         <Grid item xs={12} sm={8}>
@@ -105,7 +232,7 @@ const User = () => {
             style={{
               background: "whitesmoke",
               height: "400px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
             }}
           >
             <FormControl
@@ -172,6 +299,14 @@ const User = () => {
                 </Button>
               </div>
               <br />
+              <div style={{ textAlign: "left", marginLeft: "20px" }}>
+                <Typography variant="subtitle1">
+                  <strong>Address</strong>
+                </Typography>
+                <Typography variant="subtitle2">
+                  <strong>{state.user && state.user.address}</strong>
+                </Typography>
+              </div>
             </FormControl>
           </Paper>
         </Grid>
@@ -180,4 +315,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Protectuser(User);

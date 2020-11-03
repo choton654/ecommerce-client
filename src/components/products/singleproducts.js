@@ -143,65 +143,67 @@ const Singleproduct = () => {
             <Paper
               style={{
                 width: "40%",
-                border: "2px solid lightblue",
+                border: "2px solid #287aed",
                 height: "100%",
               }}
             >
-              <Tabs
-                value={image}
-                onChange={imageChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="auto"
-                aria-label="scrollable auto tabs example"
-              >
+              <div style={{ display: "flex" }}>
+                <Tabs
+                  value={image}
+                  onChange={imageChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  orientation="vertical"
+                  scrollButtons="auto"
+                  aria-label="scrollable auto tabs example"
+                  style={{ width: "100px" }}
+                >
+                  {state.product.photo ? (
+                    state.product.photo.map((pic) => (
+                      <Tab
+                        style={{
+                          opacity: 1,
+                          minWidth: "80px",
+                        }}
+                        label={
+                          <img
+                            src={pic.img}
+                            style={{
+                              height: "80px",
+                              width: "80px",
+                            }}
+                            alt="no-image"
+                          />
+                        }
+                        {...a11yProps(state.product.photo.indexOf(pic))}
+                      />
+                    ))
+                  ) : (
+                    <h1>Loading..</h1>
+                  )}
+                </Tabs>
                 {state.product.photo ? (
                   state.product.photo.map((pic) => (
-                    <Tab
-                      style={{
-                        opacity: 1,
-                        minWidth: "80px",
-                      }}
-                      label={
-                        <img
-                          src={pic.img}
-                          style={{
-                            height: "80px",
-                            width: "80px",
-                          }}
-                          alt="no-image"
-                        />
-                      }
-                      {...a11yProps(state.product.photo.indexOf(pic))}
-                    />
+                    <TabPanel
+                      value={image}
+                      index={state.product.photo.indexOf(pic)}
+                      // style={{ marginLeft: "2rem" }}
+                    >
+                      <img
+                        src={pic.img}
+                        alt="no-image"
+                        style={{
+                          height: "500px",
+                          width: "350px",
+                        }}
+                      />
+                    </TabPanel>
                   ))
                 ) : (
                   <h1>Loading..</h1>
                 )}
-              </Tabs>
-
-              {state.product.photo ? (
-                state.product.photo.map((pic) => (
-                  <TabPanel
-                    value={image}
-                    index={state.product.photo.indexOf(pic)}
-                    // style={{ paddingTop: "10px" }}
-                  >
-                    <img
-                      src={pic.img}
-                      alt="no-image"
-                      style={{
-                        height: "400px",
-                        width: "300px",
-                        marginLeft: "5rem",
-                      }}
-                    />
-                  </TabPanel>
-                ))
-              ) : (
-                <h1>Loading..</h1>
-              )}
+              </div>
               <div style={{ display: "flex", justifyContent: "space-evenly" }}>
                 <Button
                   variant="contained"
@@ -241,7 +243,7 @@ const Singleproduct = () => {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
-                border: "2px solid lightblue",
+                border: "2px solid #287aed",
               }}
             >
               {state.product && (
@@ -264,60 +266,70 @@ const Singleproduct = () => {
                 Similar products you can find
               </Typography>
               {state.diff_product ? (
-                state.diff_product.map((prod) => (
-                  <TabContext value={value} aria-label="Vertical tabs example">
-                    <TabList onChange={handleChange}>
-                      <Tab
-                        style={{
-                          marginLeft: "20px",
-                          opacity: 1,
-                        }}
-                        label={
-                          <Card
-                            className={classes.cardroot}
-                            style={{ background: "lightblue" }}
+                <Tabs
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  aria-label="scrollable auto tabs example"
+                  onChange={handleChange}
+                  value={value}
+                >
+                  {" "}
+                  (
+                  {state.diff_product.map((prod) => (
+                    <Tab
+                      style={{
+                        marginLeft: "20px",
+                        opacity: 1,
+                      }}
+                      label={
+                        <Card
+                          className={classes.cardroot}
+                          style={{ background: "lightblue" }}
+                        >
+                          <CardMedia
+                            className={classes.media}
+                            image={prod.photo[0].img}
+                            onClick={(e) => {
+                              history.push(`/${prod._id}/product`);
+                              setImage(0);
+                            }}
+                            title="Product"
+                            style={{ border: "2px solid lightblue" }}
+                          />
+                          <CardContent
+                            style={{ padding: "0px", paddingBottom: "16px" }}
                           >
-                            <CardMedia
-                              className={classes.media}
-                              image={prod.photo[0].img}
-                              onClick={(e) => {
-                                history.push(`/${prod._id}/product`);
-                              }}
-                              title="Product"
-                              style={{ border: "2px solid lightblue" }}
-                            />
-                            <CardContent
-                              style={{ padding: "0px", paddingBottom: "16px" }}
-                            >
-                              <div style={{ display: "flex" }}>
-                                <IconButton aria-label="add to favorites">
-                                  <FavoriteIcon fontSize="small" />
-                                  <FavoriteIcon fontSize="small" />
-                                  <FavoriteIcon fontSize="small" />
-                                  <FavoriteIcon fontSize="small" />
-                                  <FavoriteIcon fontSize="small" />
-                                </IconButton>
-                                <Typography
-                                  variant="subtitle1"
-                                  color="textSecondary"
-                                  component="p"
-                                  style={{
-                                    paddingTop: "10px",
-                                    marginLeft: "40px",
-                                  }}
-                                >
-                                  <span>Rs.</span>
-                                  {prod.price}
-                                </Typography>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        }
-                        value={prod._id}
-                      />
-                    </TabList>
-                  </TabContext>
-                ))
+                            <div style={{ display: "flex" }}>
+                              <IconButton aria-label="add to favorites">
+                                <FavoriteIcon fontSize="small" />
+                                <FavoriteIcon fontSize="small" />
+                                <FavoriteIcon fontSize="small" />
+                                <FavoriteIcon fontSize="small" />
+                                <FavoriteIcon fontSize="small" />
+                              </IconButton>
+                              <Typography
+                                variant="subtitle1"
+                                color="textSecondary"
+                                component="p"
+                                style={{
+                                  paddingTop: "10px",
+                                  marginLeft: "40px",
+                                }}
+                              >
+                                <span>Rs.</span>
+                                {prod.price}
+                              </Typography>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      }
+                      value={prod._id}
+                    />
+                  ))}
+                  ){" "}
+                </Tabs>
               ) : (
                 <h1>Loading..</h1>
               )}

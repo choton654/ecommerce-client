@@ -1,10 +1,13 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
   Checkbox,
+  Collapse,
   Divider,
   FormControl,
   Input,
   InputLabel,
+  List,
+  ListItem,
   ListItemText,
   MenuItem,
   NativeSelect,
@@ -12,25 +15,35 @@ import {
   Select,
   Slider,
   Typography,
+  TextField,
 } from "@material-ui/core";
-import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { useStyles } from "../layout/theme";
 import { CategoryContext } from "./categorycontext";
 // import { ProductContext } from "../products/productcontext";
 import axios from "axios";
 import BASE_URL from "../../api";
 const priceRange = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
-
+const smallPriceRange = priceRange.map((price) => price * 5);
+const marks = smallPriceRange.map((mark) => ({
+  value: mark,
+  label: `${mark}`,
+}));
+console.log(marks);
+const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
   const { catstate, catdispatch } = useContext(CategoryContext);
   const classes = useStyles();
   const [brandName, setBeandName] = useState([]);
   const [price, setPrice] = useState([30, 70]);
   const [min, setMinMoney] = useState(0);
-  const [max, setMaxMoney] = useState(500);
-  const priceBySubcategory = {
-    subcatname,
-    priceRange,
+  const [max, setMaxMoney] = useState(2500);
+  const [open, setOpen] = useState(true);
+  const handleClick = () => {
+    setOpen(!open);
   };
   const handleBrandChange = (event) => {
     setBeandName(event.target.value);
@@ -47,18 +60,19 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
   function valuetext() {
     return `Rs.${price * 10}`;
   }
-  // console.log(price);
+  console.log(price);
   console.log(parseInt(min), parseInt(max));
   useEffect(() => {
-    if (max || min || brandName) {
+    if (max || min || brandName || subcatname) {
+      catstate.product_by_choice.length = 0;
       filterProduct();
     }
-  }, [max, brandName, min]);
+  }, [max, brandName, min, subcatname]);
 
   const filterProduct = () => {
     const money = [parseInt(min), parseInt(max)];
     const filters = [{ brand: brandName }, { price: money }];
-    console.log(filters);
+    // console.log(filters);
     axios
       .post(`${BASE_URL}/product/api/${subcatid}/filter`, { filters })
       .then((res) => {
@@ -77,7 +91,7 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
         cursor: "pointer",
         background: "white",
         padding: "10px 15px",
-        border: "3px solid lightblue",
+        border: "3px solid #287aed",
       }}
     >
       <Typography variant="h6">
@@ -92,9 +106,9 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
           value={price}
           step={10}
           defaultValue={30}
-          scale={(x) => x * 5}
-          onChange={handlePriceChange}
+          scale={(x) => x * 25}
           valueLabelDisplay="auto"
+          onChange={handlePriceChange}
           aria-labelledby="range-slider"
           getAriaValueText={valuetext}
         />
@@ -109,7 +123,7 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
               }}
             >
               <option value={0}>Min</option>
-              {priceRange.map((currency) => (
+              {smallPriceRange.map((currency) => (
                 <option value={currency}>{currency}</option>
               ))}
             </NativeSelect>
@@ -126,7 +140,7 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
                 id: "age-native-label-placeholder",
               }}
             >
-              {priceRange.map((currency) => (
+              {smallPriceRange.map((currency) => (
                 <option value={currency}>{currency}</option>
               ))}
             </NativeSelect>
@@ -136,28 +150,35 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
       <Divider
         style={{ width: "100%", marginTop: "10px", marginBottom: "10px" }}
       />
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="subtitle1">
-          <strong>Brand</strong>
-        </Typography>
-        <FormControl>
-          <Select
-            labelId="demo-mutiple-checkbox-label"
-            id="demo-mutiple-checkbox"
-            multiple
-            value={brandName}
-            onChange={handleBrandChange}
-            renderValue={(selected) => selected.join(", ")}
-          >
-            {prodbrand.map((brand) => (
-              <MenuItem key={brand} value={brand}>
-                <Checkbox checked={brandName.indexOf(brand) > -1} />
-                <ListItemText primary={brand} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+      <Autocomplete
+        multiple
+        id="checkboxes-tags-demo"
+        options={prodbrand}
+        disableCloseOnSelect
+        onChange={(e, value) => setBeandName(value)}
+        getOptionLabel={(option) => option}
+        renderOption={(option, { selected }) => (
+          <React.Fragment>
+            <Checkbox
+              icon={icon}
+              checkedIcon={checkedIcon}
+              style={{ marginRight: 8 }}
+              checked={selected}
+            />
+            {option}
+          </React.Fragment>
+        )}
+        style={{ width: "100%" }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            // variant="outlined"
+            label="Brand"
+            placeholder="Favorites"
+          />
+        )}
+      />
+      ;
     </Paper>
   );
 };

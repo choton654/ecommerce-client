@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Menu, MenuItem } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { CategoryContext } from "./categorycontext";
 const Mobilecatmenu = ({ catMenu, isCatMenuOpen, catmenuClose }) => {
   const { catstate, catdispatch } = useContext(CategoryContext);
@@ -56,7 +57,12 @@ const Mobilecatmenu = ({ catMenu, isCatMenuOpen, catmenuClose }) => {
               >
                 {subCategory.map((subcat) => (
                   <div>
-                    <MenuItem>{subcat.name}</MenuItem>
+                    <Link
+                      to={`/${subcat._id}/subcategory/${subcat.name}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <MenuItem>{subcat.name}</MenuItem>
+                    </Link>
                   </div>
                 ))}
               </Menu>

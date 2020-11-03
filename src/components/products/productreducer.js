@@ -42,6 +42,39 @@ export const reducer = (state, action) => {
           (prod) => prod._id.toString() !== action.payload.toString()
         ),
       };
+    case "DELETE_PROD_PIC":
+      return {
+        ...state,
+        products: state.products.map((prod) => {
+          if (prod._id.toString() === action.payload.productid.toString()) {
+            prod.photo = action.payload.photo;
+            return prod;
+          } else {
+            return prod;
+          }
+        }),
+      };
+    case "EDIT_PRODUCT":
+      return {
+        ...state,
+        products: state.products.map((prod) => {
+          if (prod._id.toString() === action.payload.productid.toString()) {
+            console.log(action.payload.item.category);
+            if (prod.category) {
+              prod.category.name = action.payload.item.category.name;
+              prod.category._id = action.payload.item.category._id;
+            }
+            prod.name = action.payload.item.name;
+            prod.description = action.payload.item.description;
+            prod.price = action.payload.item.price;
+            prod.count = action.payload.item.count;
+            prod.brand = action.payload.item.brand;
+            return prod;
+          } else {
+            return prod;
+          }
+        }),
+      };
     default:
       break;
   }

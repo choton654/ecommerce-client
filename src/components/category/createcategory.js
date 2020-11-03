@@ -15,9 +15,16 @@ import {
   Tabs,
   AppBar,
   Box,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Avatar,
 } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import axios from "axios";
 import { CategoryContext } from "./categorycontext";
 import BASE_URL from "../../api";
@@ -86,7 +93,7 @@ const Createcategory = () => {
         catdispatch({ type: "ADD_SINGLE_CATEGORY", payload: singleCategory });
         setCatname("");
         setCatid("");
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => console.log(err));
   };
@@ -110,7 +117,7 @@ const Createcategory = () => {
         const { catagory } = res.data;
         catdispatch({ type: "EDIT_SINGLE_CATEGORY", payload: catagory });
         setcat("");
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => console.log(err));
   };
@@ -129,6 +136,35 @@ const Createcategory = () => {
       })
       .catch((err) => console.log(err));
   };
+  const [open, setOpen] = useState(false);
+  const [photo, setPhoto] = useState([]);
+  const data = new FormData();
+  for (let i = 0; i < photo.length; i++) {
+    data.append("photo", photo[i]);
+  }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const addCatpic = (catid) => {
+    handleClose();
+    axios
+      .post(`${BASE_URL}/category/api/${catid}/${id}/addphoto`, data, {
+        headers: {
+          Authorization: `Barer ${token}`,
+        },
+      })
+      .then((res) => {
+        const { category } = res.data;
+        console.log(category);
+        catdispatch({ type: "ADD_PHOTO", payload: { category, catid } });
+        // window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Container className={classes.root}>
       <Grid container spacing={3} style={{ marginTop: "20px" }}>
@@ -138,7 +174,7 @@ const Createcategory = () => {
             style={{
               background: "whitesmoke",
               height: "400px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
             }}
           >
             <Typography variant="h6">Add Category</Typography>
@@ -197,7 +233,7 @@ const Createcategory = () => {
             style={{
               background: "whitesmoke",
               height: "400px",
-              border: "2px solid lightblue",
+              border: "2px solid #287aed",
             }}
           >
             <Typography variant="h6">Category List</Typography>
@@ -216,7 +252,24 @@ const Createcategory = () => {
                     catstate.categories.map((cat) => (
                       <Tab
                         style={{ opacity: 1 }}
-                        label={`${cat.name}`}
+                        label={
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Typography variant="subtitle2">
+                              <strong>{cat.name}</strong>
+                            </Typography>
+                            <DeleteForeverIcon
+                              onClick={() => deleteCat(cat._id)}
+                              fontSize="small"
+                              color="secondary"
+                              style={{ marginLeft: "20px" }}
+                            />
+                          </div>
+                        }
                         {...a11yProps(catstate.categories.indexOf(cat))}
                       />
                     ))
@@ -264,15 +317,52 @@ const Createcategory = () => {
                         Save
                       </Button>
                     </div>
-                    <DeleteForeverIcon
-                      onClick={() => deleteCat(cat._id)}
-                      fontSize="large"
-                      style={{
-                        float: "right",
-                        marginTop: "120px",
-                        cursor: "pointer",
-                      }}
-                    />
+                    <div style={{ display: "flex", marginLeft: "20px" }}>
+                      <IconButton
+                        color="primary"
+                        style={{ marginLeft: "10px" }}
+                        onClick={handleClickOpen}
+                      >
+                        <AddAPhotoIcon fontSize="medium" />
+                      </IconButton>
+                      {cat.photo &&
+                        cat.photo.map((pic) => (
+                          <Avatar alt="Remy Sharp" src={pic.img} />
+                        ))}
+
+                      <Dialog
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="form-dialog-title"
+                      >
+                        <DialogTitle id="form-dialog-title">
+                          Add Photo
+                        </DialogTitle>
+                        <DialogContent>
+                          <Input
+                            autoFocus
+                            margin="dense"
+                            id="photo"
+                            type="file"
+                            fullWidth
+                            onChange={(e) =>
+                              setPhoto([...photo, e.target.files[0]])
+                            }
+                          />
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose} color="primary">
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => addCatpic(cat._id)}
+                            color="primary"
+                          >
+                            Add photo
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </div>
                   </TabPanel>
                 ))
               ) : (

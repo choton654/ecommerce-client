@@ -16,6 +16,9 @@ import {
   Paper,
   Avatar,
   Badge,
+  MenuList,
+  MenuItem,
+  Menu,
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -34,6 +37,8 @@ import { useStyles } from "./theme";
 import Mobilecatmenu from "../category/mobilecatmenu";
 import { AuthContext } from "../user/authcontext";
 import { CartContext } from "../cart/cartcontext";
+import BASE_URL from "../../api";
+import axios from "axios";
 const useNavstyles = makeStyles((theme) => ({
   menuButton: {
     marginLeft: theme.spacing(2),
@@ -52,7 +57,7 @@ const useNavstyles = makeStyles((theme) => ({
   },
 
   inputRoot: {
-    color: "inherit",
+    color: "#0a0a0a",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -82,6 +87,8 @@ const Navbar = () => {
   const isMenuOpen = Boolean(anchorEl);
   const user = JSON.parse(localStorage.getItem("user")) || "";
   const token = localStorage.getItem("token") || "";
+  const [search, setSearch] = useState("");
+  console.log(search);
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -104,11 +111,31 @@ const Navbar = () => {
     }
     setState(!isOpen);
   };
-
+  const [searchmenu, setSearchmenu] = useState(null);
+  const [searchedProducts, setSearchedProducts] = useState([]);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setSearchmenu(e.currentTarget);
+    axios
+      .post(`${BASE_URL}/product/api/search`, { search })
+      .then((res) => {
+        const item = res.data.findProduct;
+        setSearchedProducts(item);
+        console.log(searchedProducts);
+      })
+      .catch((err) => console.log(err));
+  };
+  console.log(searchedProducts);
   return (
     <div>
       <AppBar>
-        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            background: "#287aed",
+          }}
+        >
           <IconButton
             edge="start"
             color="inherit"
@@ -148,7 +175,34 @@ const Navbar = () => {
           </Drawer>
           <Typography variant="h6" className={navclasses.title} color="inherit">
             <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-              Home
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <img
+                  src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_4ee2f9.png"
+                  style={{ width: 75 }}
+                />
+                <a
+                  style={{
+                    fontSize: "11px",
+                    fontStyle: "italic",
+                    marginTop: "-1px",
+                  }}
+                >
+                  Explore{" "}
+                  <span
+                    style={{
+                      marginRight: "2px",
+                      fontWeight: 500,
+                      color: "#ffe500",
+                    }}
+                  >
+                    Plus{" "}
+                  </span>
+                  <img
+                    src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/plus_b13a8b.png"
+                    style={{ width: 10 }}
+                  />{" "}
+                </a>
+              </div>
             </Link>
           </Typography>
 
@@ -158,6 +212,8 @@ const Navbar = () => {
             </div>
             <InputBase
               placeholder="Search items"
+              value={search}
+              onChange={handleSearch}
               classes={{
                 root: navclasses.inputRoot,
                 input: navclasses.inputInput,
@@ -165,7 +221,25 @@ const Navbar = () => {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-
+          <Menu
+            id="simple-menu"
+            anchorEl={searchmenu}
+            open={Boolean(searchmenu)}
+            onClose={() => setSearchmenu(null)}
+            style={{
+              marginTop: "35px",
+            }}
+          >
+            <MenuList>
+              {searchedProducts.map((item) => (
+                <MenuItem onClose={() => setSearchmenu(null)}>
+                  <Typography variant="subtitle1">
+                    <Link to={`/${item._id}/product`}>{item.name}</Link>
+                  </Typography>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
           <div className={classes.buttonWrapper}>
             {token ? (
               <div
@@ -195,7 +269,7 @@ const Navbar = () => {
                   dispatch({ type: "LOGIN" });
                 }}
               >
-                <strong style={{ color: "blue" }}>Login</strong>
+                <strong style={{ color: "#287aed" }}>Login</strong>
               </Button>
             )}
             <Login
