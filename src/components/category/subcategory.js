@@ -155,7 +155,7 @@ const Subcategory = () => {
                     <Card key={product._id} className={classes.cardroot}>
                       <CardMedia
                         className={classes.media}
-                        image={product.photo[0].img}
+                        image={`${BASE_URL}${product.photo[0].img}`}
                         onClick={(e) => {
                           history.push(`/${product._id}/product`);
                         }}
@@ -213,7 +213,7 @@ const Subcategory = () => {
                     <Card key={product._id} className={classes.cardroot}>
                       <CardMedia
                         className={classes.media}
-                        image={product.photo[0].img}
+                        image={`${BASE_URL}${product.photo[0].img}`}
                         onClick={(e) => {
                           history.push(`/${product._id}/product`);
                         }}

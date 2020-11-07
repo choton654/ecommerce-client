@@ -201,7 +201,7 @@ const Singleproduct = () => {
                       // style={{ marginLeft: "2rem" }}
                     >
                       <img
-                        src={pic.img}
+                        src={`${BASE_URL}${pic.img}`}
                         alt="no-image"
                         style={{
                           height: "500px",
@@ -380,7 +380,7 @@ const Singleproduct = () => {
                           <CardMedia
                             className={classes.media}
                             // style={{ width: "100px" }}
-                            image={prod.photo[0].img}
+                            image={`${BASE_URL}${prod.photo[0].img}`}
                             onClick={(e) => {
                               history.push(`/${prod._id}/product`);
                               setImage(0);

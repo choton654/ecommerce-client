@@ -327,7 +327,10 @@ const Createcategory = () => {
                       </IconButton>
                       {cat.photo &&
                         cat.photo.map((pic) => (
-                          <Avatar alt="Remy Sharp" src={pic.img} />
+                          <Avatar
+                            alt="Remy Sharp"
+                            src={`${BASE_URL}${pic.img}`}
+                          />
                         ))}
 
                       <Dialog

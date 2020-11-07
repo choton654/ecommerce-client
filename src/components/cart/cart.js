@@ -114,7 +114,10 @@ const Cart = () => {
                   >
                     <div>
                       <img
-                        src={item.productId && item.productId.photo[0].img}
+                        src={
+                          item.productId &&
+                          `${BASE_URL}${item.productId.photo[0].img}`
+                        }
                         alt="no-image"
                         style={{
                           height: "200px",

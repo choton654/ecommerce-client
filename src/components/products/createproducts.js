@@ -499,7 +499,7 @@ const Createproducts = () => {
                                     </div>
                                     <img
                                       // src={`${BASE_URL}/${pic.img}`}
-                                      src={pic.img}
+                                      src={`${BASE_URL}${pic.img}`}
                                       style={{
                                         height: "100px",
                                         width: "100px",
