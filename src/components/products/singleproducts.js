@@ -176,7 +176,7 @@ const Singleproduct = () => {
                         }}
                         label={
                           <img
-                            src={`https://serene-castle-33359.herokuapp.com${pic.img}`}
+                            src={`${BASE_URL}${pic.img}`}
                             style={{
                               height: "80px",
                               width: "80px",
