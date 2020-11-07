@@ -341,7 +341,7 @@ const Createproducts = () => {
             className={classes.paper}
             style={{
               background: "whitesmoke",
-              height: "500px",
+              height: "120%",
               border: "2px solid #287aed",
             }}
           >
@@ -458,43 +458,56 @@ const Createproducts = () => {
                           {prod.photo &&
                             prod.photo.map((pic) => (
                               <div style={{ display: "flex" }}>
-                                <img
-                                  // src={`${BASE_URL}/${pic.img}`}
-                                  src={pic.img}
-                                  style={{
-                                    height: "100px",
-                                    width: "100px",
-                                    marginLeft: "10px",
-                                  }}
-                                />
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "space-between",
-                                  }}
-                                >
-                                  <IconButton
-                                    style={{ marginBottom: "5px" }}
-                                    color="secondary"
+                                <Grid container item xs={4} sm={3}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      width: "100%",
+                                      flexWrap: "wrap",
+                                    }}
                                   >
-                                    <EditIcon
-                                      fontSize="small"
-                                      // onClick={() => picDelete(pic._id, prod._id)}
+                                    <div
+                                      style={{
+                                        display: "flex",
+
+                                        justifyContent: "space-between",
+                                      }}
+                                    >
+                                      <IconButton
+                                        style={{ marginBottom: "5px" }}
+                                        color="secondary"
+                                      >
+                                        <EditIcon
+                                          fontSize="small"
+                                          // onClick={() => picDelete(pic._id, prod._id)}
+                                        />
+                                      </IconButton>
+                                      <IconButton
+                                        style={{
+                                          marginBottom: "5px",
+                                          marginLeft: "10px",
+                                        }}
+                                        color="secondary"
+                                      >
+                                        <DeleteForeverIcon
+                                          fontSize="small"
+                                          onClick={() =>
+                                            picDelete(pic._id, prod._id)
+                                          }
+                                        />
+                                      </IconButton>
+                                    </div>
+                                    <img
+                                      // src={`${BASE_URL}/${pic.img}`}
+                                      src={pic.img}
+                                      style={{
+                                        height: "100px",
+                                        width: "100px",
+                                        marginLeft: "10px",
+                                      }}
                                     />
-                                  </IconButton>
-                                  <IconButton
-                                    style={{ marginBottom: "5px" }}
-                                    color="secondary"
-                                  >
-                                    <DeleteForeverIcon
-                                      fontSize="small"
-                                      onClick={() =>
-                                        picDelete(pic._id, prod._id)
-                                      }
-                                    />
-                                  </IconButton>
-                                </div>
+                                  </div>
+                                </Grid>
                               </div>
                             ))}
                         </div>

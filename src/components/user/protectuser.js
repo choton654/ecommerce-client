@@ -9,7 +9,6 @@ const Protectuser = (Component) => {
     const token = localStorage.getItem("token");
     if (token === null) {
       enqueueSnackbar(`Login first`, { variant: "error" });
-
       history.push("/");
       console.log("not logged in");
     }

@@ -87,16 +87,32 @@ const Login = ({ openModal, close }) => {
         aria-describedby="simple-modal-description"
       >
         <Paper className={classes.paper2}>
-          <div style={{ width: "50%", height: "100%", background: "#287aed" }}>
-            <div className={classes.modalDiv}>
-              <Typography
-                variant="h5"
-                style={{ marginTop: "20px" }}
-                colot="inherit"
-              >
-                <strong>Login</strong>
+          <div
+            style={{
+              width: "50%",
+              height: "100%",
+              background: "#287aed",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className={classes.modalDiv} style={{ paddingRight: "30px" }}>
+              <Typography variant="h5" style={{ marginTop: "20px" }}>
+                <strong style={{ color: "white" }}>Login</strong>
+              </Typography>
+              <Typography variant="h6" style={{ color: "white" }}>
+                Get access to your orders, Wishlist and Recomendation
               </Typography>
             </div>
+            <img
+              src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
+              style={{
+                maxWidth: "50%",
+                marginLeft: "40px",
+                marginBottom: "30px",
+              }}
+            />
           </div>
           <div>
             <div className={classes.modalDiv}>

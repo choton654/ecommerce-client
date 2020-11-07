@@ -18,13 +18,10 @@ export const useStyles = makeStyles((theme) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 1),
-    // "&:hover": {
-    //   backgroundColor: fade(theme.palette.common.white, 0.25),
-    // },
     marginRight: "50px",
     width: "70%",
     [theme.breakpoints.up("md")]: {
-      marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(2),
       width: "50%",
     },
   },
@@ -112,18 +109,27 @@ export const useStyles = makeStyles((theme) => ({
   },
   media: {
     height: "50px",
-    width: "250px",
+    width: 240,
     paddingTop: "56.25%", // 16:9
-    border: "2px solid lightblue",
+    borderBottom: "2px solid lightblue",
   },
   cardroot: {
-    maxWidth: 250,
-    background: "lightblue",
+    maxWidth: 240,
+    background: "whitesmoke",
     marginLeft: "20px",
+    marginBottom: "10px",
     cursor: "pointer",
+    border: "2px solid #287aed",
   },
   large: {
     width: "260px",
     height: "260px",
+  },
+  rating: {
+    display: "flex",
+    flexDirection: "column",
+    "& > * + *": {
+      marginTop: theme.spacing(1),
+    },
   },
 }));

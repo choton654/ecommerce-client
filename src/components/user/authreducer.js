@@ -1,4 +1,5 @@
 export const initialState = {
+  users: [],
   user: {},
   loginOpen: false,
   error: null,
@@ -6,6 +7,23 @@ export const initialState = {
 
 export const reducer = (state, action) => {
   switch (action.type) {
+    case "ALL_USERS":
+      return {
+        ...state,
+        users: action.payload,
+      };
+    case "ADMIN_USERS":
+      return {
+        ...state,
+        users: [
+          ...state.users,
+          state.users.filter((user) =>
+            user._id.toString() === action.payload._id.toString()
+              ? action.payload
+              : user
+          ),
+        ],
+      };
     case "ADD_USER":
       return {
         ...state,

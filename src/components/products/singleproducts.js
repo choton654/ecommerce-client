@@ -16,17 +16,22 @@ import {
   IconButton,
   Divider,
   Box,
+  Checkbox,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormLabel,
 } from "@material-ui/core";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import { useStyles } from "../layout/theme";
 import { ProductContext } from "./productcontext";
-import { CategoryContext } from "../category/categorycontext";
 import axios from "axios";
 import BASE_URL from "../../api";
 import { useParams, useHistory } from "react-router-dom";
 import { TabContext, TabList } from "@material-ui/lab";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import Rating from "@material-ui/lab/Rating";
 import { useSnackbar } from "notistack";
 import { CartContext } from "../cart/cartcontext";
 import { AuthContext } from "../user/authcontext";
@@ -64,7 +69,6 @@ function a11yProps(index) {
 }
 
 const Singleproduct = () => {
-  // const { catstate, catdispatch } = useContext(CategoryContext);
   const { state: userState, dispatch: userDispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
   const { state, dispatch } = useContext(ProductContext);
@@ -78,7 +82,11 @@ const Singleproduct = () => {
   const classes = useStyles();
   const [value, setValue] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
-
+  const [ratings, setRatings] = useState(0);
+  console.log(ratings);
+  const handleRatings = (event) => {
+    setRatings(event.target.value);
+  };
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -87,10 +95,10 @@ const Singleproduct = () => {
     setImage(newValue);
   };
   useEffect(() => {
-    if (state.product) {
+    if (productId) {
       getProduct();
     }
-  }, [state.product]);
+  }, [productId]);
 
   const getProduct = (e) => {
     axios
@@ -98,7 +106,6 @@ const Singleproduct = () => {
       .then((res) => {
         const { product, diffProducts } = res.data;
         dispatch({ type: "PRODUCT", payload: { product, diffProducts } });
-        console.log(state.product.photo);
       })
       .catch((err) => console.log(err));
   };
@@ -162,6 +169,7 @@ const Singleproduct = () => {
                   {state.product.photo ? (
                     state.product.photo.map((pic) => (
                       <Tab
+                        key={pic._id}
                         style={{
                           opacity: 1,
                           minWidth: "80px",
@@ -172,6 +180,7 @@ const Singleproduct = () => {
                             style={{
                               height: "80px",
                               width: "80px",
+                              border: "2px solid #287aed",
                             }}
                             alt="no-image"
                           />
@@ -186,6 +195,7 @@ const Singleproduct = () => {
                 {state.product.photo ? (
                   state.product.photo.map((pic) => (
                     <TabPanel
+                      key={pic._id}
                       value={image}
                       index={state.product.photo.indexOf(pic)}
                       // style={{ marginLeft: "2rem" }}
@@ -198,43 +208,50 @@ const Singleproduct = () => {
                           width: "350px",
                         }}
                       />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-evenly",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={addTocart}
+                          style={{
+                            height: "50px",
+                            width: "150px",
+                            display: "flex",
+                            marginTop: "50px",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          <ShoppingCartIcon fontSize="small" />
+                          Go to Cart
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          style={{
+                            marginLeft: "10px",
+                            width: "150px",
+                            display: "flex",
+                            marginTop: "50px",
+                            justifyContent: "space-evenly",
+                          }}
+                        >
+                          <ShoppingBasketIcon
+                            fontSize="small"
+                            // style={{ marginLeft: "20px" }}
+                          />
+                          Buy Now
+                        </Button>
+                      </div>
                     </TabPanel>
                   ))
                 ) : (
                   <h1>Loading..</h1>
                 )}
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={addTocart}
-                  style={{
-                    height: "50px",
-                    width: "200px",
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  <ShoppingCartIcon fontSize="small" />
-                  Go to Cart
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{
-                    marginLeft: "10px",
-                    width: "200px",
-                    display: "flex",
-                    justifyContent: "space-evenly",
-                  }}
-                >
-                  <ShoppingBasketIcon
-                    fontSize="small"
-                    // style={{ marginLeft: "20px" }}
-                  />
-                  Buy Now
-                </Button>
               </div>
             </Paper>
             <Paper
@@ -262,6 +279,80 @@ const Singleproduct = () => {
               )}
               <br />
               <Divider variant="middle" />
+              <div style={{ marginLeft: "20px" }}>
+                <Typography variant="h6">Rate this product</Typography>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    aria-label="gender"
+                    name="gender1"
+                    value={ratings}
+                    onChange={handleRatings}
+                  >
+                    <FormControlLabel
+                      value={5}
+                      control={<Radio />}
+                      label={
+                        <Rating
+                          name="customized-10"
+                          value={5}
+                          max={5}
+                          style={{ marginLeft: "10px", marginTop: "8px" }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value={4}
+                      control={<Radio />}
+                      label={
+                        <Rating
+                          name="customized-10"
+                          value={4}
+                          max={4}
+                          style={{ marginLeft: "10px", marginTop: "8px" }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value={3}
+                      control={<Radio />}
+                      label={
+                        <Rating
+                          name="customized-10"
+                          value={3}
+                          max={3}
+                          style={{ marginLeft: "10px", marginTop: "8px" }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value={2}
+                      control={<Radio />}
+                      label={
+                        <Rating
+                          name="customized-10"
+                          value={2}
+                          max={2}
+                          style={{ marginLeft: "10px", marginTop: "8px" }}
+                        />
+                      }
+                    />
+                    <FormControlLabel
+                      value={1}
+                      control={<Radio />}
+                      label={
+                        <Rating
+                          name="customized-10"
+                          value={1}
+                          max={1}
+                          style={{ marginLeft: "10px", marginTop: "8px" }}
+                        />
+                      }
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+              <Divider variant="middle" />
+
               <Typography variant="h6" style={{ marginLeft: "20px" }}>
                 Similar products you can find
               </Typography>
@@ -279,46 +370,48 @@ const Singleproduct = () => {
                   (
                   {state.diff_product.map((prod) => (
                     <Tab
+                      key={prod._id}
                       style={{
-                        marginLeft: "20px",
+                        marginLeft: "10px",
                         opacity: 1,
                       }}
                       label={
-                        <Card
-                          className={classes.cardroot}
-                          style={{ background: "lightblue" }}
-                        >
+                        <Card className={classes.cardroot}>
                           <CardMedia
                             className={classes.media}
+                            // style={{ width: "100px" }}
                             image={prod.photo[0].img}
                             onClick={(e) => {
                               history.push(`/${prod._id}/product`);
                               setImage(0);
                             }}
                             title="Product"
-                            style={{ border: "2px solid lightblue" }}
                           />
                           <CardContent
                             style={{ padding: "0px", paddingBottom: "16px" }}
                           >
                             <div style={{ display: "flex" }}>
-                              <IconButton aria-label="add to favorites">
-                                <FavoriteIcon fontSize="small" />
-                                <FavoriteIcon fontSize="small" />
-                                <FavoriteIcon fontSize="small" />
-                                <FavoriteIcon fontSize="small" />
-                                <FavoriteIcon fontSize="small" />
-                              </IconButton>
+                              <div className={classes.rating}>
+                                <Rating
+                                  name="half-rating"
+                                  defaultValue={0}
+                                  precision={0.5}
+                                  style={{
+                                    paddingTop: "10px",
+                                    paddingLeft: "10px",
+                                  }}
+                                />
+                              </div>
                               <Typography
                                 variant="subtitle1"
                                 color="textSecondary"
                                 component="p"
                                 style={{
                                   paddingTop: "10px",
-                                  marginLeft: "40px",
+                                  marginLeft: "30px",
                                 }}
                               >
-                                <span>Rs.</span>
+                                <strong>Rs.</strong>
                                 {prod.price}
                               </Typography>
                             </div>

@@ -15,13 +15,12 @@ import {
   CardMedia,
   IconButton,
 } from "@material-ui/core";
-import FavoriteIcon from "@material-ui/icons/Favorite";
+import Rating from "@material-ui/lab/Rating";
 import { useStyles } from "../layout/theme";
 import Filterproduct from "./filterproduct";
 const Subcategory = () => {
   const classes = useStyles();
   const { catstate, catdispatch } = useContext(CategoryContext);
-
   const { id, name } = useParams();
   const history = useHistory();
   const [choice, setChoice] = useState({
@@ -29,6 +28,7 @@ const Subcategory = () => {
     sortBy: "",
     limit: 6,
   });
+
   useEffect(() => {
     if (name) {
       catstate.filtered_prod.length = 0;
@@ -148,19 +148,11 @@ const Subcategory = () => {
                   className={classes.paper}
                   style={{
                     display: "flex",
-                    flexWrap: "nowrap",
+                    flexWrap: "wrap",
                   }}
                 >
                   {catstate.filtered_prod.map((product) => (
-                    <Card
-                      key={product._id}
-                      className={classes.cardroot}
-                      style={{
-                        background: "lightblue",
-                        marginLeft: "20px",
-                        cursor: "pointer",
-                      }}
-                    >
+                    <Card key={product._id} className={classes.cardroot}>
                       <CardMedia
                         className={classes.media}
                         image={product.photo[0].img}
@@ -173,13 +165,17 @@ const Subcategory = () => {
                         style={{ padding: "0px", paddingBottom: "16px" }}
                       >
                         <div style={{ display: "flex" }}>
-                          <IconButton aria-label="add to favorites">
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                          </IconButton>
+                          <div className={classes.rating}>
+                            <Rating
+                              name="half-rating"
+                              defaultValue={2.5}
+                              precision={0.5}
+                              style={{
+                                paddingTop: "10px",
+                                paddingLeft: "10px",
+                              }}
+                            />
+                          </div>
                           <Typography
                             variant="subtitle1"
                             color="textSecondary"
@@ -189,7 +185,7 @@ const Subcategory = () => {
                               marginLeft: "40px",
                             }}
                           >
-                            <span>Rs.</span>
+                            <strong>Rs.</strong>
                             {product.price}
                           </Typography>
                         </div>
@@ -210,7 +206,7 @@ const Subcategory = () => {
                   className={classes.paper}
                   style={{
                     display: "flex",
-                    flexWrap: "nowrap",
+                    flexWrap: "wrap",
                   }}
                 >
                   {catstate.product_by_choice.map((product) => (
@@ -227,13 +223,17 @@ const Subcategory = () => {
                         style={{ padding: "0px", paddingBottom: "16px" }}
                       >
                         <div style={{ display: "flex" }}>
-                          <IconButton aria-label="add to favorites">
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                            <FavoriteIcon fontSize="small" />
-                          </IconButton>
+                          <div className={classes.rating}>
+                            <Rating
+                              name="half-rating"
+                              defaultValue={2.5}
+                              precision={0.5}
+                              style={{
+                                paddingTop: "10px",
+                                paddingLeft: "10px",
+                              }}
+                            />
+                          </div>
                           <Typography
                             variant="subtitle1"
                             color="textSecondary"

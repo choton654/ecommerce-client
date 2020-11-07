@@ -39,6 +39,7 @@ import { AuthContext } from "../user/authcontext";
 import { CartContext } from "../cart/cartcontext";
 import BASE_URL from "../../api";
 import axios from "axios";
+import JwtDecode from "jwt-decode";
 const useNavstyles = makeStyles((theme) => ({
   menuButton: {
     marginLeft: theme.spacing(2),
@@ -72,11 +73,10 @@ const useNavstyles = makeStyles((theme) => ({
     },
   },
 }));
-
 const Navbar = () => {
   const { state, dispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
-  const quantity = cartstate && cartstate.cart.quantity;
+  const quantity = cartstate.cart && cartstate.cart.quantity;
   const history = useHistory();
   const classes = useStyles();
   const navclasses = useNavstyles();
@@ -88,7 +88,7 @@ const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user")) || "";
   const token = localStorage.getItem("token") || "";
   const [search, setSearch] = useState("");
-  console.log(search);
+  // console.log(search);
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -125,7 +125,7 @@ const Navbar = () => {
       })
       .catch((err) => console.log(err));
   };
-  console.log(searchedProducts);
+  // console.log(searchedProducts);
   return (
     <div>
       <AppBar>
@@ -180,7 +180,7 @@ const Navbar = () => {
                   src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_4ee2f9.png"
                   style={{ width: 75 }}
                 />
-                <a
+                <span
                   style={{
                     fontSize: "11px",
                     fontStyle: "italic",
@@ -201,7 +201,7 @@ const Navbar = () => {
                     src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/plus_b13a8b.png"
                     style={{ width: 10 }}
                   />{" "}
-                </a>
+                </span>
               </div>
             </Link>
           </Typography>

@@ -5,14 +5,15 @@ import { Link } from "react-router-dom";
 const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const history = useHistory();
+
   const handleClick1 = (menuClose) => {
     menuClose();
     history.push("/user");
   };
   const handleClick2 = (menuClose) => {
-    menuClose();
     localStorage.removeItem("token");
     history.push("/");
+    menuClose();
   };
   return (
     <Menu
@@ -36,6 +37,11 @@ const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
           <MenuItem>
             <Link to="/products" style={{ textDecoration: "none" }}>
               Add product
+            </Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to="/allUsers" style={{ textDecoration: "none" }}>
+              All Users
             </Link>
           </MenuItem>
         </div>

@@ -47,7 +47,7 @@ const Category = () => {
   return (
     <div className={classes.mainpaper}>
       <Paper
-        square="true"
+        square={true}
         className={classes.paper1}
         style={{ paddingTop: "20px" }}
       >
@@ -68,6 +68,7 @@ const Category = () => {
                     <strong>{cat.name}</strong>
                   </Typography>
                   <Menu
+                    transitionDuration="auto"
                     anchorEl={subcatMenu}
                     anchorOrigin={{ vertical: "top", horizontal: "right" }}
                     id="primary-search-account-menu"
@@ -79,7 +80,7 @@ const Category = () => {
                   >
                     {catstate.subcategories ? (
                       catstate.subcategories.map((subcat) => (
-                        <div>
+                        <div key={subcat._id}>
                           <Link
                             to={`/${subcat._id}/subcategory/${subcat.name}`}
                             style={{ textDecoration: "none" }}

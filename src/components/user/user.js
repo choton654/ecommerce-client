@@ -159,7 +159,7 @@ const User = () => {
           >
             <div style={{ textAlign: "left" }}>
               <MenuItem style={{ display: "flex" }}>
-                <AirportShuttleIcon fontSize="medium" color="primary" />
+                <AirportShuttleIcon fontSize="default" color="primary" />
                 <Typography
                   variant="h6"
                   color="primary"
@@ -172,7 +172,7 @@ const User = () => {
                 style={{ display: "flex", marginTop: "5px" }}
                 onClick={handleClickOpen}
               >
-                <EditLocationIcon fontSize="medium" color="primary" />
+                <EditLocationIcon fontSize="default" color="primary" />
                 <Typography
                   variant="h6"
                   color="primary"
@@ -213,7 +213,7 @@ const User = () => {
                 </DialogActions>
               </Dialog>
               <MenuItem style={{ display: "flex", marginTop: "5px" }}>
-                <ExitToAppIcon fontSize="medium" color="primary" />
+                <ExitToAppIcon fontSize="default" color="primary" />
                 <Typography
                   variant="h6"
                   color="primary"
