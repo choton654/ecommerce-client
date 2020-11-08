@@ -22,8 +22,12 @@ import {
 } from "@material-ui/core";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
+import PersonIcon from "@material-ui/icons/Person";
+import ViewCompactIcon from "@material-ui/icons/ViewCompact";
+import CategoryIcon from "@material-ui/icons/Category";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import FaceIcon from "@material-ui/icons/Face";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
 import FolderIcon from "@material-ui/icons/Folder";
@@ -32,6 +36,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import { Link } from "react-router-dom";
 import Login from "../user/login";
+import HomeIcon from "@material-ui/icons/Home";
 import Profilemenu from "./profilemenu";
 import { useStyles } from "./theme";
 import Mobilecatmenu from "../category/mobilecatmenu";
@@ -146,25 +151,93 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
           <Drawer open={isOpen} onClose={toggleDrawer}>
-            <List component="nav" className={classes.list}>
-              <ListItem style={{ height: "80px" }}>
-                <Avatar>
-                  <FolderIcon />
-                </Avatar>
+            <List
+              component="nav"
+              className={classes.list}
+              style={{ paddingTop: "0px" }}
+            >
+              <ListItem
+                style={{
+                  height: "60px",
+                  background: "#287aed",
+                }}
+              >
+                <PersonIcon style={{ color: "white", background: "#287aed" }} />
+                <Typography
+                  variant="h6"
+                  style={{ marginLeft: "20px", color: "white" }}
+                >
+                  {" "}
+                  welcome!
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <HomeIcon />
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  <Typography
+                    variant="subtitle1"
+                    style={{ marginLeft: "20px", color: "grey" }}
+                  >
+                    <strong>Home</strong>
+                  </Typography>
+                </Link>
               </ListItem>
               <ListItem
                 button
                 onClick={handlecategoryMenuOpen}
-                style={{ background: "lightblue" }}
+                style={{ background: "white", display: "flex" }}
               >
-                <Avatar>
-                  <FolderIcon />
-                </Avatar>
+                <CategoryIcon />
                 <br />
-                <ListItemText
-                  primary="Category"
-                  style={{ paddingLeft: "20px" }}
-                />
+
+                <Typography
+                  variant="subtitle1"
+                  style={{ marginLeft: "20px", color: "grey" }}
+                >
+                  <strong>All Category</strong>
+                </Typography>
+              </ListItem>
+              <ListItem button style={{ background: "white", display: "flex" }}>
+                <PersonIcon />
+                <Link to="/user" style={{ textDecoration: "none" }}>
+                  <Typography
+                    variant="subtitle1"
+                    style={{
+                      marginLeft: "20px",
+                      color: "grey",
+                    }}
+                  >
+                    <strong>My Account</strong>
+                  </Typography>
+                </Link>
+              </ListItem>
+              <ListItem>
+                <ViewCompactIcon />
+                <Typography
+                  variant="subtitle1"
+                  style={{
+                    marginLeft: "20px",
+                    cursor: "pointer",
+                    color: "grey",
+                  }}
+                >
+                  <strong>My Orders</strong>
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <ShoppingCartIcon />
+                <Link to="/viewcart" style={{ textDecoration: "none" }}>
+                  <Typography
+                    variant="subtitle1"
+                    style={{
+                      marginLeft: "20px",
+                      cursor: "pointer",
+                      color: "grey",
+                    }}
+                  >
+                    <strong>My Cart</strong>
+                  </Typography>
+                </Link>
               </ListItem>
               <Mobilecatmenu
                 catMenu={catMenu}
