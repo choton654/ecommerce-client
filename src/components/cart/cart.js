@@ -95,6 +95,25 @@ const Cart = () => {
         console.log(error);
       });
   };
+  const handleOrder = (productId, price) => {
+    axios
+      .post(
+        `${BASE_URL}/order/api/${userId}/createorder`,
+        { productId, price },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const { order } = res.data;
+        console.log(order);
+        const { success } = res.data;
+        cartdispatch({ type: "PLACE_ORDER", payload: order });
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Container maxWidth="lg" className={classes.root}>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
@@ -104,98 +123,126 @@ const Cart = () => {
           cartstate.cart.quantity &&
           cartstate.cart.quantity > 0 ? (
             cartstate.cart.cartItem.map((item) => (
-              <Paper style={{ border: "2px solid lightblue" }} key={item._id}>
-                <div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={
-                          item.productId &&
-                          `${BASE_URL}${item.productId.photo[0].img}`
-                        }
-                        alt="no-image"
-                        style={{
-                          height: "200px",
-                          width: "200px",
-                          marginTop: "20px",
-                          marginLeft: "20px",
-                        }}
-                      />
-                      <div style={{ display: "flex", marginLeft: "20px" }}>
-                        <IconButton
-                          onClick={() =>
-                            handleRemove(
-                              item.productId && item.productId._id,
-                              item.price
-                            )
-                          }
-                        >
-                          <RemoveIcon fontSize="default" />
-                        </IconButton>
-
-                        <div
-                          style={{
-                            maxWidth: "50px",
-                            marginTop: "10px",
-                          }}
-                        >
-                          <Input
-                            type="text"
-                            value={item.quantity}
-                            style={{
-                              border: "1px solid black",
-                              textAlign: "center",
-                            }}
-                          />
-                        </div>
-                        <IconButton
-                          onClick={() => addTocart(item.productId._id)}
-                        >
-                          <AddIcon fontSize="default" />
-                        </IconButton>
-                      </div>
-                    </div>
-
+              <div key={item._id}>
+                <Paper style={{ border: "2px solid lightblue" }} key={item._id}>
+                  <div>
                     <div
                       style={{
                         display: "flex",
-                        justifyContent: "space-evenly",
-                        marginTop: "20px",
-                        width: "600px",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <Typography>
-                        {item.productId && item.productId.name}
-                      </Typography>
-                      <Typography>
-                        <span>Quantity</span>
-                        {":"} {item.quantity}
-                      </Typography>
+                      <div>
+                        <img
+                          src={
+                            item.productId &&
+                            `${BASE_URL}${item.productId.photo[0].img}`
+                          }
+                          alt="no-image"
+                          style={{
+                            height: "200px",
+                            width: "200px",
+                            marginTop: "20px",
+                            marginLeft: "20px",
+                          }}
+                        />
+                        <div style={{ display: "flex", marginLeft: "20px" }}>
+                          <IconButton
+                            onClick={() =>
+                              handleRemove(
+                                item.productId && item.productId._id,
+                                item.price
+                              )
+                            }
+                          >
+                            <RemoveIcon fontSize="default" />
+                          </IconButton>
 
-                      <Button
-                        style={{ height: "30px" }}
-                        variant="contained"
-                        color="primary"
-                        onClick={() =>
-                          handleRemove(
-                            item.productId && item.productId._id,
-                            item.price
-                          )
-                        }
+                          <div
+                            style={{
+                              maxWidth: "50px",
+                              marginTop: "10px",
+                            }}
+                          >
+                            <Input
+                              type="text"
+                              value={item.quantity}
+                              style={{
+                                border: "1px solid black",
+                                textAlign: "center",
+                              }}
+                            />
+                          </div>
+                          <IconButton
+                            onClick={() => addTocart(item.productId._id)}
+                          >
+                            <AddIcon fontSize="default" />
+                          </IconButton>
+                        </div>
+                      </div>
+
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-evenly",
+                          marginTop: "20px",
+                          width: "600px",
+                        }}
                       >
-                        Remove Item
-                      </Button>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            // justifyContent: "space-evenly",
+                            // marginTop: "20px",
+                            // width: "600px",
+                          }}
+                        >
+                          <Typography>
+                            {item.productId && item.productId.name}
+                          </Typography>
+                          <Typography>
+                            <span>Quantity</span>
+                            {":"} {item.quantity}
+                          </Typography>
+                        </div>
+                        <div>
+                          <Button
+                            style={{ height: "30px" }}
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              handleRemove(
+                                item.productId && item.productId._id,
+                                item.price
+                              )
+                            }
+                          >
+                            Remove Item
+                          </Button>
+                          <p />
+                          <Button
+                            style={{ height: "30px" }}
+                            variant="contained"
+                            color="primary"
+                            onClick={() =>
+                              handleOrder(
+                                item.productId && item.productId._id,
+                                item.price
+                              )
+                            }
+                          >
+                            Place Order
+                          </Button>
+                        </div>
+                      </div>
                     </div>
+                    <br />
+                    <Divider variant="middle" />
                   </div>
-                  <br />
-                  <Divider variant="middle" />
-                </div>
-              </Paper>
+                  <div></div>
+                </Paper>
+              </div>
             ))
           ) : (
             <Paper
@@ -233,10 +280,15 @@ const Cart = () => {
                 width: "400px",
                 border: "2px solid lightblue",
                 position: "fixed",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
               }}
             >
-              <Typography varient="h4">{cartstate.cart.price}</Typography>
-              <Typography varient="h4">{cartstate.cart.quantity}</Typography>
+              <div>
+                <Typography varient="h4">{cartstate.cart.price}</Typography>
+                <Typography varient="h4">{cartstate.cart.quantity}</Typography>
+              </div>
             </Paper>
           )}
         </Grid>

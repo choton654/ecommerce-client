@@ -27,6 +27,8 @@ import ViewCompactIcon from "@material-ui/icons/ViewCompact";
 import CategoryIcon from "@material-ui/icons/Category";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import FaceIcon from "@material-ui/icons/Face";
+import ExtensionIcon from "@material-ui/icons/Extension";
+import AddBoxIcon from "@material-ui/icons/AddBox";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
@@ -239,6 +241,40 @@ const Navbar = () => {
                   </Typography>
                 </Link>
               </ListItem>
+              {user.role === 1 && (
+                <div>
+                  <ListItem>
+                    <AddBoxIcon />
+                    <Link to="/addcategory" style={{ textDecoration: "none" }}>
+                      <Typography
+                        variant="subtitle1"
+                        style={{
+                          marginLeft: "20px",
+                          cursor: "pointer",
+                          color: "grey",
+                        }}
+                      >
+                        <strong>Add Category</strong>
+                      </Typography>
+                    </Link>
+                  </ListItem>
+                  <ListItem>
+                    <ExtensionIcon />
+                    <Link to="/products" style={{ textDecoration: "none" }}>
+                      <Typography
+                        variant="subtitle1"
+                        style={{
+                          marginLeft: "20px",
+                          cursor: "pointer",
+                          color: "grey",
+                        }}
+                      >
+                        <strong>Add Products</strong>
+                      </Typography>
+                    </Link>
+                  </ListItem>
+                </div>
+              )}
               <Mobilecatmenu
                 catMenu={catMenu}
                 isCatMenuOpen={isCatMenuOpen}

@@ -42,6 +42,10 @@ export const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     textAlign: "center",
+    width: "80%",
+    [theme.breakpoints.up("md")]: {
+      width: "90%",
+    },
     // color: theme.palette.text.secondary,
   },
   gridItem: {
@@ -130,6 +134,24 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     "& > * + *": {
       marginTop: theme.spacing(1),
+    },
+  },
+  control: {
+    width: "80%",
+    [theme.breakpoints.up("md")]: {
+      width: "60%",
+    },
+  },
+  paper5: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    width: "80%",
+    [theme.breakpoints.up("md")]: {
+      width: "90%",
+    },
+    height: "190%",
+    [theme.breakpoints.up("sm")]: {
+      height: "120%",
     },
   },
 }));

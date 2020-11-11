@@ -1,5 +1,6 @@
 export const initialState = {
   cart: {},
+  orders: [],
   error: null,
 };
 
@@ -9,6 +10,11 @@ export const reducer = (state, action) => {
       return {
         ...state,
         cart: action.payload,
+      };
+    case "PLACE_ORDER":
+      return {
+        ...state,
+        orders: action.payload,
       };
     case "ERROR":
       return {

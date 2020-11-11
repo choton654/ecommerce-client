@@ -82,10 +82,10 @@ const Subcategory = () => {
   return (
     <div className={classes.root}>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
-        <Grid item xs={4} sm={3}>
+        <Grid item xs={12} md={3}>
           <Filterproduct prodbrand={brand} subcatid={id} subcatname={name} />
         </Grid>
-        <Grid item xs={8} sm={9}>
+        <Grid item xs={12} md={9}>
           <Paper
             style={{ background: "whitesmoke", border: "3px solid #287aed" }}
           >

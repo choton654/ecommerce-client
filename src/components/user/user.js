@@ -236,8 +236,9 @@ const User = () => {
             }}
           >
             <FormControl
+              className={classes.control}
               margin="dense"
-              style={{ marginRight: "8rem", width: "60%" }}
+              style={{ marginRight: "8rem" }}
             >
               <Typography variant="h6" style={{ marginRight: "4rem" }}>
                 Personal Information

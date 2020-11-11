@@ -338,10 +338,10 @@ const Createproducts = () => {
         </Grid>
         <Grid item xs={12} sm={8}>
           <Paper
-            className={classes.paper}
+            className={classes.paper5}
             style={{
               background: "whitesmoke",
-              height: "120%",
+              // height: "120%",
               border: "2px solid #287aed",
             }}
           >
