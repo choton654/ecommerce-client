@@ -168,7 +168,7 @@ const Subcategory = () => {
                           <div className={classes.rating}>
                             <Rating
                               name="half-rating"
-                              defaultValue={2.5}
+                              defaultValue={product.ratings}
                               precision={0.5}
                               style={{
                                 paddingTop: "10px",

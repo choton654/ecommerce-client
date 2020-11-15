@@ -160,7 +160,7 @@ const Createcategory = () => {
         const { category } = res.data;
         console.log(category);
         catdispatch({ type: "ADD_PHOTO", payload: { category, catid } });
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((err) => console.log(err));
   };

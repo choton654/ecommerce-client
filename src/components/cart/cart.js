@@ -9,9 +9,12 @@ import {
   Divider,
   IconButton,
   Input,
+  D,
 } from "@material-ui/core";
 import RemoveIcon from "@material-ui/icons/Remove";
+import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
 import AddIcon from "@material-ui/icons/Add";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { useStyles } from "../layout/theme";
 import { CartContext } from "./cartcontext";
 import axios from "axios";
@@ -184,7 +187,7 @@ const Cart = () => {
                       <div
                         style={{
                           display: "flex",
-                          justifyContent: "space-evenly",
+                          justifyContent: "space-between",
                           marginTop: "20px",
                           width: "600px",
                         }}
@@ -193,24 +196,28 @@ const Cart = () => {
                           style={{
                             display: "flex",
                             flexDirection: "column",
+                            textAlign: "center",
+
                             // justifyContent: "space-evenly",
                             // marginTop: "20px",
                             // width: "600px",
                           }}
                         >
-                          <Typography>
-                            {item.productId && item.productId.name}
+                          <Typography style={{ maxWidth: "200px" }}>
+                            <strong>
+                              {item.productId && item.productId.name}
+                            </strong>
                           </Typography>
-                          <Typography>
+                          <Typography style={{ marginTop: "10px" }}>
                             <span>Quantity</span>
                             {":"} {item.quantity}
                           </Typography>
                         </div>
                         <div>
                           <Button
-                            style={{ height: "30px" }}
-                            variant="contained"
-                            color="primary"
+                            style={{ height: "30px", marginRight: "20px" }}
+                            // variant="contained"
+                            color="secondary"
                             onClick={() =>
                               handleRemove(
                                 item.productId && item.productId._id,
@@ -218,12 +225,15 @@ const Cart = () => {
                               )
                             }
                           >
+                            <RestoreFromTrashIcon
+                              style={{ marginRight: "10px" }}
+                            />{" "}
                             Remove Item
                           </Button>
                           <p />
                           <Button
-                            style={{ height: "30px" }}
-                            variant="contained"
+                            style={{ height: "30px", marginRight: "20px" }}
+                            // variant="contained"
                             color="primary"
                             onClick={() =>
                               handleOrder(
@@ -232,6 +242,9 @@ const Cart = () => {
                               )
                             }
                           >
+                            <ShoppingBasketIcon
+                              style={{ marginRight: "10px" }}
+                            />{" "}
                             Place Order
                           </Button>
                         </div>
@@ -282,12 +295,58 @@ const Cart = () => {
                 position: "fixed",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
+                // justifyContent: "space-between",
               }}
             >
+              <Typography
+                style={{ marginLeft: "20px", marginTop: "20px" }}
+                variant="h6"
+              >
+                <strong>Price Details</strong>
+              </Typography>
+              <Divider orientation="horizontal" style={{ marginTop: "20px" }} />
               <div>
-                <Typography varient="h4">{cartstate.cart.price}</Typography>
-                <Typography varient="h4">{cartstate.cart.quantity}</Typography>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "20px",
+                  }}
+                >
+                  <Typography
+                    variant="subtitle1"
+                    style={{ marginLeft: "20px" }}
+                  >
+                    Price( {cartstate.cart.quantity} items)
+                  </Typography>
+                  <Typography varient="h4"></Typography>
+                  <Typography varient="h4" style={{ marginRight: "20px" }}>
+                    Rs.{cartstate.cart.price}
+                  </Typography>
+                </div>
+                <Divider
+                  orientation="horizontal"
+                  style={{ marginTop: "20px" }}
+                />
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography
+                    variant="h6"
+                    style={{ marginTop: "20px", marginLeft: "20px" }}
+                  >
+                    <strong>Total amount</strong>
+                  </Typography>
+                  <Typography
+                    variant="subtitle1"
+                    style={{ marginRight: "20px", marginTop: "20px" }}
+                  >
+                    <strong>
+                      <span>Rs.</span>
+                      {cartstate.cart.price}
+                    </strong>
+                  </Typography>
+                </div>
               </div>
             </Paper>
           )}

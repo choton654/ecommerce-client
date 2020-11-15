@@ -75,6 +75,11 @@ export const reducer = (state, action) => {
           }
         }),
       };
+    case "ADD_RATINGS":
+      return {
+        ...state,
+        product: action.payload,
+      };
     default:
       break;
   }

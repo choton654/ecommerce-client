@@ -72,7 +72,7 @@ const Singleproduct = () => {
   const { state: userState, dispatch: userDispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
   const { state, dispatch } = useContext(ProductContext);
-  console.log(state.product);
+  // console.log(state.product);
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
@@ -82,10 +82,36 @@ const Singleproduct = () => {
   const classes = useStyles();
   const [value, setValue] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
-  const [ratings, setRatings] = useState(0);
-  console.log(ratings);
+  const [productRating, setRatings] = useState(0);
+  console.log(productRating);
   const handleRatings = (event) => {
     setRatings(event.target.value);
+  };
+
+  useEffect(() => {
+    if (productRating !== 0) {
+      addRatings();
+    }
+  }, [productRating]);
+
+  const addRatings = () => {
+    console.log(productRating);
+    axios
+      .put(
+        `${BASE_URL}/product/api/${userId}/${productId}/addratings`,
+        { productRating },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const product = res.data.rateProduct;
+        console.log(product);
+        dispatch({ type: "ADD_RATINGS", payload: product });
+      })
+      .catch((err) => console.log(err));
   };
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -143,17 +169,12 @@ const Singleproduct = () => {
             style={{
               height: "670px",
               display: "flex",
+              flexWrap: "wrap",
               justifyContent: "space-between",
               boxShadow: "none",
             }}
           >
-            <Paper
-              style={{
-                width: "40%",
-                border: "2px solid #287aed",
-                height: "100%",
-              }}
-            >
+            <Paper className={classes.paper6}>
               <div style={{ display: "flex" }}>
                 <Tabs
                   value={image}
@@ -254,15 +275,7 @@ const Singleproduct = () => {
                 )}
               </div>
             </Paper>
-            <Paper
-              style={{
-                width: "58%",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                border: "2px solid #287aed",
-              }}
-            >
+            <Paper className={classes.paper7}>
               {state.product && (
                 <div style={{ marginLeft: "20px" }}>
                   <Typography variant="h6">{state.product.name}</Typography>
@@ -285,7 +298,7 @@ const Singleproduct = () => {
                   <RadioGroup
                     aria-label="gender"
                     name="gender1"
-                    value={ratings}
+                    value={productRating}
                     onChange={handleRatings}
                   >
                     <FormControlLabel
@@ -394,7 +407,7 @@ const Singleproduct = () => {
                               <div className={classes.rating}>
                                 <Rating
                                   name="half-rating"
-                                  defaultValue={0}
+                                  defaultValue={prod.ratings}
                                   precision={0.5}
                                   style={{
                                     paddingTop: "10px",

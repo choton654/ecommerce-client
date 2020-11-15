@@ -46,6 +46,10 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       width: "90%",
     },
+    // height: "130%",
+    // [theme.breakpoints.up("md")]: {
+    //   height: "120%",
+    // },
     // color: theme.palette.text.secondary,
   },
   gridItem: {
@@ -153,5 +157,27 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       height: "120%",
     },
+  },
+  paper6: {
+    border: "2px solid #287aed",
+    height: "100%",
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "40%",
+    },
+  },
+  paper7: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    border: "2px solid #287aed",
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "58%",
+    },
+    // marginTop: "10px",
+    // [theme.breakpoints.up("sm")]: {
+    //   marginTop: "0px",
+    // },
   },
 }));

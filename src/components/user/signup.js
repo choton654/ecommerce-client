@@ -74,84 +74,121 @@ const Signup = ({ isOpen, close }) => {
         aria-describedby="simple-modal-description"
       >
         <Paper className={classes.paper2}>
-          <div className={classes.modalDiv}>
-            <Typography variant="h6" style={{ marginLeft: "60px" }}>
-              Register Here
-            </Typography>
-            <FormControl>
-              <InputLabel htmlFor="input-with-username">Username</InputLabel>
-              <Input
-                id="input-with-username"
-                type="text"
-                name="username"
-                value={values.username}
-                required={true}
-                onChange={handleChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-                error={state.error !== null && true}
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel htmlFor="input-with-icon-adornment">Email</InputLabel>
-              <Input
-                id="input-with-icon-adornment"
-                type="email"
-                name="email"
-                value={values.email}
-                required={true}
-                onChange={handleChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-                error={state.error !== null && true}
-              />
-            </FormControl>
-            <FormControl>
-              <InputLabel htmlFor="standard-adornment-password">
-                Password
-              </InputLabel>
-              <Input
-                id="standard-adornment-password"
-                type={values.showPassword ? "text" : "password"}
-                name="password"
-                value={values.password}
-                required={true}
-                onChange={handleChange}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                    >
-                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                error={state.error !== null && true}
-              />
-            </FormControl>
-          </div>
-          <br />
-          <Typography variant="subtitle1" color="error">
-            <strong style={{ marginLeft: "80px" }}>
-              {state.error && state.error}
-            </strong>
-          </Typography>
-          <Button
-            color="primary"
-            variant="outlined"
-            type="submit"
-            onClick={(e) => handleSubmit(e)}
-            style={{ marginLeft: "140px" }}
+          <div
+            style={{
+              width: "70%",
+              height: "100%",
+              background: "#287aed",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
           >
-            Submit
-          </Button>
+            <div className={classes.modalDiv} style={{ paddingRight: "30px" }}>
+              <Typography variant="h5" style={{ marginTop: "20px" }}>
+                <strong style={{ color: "white" }}> Register Here</strong>
+              </Typography>
+              <Typography variant="h6" style={{ color: "white" }}>
+                Get access to your orders, Wishlist and Recomendation
+              </Typography>
+            </div>
+            <img
+              src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
+              style={{
+                maxWidth: "50%",
+                marginLeft: "40px",
+                marginBottom: "30px",
+              }}
+            />
+          </div>
+          {/* <Typography variant="h6" style={{ marginLeft: "60px" }}>
+              Register Here
+            </Typography> */}
+          <div>
+            <div className={classes.modalDiv}>
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel htmlFor="input-with-username">Username</InputLabel>
+                <Input
+                  id="input-with-username"
+                  type="text"
+                  name="username"
+                  value={values.username}
+                  required={true}
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <AccountCircle />
+                    </InputAdornment>
+                  }
+                  error={state.error !== null && true}
+                />
+              </FormControl>
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel htmlFor="input-with-icon-adornment">
+                  Email
+                </InputLabel>
+                <Input
+                  id="input-with-icon-adornment"
+                  type="email"
+                  name="email"
+                  value={values.email}
+                  required={true}
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <AccountCircle />
+                    </InputAdornment>
+                  }
+                  error={state.error !== null && true}
+                />
+              </FormControl>
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel htmlFor="standard-adornment-password">
+                  Password
+                </InputLabel>
+                <Input
+                  id="standard-adornment-password"
+                  type={values.showPassword ? "text" : "password"}
+                  name="password"
+                  value={values.password}
+                  required={true}
+                  onChange={handleChange}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                      >
+                        {values.showPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  error={state.error !== null && true}
+                />
+              </FormControl>
+            </div>
+            <br />
+            <div className={classes.modalDiv2}>
+              <Typography variant="subtitle1" color="error">
+                <strong style={{ marginLeft: "80px" }}>
+                  {state.error && state.error}
+                </strong>
+              </Typography>
+              <Button
+                color="primary"
+                variant="outlined"
+                type="submit"
+                onClick={(e) => handleSubmit(e)}
+                style={{ width: "100%" }}
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
         </Paper>
       </Modal>
     </div>

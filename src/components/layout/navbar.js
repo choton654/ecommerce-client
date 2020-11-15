@@ -80,7 +80,7 @@ const useNavstyles = makeStyles((theme) => ({
     },
   },
 }));
-const Navbar = () => {
+const Navbar = ({ searchitem, search }) => {
   const { state, dispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
   const quantity = cartstate.cart && cartstate.cart.quantity;
@@ -94,7 +94,7 @@ const Navbar = () => {
   const isMenuOpen = Boolean(anchorEl);
   const user = JSON.parse(localStorage.getItem("user")) || "";
   const token = localStorage.getItem("token") || "";
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   // console.log(search);
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -118,20 +118,20 @@ const Navbar = () => {
     }
     setState(!isOpen);
   };
-  const [searchmenu, setSearchmenu] = useState(null);
-  const [searchedProducts, setSearchedProducts] = useState([]);
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    setSearchmenu(e.currentTarget);
-    axios
-      .post(`${BASE_URL}/product/api/search`, { search })
-      .then((res) => {
-        const item = res.data.findProduct;
-        setSearchedProducts(item);
-        console.log(searchedProducts);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const [searchmenu, setSearchmenu] = useState(null);
+  // const [searchedProducts, setSearchedProducts] = useState([]);
+  // const handleSearch = (e) => {
+  //   setSearch(e.target.value);
+  //   setSearchmenu(e.currentTarget);
+  //   axios
+  //     .post(`${BASE_URL}/product/api/search`, { search })
+  //     .then((res) => {
+  //       const item = res.data.findProduct;
+  //       setSearchedProducts(item);
+  //       console.log(searchedProducts);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
   // console.log(searchedProducts);
   return (
     <div>
@@ -322,7 +322,7 @@ const Navbar = () => {
             <InputBase
               placeholder="Search items"
               value={search}
-              onChange={handleSearch}
+              onChange={searchitem}
               classes={{
                 root: navclasses.inputRoot,
                 input: navclasses.inputInput,
@@ -330,7 +330,11 @@ const Navbar = () => {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-          <Menu
+          {/* <Searchitems
+            searchmenu={searchmenu}
+            searchedProducts={searchedProducts}
+          /> */}
+          {/* <Menu
             id="simple-menu"
             anchorEl={searchmenu}
             open={Boolean(searchmenu)}
@@ -348,7 +352,7 @@ const Navbar = () => {
                 </MenuItem>
               ))}
             </MenuList>
-          </Menu>
+          </Menu> */}
           <div className={classes.buttonWrapper}>
             {token ? (
               <div

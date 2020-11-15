@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Createproducts from "./components/products/createproducts";
 import User from "./components/user/user";
 import { Route, Switch, useHistory } from "react-router-dom";
@@ -10,6 +10,9 @@ import Cart from "./components/cart/cart";
 import Allusers from "./components/user/allusers";
 import JwtDecode from "jwt-decode";
 import Homeproduct from "./components/homeproduct";
+import Searchitems from "./components/layout/searchitems";
+import axios from "axios";
+import BASE_URL from "./api";
 function App() {
   const history = useHistory();
   const token = localStorage.getItem("token") || "";
@@ -21,9 +24,28 @@ function App() {
     localStorage.removeItem("token");
     history.push("/");
   }
+  const [search, setSearch] = useState("");
+  const [searchmenu, setSearchmenu] = useState(null);
+  const [searchedProducts, setSearchedProducts] = useState([]);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setSearchmenu(e.currentTarget);
+    axios
+      .post(`${BASE_URL}/product/api/search`, { search })
+      .then((res) => {
+        const item = res.data.findProduct;
+        setSearchedProducts(item);
+        console.log(searchedProducts);
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div>
-      <Home />
+      <Home searchitem={handleSearch} search={search} />
+      <Searchitems
+        searchmenu={searchmenu}
+        searchedProducts={searchedProducts}
+      />
       <Switch>
         <Route exact path="/" component={Homeproduct} />
         <Route exact path="/user" component={User} />

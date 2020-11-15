@@ -75,6 +75,10 @@ const Createproducts = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [valuePic, setValuePic] = useState(0);
+  const picChange = (event, newValue) => {
+    setValuePic(newValue);
+  };
   const handlePhoto = (e) => {
     setPhoto([...photo, e.target.files[0]]);
   };
@@ -356,7 +360,7 @@ const Createproducts = () => {
                       indicatorColor="primary"
                       textColor="primary"
                       variant="scrollable"
-                      scrollButtons="auto"
+                      scrollButtons="on"
                       aria-label="scrollable auto tabs example"
                     >
                       {state.products.map((prod) => (
@@ -455,61 +459,82 @@ const Createproducts = () => {
                             // overflowX: "scroll",
                           }}
                         >
-                          {prod.photo &&
-                            prod.photo.map((pic) => (
-                              <div style={{ display: "flex" }}>
-                                <Grid container item xs={4} sm={3}>
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      width: "100%",
-                                      flexWrap: "wrap",
-                                    }}
-                                  >
+                          <Tabs
+                            value={valuePic}
+                            onChange={picChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="scrollable"
+                            scrollButtons="on"
+                            aria-label="scrollable auto tabs example"
+                          >
+                            {prod.photo &&
+                              prod.photo.map((pic) => (
+                                <Tab
+                                  label={
                                     <div
                                       style={{
                                         display: "flex",
-
-                                        justifyContent: "space-between",
+                                        width: "100px",
                                       }}
                                     >
-                                      <IconButton
-                                        style={{ marginBottom: "5px" }}
-                                        color="secondary"
-                                      >
-                                        <EditIcon
-                                          fontSize="small"
-                                          // onClick={() => picDelete(pic._id, prod._id)}
-                                        />
-                                      </IconButton>
-                                      <IconButton
-                                        style={{
-                                          marginBottom: "5px",
-                                          marginLeft: "10px",
-                                        }}
-                                        color="secondary"
-                                      >
-                                        <DeleteForeverIcon
-                                          fontSize="small"
-                                          onClick={() =>
-                                            picDelete(pic._id, prod._id)
-                                          }
-                                        />
-                                      </IconButton>
+                                      <Grid container item xs={4} sm={3}>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            width: "50%",
+                                            flexWrap: "wrap",
+                                          }}
+                                        >
+                                          <div
+                                            style={{
+                                              display: "flex",
+
+                                              justifyContent: "space-between",
+                                            }}
+                                          >
+                                            <IconButton
+                                              style={{ marginBottom: "5px" }}
+                                              color="secondary"
+                                            >
+                                              <EditIcon
+                                                fontSize="small"
+                                                // onClick={() => picDelete(pic._id, prod._id)}
+                                              />
+                                            </IconButton>
+                                            <IconButton
+                                              style={{
+                                                marginBottom: "5px",
+                                                marginLeft: "10px",
+                                              }}
+                                              color="secondary"
+                                            >
+                                              <DeleteForeverIcon
+                                                fontSize="small"
+                                                onClick={() =>
+                                                  picDelete(pic._id, prod._id)
+                                                }
+                                              />
+                                            </IconButton>
+                                          </div>
+
+                                          <img
+                                            // src={`${BASE_URL}/${pic.img}`}
+                                            src={`${BASE_URL}${pic.img}`}
+                                            style={{
+                                              height: "100px",
+                                              width: "100px",
+                                              marginLeft: "10px",
+                                            }}
+                                          />
+                                        </div>
+                                      </Grid>
                                     </div>
-                                    <img
-                                      // src={`${BASE_URL}/${pic.img}`}
-                                      src={`${BASE_URL}${pic.img}`}
-                                      style={{
-                                        height: "100px",
-                                        width: "100px",
-                                        marginLeft: "10px",
-                                      }}
-                                    />
-                                  </div>
-                                </Grid>
-                              </div>
-                            ))}
+                                  }
+                                  {...a11yProps(state.products.indexOf(prod))}
+                                />
+                              ))}
+                          </Tabs>
                         </div>
                       </div>
                     </TabPanel>
