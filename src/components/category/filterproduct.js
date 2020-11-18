@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   Checkbox,
   Collapse,
@@ -25,13 +26,8 @@ import { CategoryContext } from "./categorycontext";
 // import { ProductContext } from "../products/productcontext";
 import axios from "axios";
 import BASE_URL from "../../api";
-const priceRange = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
-const smallPriceRange = priceRange.map((price) => price * 50);
-const marks = smallPriceRange.map((mark) => ({
-  value: mark,
-  label: `${mark}`,
-}));
-console.log(marks);
+
+// console.log(marks);
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
@@ -40,8 +36,25 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
   const [brandName, setBeandName] = useState([]);
   const [price, setPrice] = useState([30, 70]);
   const [min, setMinMoney] = useState(0);
-  const [max, setMaxMoney] = useState(25000);
+  const [max, setMaxMoney] = useState(2500);
   const [open, setOpen] = useState(true);
+  const { id, name } = useParams();
+
+  const bigSubcategory = ["Computer", "Mobile", "Television", "Sports"];
+  let smallPriceRange;
+  let priceRange = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
+  if (bigSubcategory.includes(name)) {
+    smallPriceRange = priceRange.map((price) => price * 50);
+    console.log("big cat");
+  } else {
+    console.log("small cat");
+    smallPriceRange = priceRange.map((price) => price * 5);
+  }
+
+  const marks = smallPriceRange.map((mark) => ({
+    value: mark,
+    label: `${mark}`,
+  }));
   const handleClick = () => {
     setOpen(!open);
   };
@@ -106,7 +119,7 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
           value={price}
           step={10}
           defaultValue={30}
-          scale={(x) => x * 25}
+          scale={(x) => x * 2.5}
           valueLabelDisplay="auto"
           onChange={handlePriceChange}
           aria-labelledby="range-slider"

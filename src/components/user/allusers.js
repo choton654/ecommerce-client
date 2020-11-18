@@ -11,6 +11,7 @@ import axios from "axios";
 import { useStyles } from "../layout/theme";
 import BASE_URL from "../../api";
 import { AuthContext } from "./authcontext";
+import Adminresource from "./adminresource";
 
 const Allusers = () => {
   const { state, dispatch } = useContext(AuthContext);
@@ -18,11 +19,14 @@ const Allusers = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const id = user._id;
   const token = localStorage.getItem("token");
-
+  const [adminUser, setAdminUser] = useState({
+    user: false,
+    admin: true,
+  });
   const [role, setRole] = useState({
     name: "",
   });
-  var adminORuser;
+  let adminORuser;
   const handleChecked = (event, userid) => {
     setRole({ [event.target.name]: event.target.checked });
     adminORuser = event.target.checked;
@@ -45,6 +49,7 @@ const Allusers = () => {
         const { user } = res.data;
         console.log(user);
         dispatch({ type: "ADMIN_USERS", payload: user });
+        // window.location.reload();
       })
       .catch((err) => console.log(err));
   };
@@ -60,6 +65,7 @@ const Allusers = () => {
       })
       .then((res) => {
         const { users } = res.data;
+
         dispatch({ type: "ALL_USERS", payload: users });
       })
       .catch((err) => console.log(err));
@@ -83,10 +89,11 @@ const Allusers = () => {
             <Typography variant="h6" style={{ marginLeft: "10px" }}>
               Username
             </Typography>
-            <Typography variant="h6">Email</Typography>
-            <Typography variant="h6">Role</Typography>
-            <Typography variant="h6" style={{ marginRight: "10px" }}>
-              Status
+            <Typography variant="h6" style={{ marginRight: "20px" }}>
+              Email
+            </Typography>
+            <Typography variant="h6" style={{ marginRight: "40px" }}>
+              Role
             </Typography>
           </div>
           {state.users && (
@@ -116,15 +123,15 @@ const Allusers = () => {
                         {user.role === 0 ? "user" : "admin"}
                       </Typography>
                       <Switch
-                        checked={user.role === 0 ? role.user : role.admin}
+                        checked={
+                          user.role === 0 ? adminUser.user : adminUser.admin
+                        }
                         onChange={(e) => handleChecked(e, user._id)}
                         name={user.username}
                         inputProps={{ "aria-label": "secondary checkbox" }}
                       />
                     </div>
                   </div>
-
-                  <Typography variant="subtitle1">active</Typography>
                 </MenuItem>
               ))}
             </div>
@@ -135,4 +142,4 @@ const Allusers = () => {
   );
 };
 
-export default Allusers;
+export default Adminresource(Allusers);

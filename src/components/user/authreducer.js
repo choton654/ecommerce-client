@@ -15,14 +15,12 @@ export const reducer = (state, action) => {
     case "ADMIN_USERS":
       return {
         ...state,
-        users: [
-          ...state.users,
-          state.users.filter((user) =>
-            user._id.toString() === action.payload._id.toString()
-              ? action.payload
-              : user
-          ),
-        ],
+        users: state.users.map((user) => {
+          if (user._id.toString() === action.payload._id.toString()) {
+            user.role = action.payload.role;
+          }
+          return user;
+        }),
       };
     case "ADD_USER":
       return {

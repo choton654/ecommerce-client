@@ -159,7 +159,7 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   paper6: {
-    border: "2px solid #287aed",
+    // border: "2px solid #287aed",
     height: "100%",
     width: "100%",
     [theme.breakpoints.up("sm")]: {
@@ -170,7 +170,7 @@ export const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    border: "2px solid #287aed",
+    // border: "2px solid #287aed",
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       width: "58%",
@@ -179,5 +179,10 @@ export const useStyles = makeStyles((theme) => ({
     // [theme.breakpoints.up("sm")]: {
     //   marginTop: "0px",
     // },
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: "25ch",
   },
 }));

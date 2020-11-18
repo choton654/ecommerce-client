@@ -8,6 +8,8 @@ import Singleproduct from "./components/products/singleproducts";
 import Subcategory from "./components/category/subcategory";
 import Cart from "./components/cart/cart";
 import Allusers from "./components/user/allusers";
+import Order from "./components/order/order";
+import Shipping from "./components/order/shipping";
 import JwtDecode from "jwt-decode";
 import Homeproduct from "./components/homeproduct";
 import Searchitems from "./components/layout/searchitems";
@@ -55,6 +57,8 @@ function App() {
         <Route exact path="/addcategory" component={Createcategory} />
         <Route exact path="/:id/subcategory/:name" component={Subcategory} />
         <Route exact path="/viewcart" component={Cart} />
+        <Route exact path="/:orderid/vieworder" component={Order} />
+        <Route exact path="/shipping" component={Shipping} />
       </Switch>
     </div>
   );

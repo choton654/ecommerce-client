@@ -27,6 +27,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import axios from "axios";
 import { CategoryContext } from "./categorycontext";
+import Adminresource from "../user/adminresource";
 import BASE_URL from "../../api";
 
 function TabPanel(props) {
@@ -379,4 +380,4 @@ const Createcategory = () => {
   );
 };
 
-export default Createcategory;
+export default Adminresource(Createcategory);

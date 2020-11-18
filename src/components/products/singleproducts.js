@@ -23,6 +23,7 @@ import {
   Radio,
   FormLabel,
 } from "@material-ui/core";
+import StarRateIcon from "@material-ui/icons/StarRate";
 import { useStyles } from "../layout/theme";
 import { ProductContext } from "./productcontext";
 import axios from "axios";
@@ -151,7 +152,7 @@ const Singleproduct = () => {
       .then((res) => {
         const { success } = res.data;
         enqueueSnackbar(success, { variant: "success" });
-        history.push("/viewcart");
+        // history.push("/viewcart");
       })
       .catch((err) => {
         const error = err.response.data.err;
@@ -160,6 +161,10 @@ const Singleproduct = () => {
         userDispatch({ type: "LOGIN" });
         console.log(error);
       });
+  };
+  const handleBuy = () => {
+    addTocart();
+    history.push("/vieworder");
   };
   return (
     <Container maxWidth="lg" className={classes.root}>
@@ -260,6 +265,7 @@ const Singleproduct = () => {
                             marginTop: "50px",
                             justifyContent: "space-evenly",
                           }}
+                          onClick={handleBuy}
                         >
                           <ShoppingBasketIcon
                             fontSize="small"
@@ -277,17 +283,74 @@ const Singleproduct = () => {
             </Paper>
             <Paper className={classes.paper7}>
               {state.product && (
-                <div style={{ marginLeft: "20px" }}>
+                <div style={{ marginLeft: "20px", marginTop: "20px" }}>
+                  <Typography variant="subtitle1">
+                    <strong style={{ color: "rgb(135, 135, 135)" }}>
+                      {state.product.brand}
+                    </strong>
+                  </Typography>
                   <Typography variant="h6">{state.product.name}</Typography>
-                  <Typography variant="h6">
-                    <span>Price</span>
-                    {":"}
-                    {state.product.price}
+                  <Typography
+                    variant="subtitle2"
+                    style={{ color: "#26a541", marginTop: "10px" }}
+                  >
+                    <strong>spacial price</strong>
                   </Typography>
-                  <Typography variant="h6">
-                    <span>Brand</span>
-                    {":"} {state.product.brand}
+                  <Typography variant="h4" style={{ marginTop: "10px" }}>
+                    <strong>₹{state.product.price}</strong>
                   </Typography>
+                  <div style={{ display: "flex", marginTop: "10px" }}>
+                    <div
+                      style={{
+                        padding: "2px 7px",
+                        borderRadius: "14px",
+                        fontSize: "16px",
+                        backgroundColor: "#26a541",
+                        verticalAlign: "baseline",
+                        lineHeight: "normal",
+                        display: "inline-block",
+                        color: "#fff",
+                        fontWeight: "900",
+                      }}
+                    >
+                      <div style={{ display: "flex" }}>
+                        <span style={{ marginTop: "3px", marginLeft: "2px" }}>
+                          <strong>4.2</strong>
+                        </span>
+                        <StarRateIcon
+                          fontSize="small"
+                          style={{ marginTop: "2px" }}
+                        />
+                      </div>
+                    </div>
+
+                    <Typography
+                      variant="subtitle1"
+                      style={{
+                        color: "rgb(135, 135, 135)",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      <strong>2009 ratings and 290 reviews</strong>
+                    </Typography>
+                    <span
+                      style={{
+                        marginLeft: "12px",
+                        verticalAlign: "middle",
+                        fontSize: "20px",
+                      }}
+                    >
+                      <img
+                        style={{
+                          marginTop: "-4px",
+                          height: "18px",
+                          verticalAlign: "middle",
+                        }}
+                        height="21"
+                        src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/fa_62673a.png"
+                      />
+                    </span>
+                  </div>
                 </div>
               )}
               <br />
@@ -424,8 +487,7 @@ const Singleproduct = () => {
                                   marginLeft: "30px",
                                 }}
                               >
-                                <strong>Rs.</strong>
-                                {prod.price}
+                                <strong>₹{prod.price}</strong>
                               </Typography>
                             </div>
                           </CardContent>

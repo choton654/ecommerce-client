@@ -9,6 +9,7 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
+import FacebookIcon from "@material-ui/icons/Facebook";
 import React, { useState, useContext } from "react";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Visibility from "@material-ui/icons/Visibility";
@@ -74,6 +75,12 @@ const Login = ({ openModal, close }) => {
         const error = err.response.data.err;
         dispatch({ type: "ERROR", payload: error });
       });
+  };
+  const handleFacebook = () => {
+    axios
+      .get(`${BASE_URL}/auth/facebook`)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
   };
   return (
     <div>
@@ -162,6 +169,9 @@ const Login = ({ openModal, close }) => {
               </FormControl>
             </div>
             <br />
+            <IconButton onClick={handleFacebook}>
+              <FacebookIcon style={{ color: "#287aed" }} />
+            </IconButton>
             <div className={classes.modalDiv2}>
               <Typography variant="subtitle1" color="error">
                 <strong style={{ marginLeft: "60px" }}>

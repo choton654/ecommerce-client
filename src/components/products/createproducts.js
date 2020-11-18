@@ -21,6 +21,7 @@ import {
   AppBar,
   IconButton,
 } from "@material-ui/core";
+import Adminresource from "../user/adminresource";
 import { useSnackbar } from "notistack";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -549,4 +550,4 @@ const Createproducts = () => {
   );
 };
 
-export default Createproducts;
+export default Adminresource(Createproducts);

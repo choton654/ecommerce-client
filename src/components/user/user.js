@@ -16,6 +16,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
 import EditLocationIcon from "@material-ui/icons/EditLocation";
@@ -25,6 +27,12 @@ import { AuthContext } from "./authcontext";
 import { useStyles } from "../layout/theme";
 import BASE_URL from "../../api";
 import Protectuser from "./protectuser";
+function a11yProps(index) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    "aria-controls": `scrollable-auto-tabpanel-${index}`,
+  };
+}
 const User = () => {
   const history = useHistory();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -36,7 +44,10 @@ const User = () => {
   const token = localStorage.getItem("token");
   const classes = useStyles();
   const { state, dispatch } = useContext(AuthContext);
-
+  const [value, setValue] = useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   useEffect(() => {
     singleUser();
   }, []);
@@ -90,12 +101,28 @@ const User = () => {
     setOpen(false);
   };
   const [address, setAddress] = useState("");
+  const [postalCode, setPostalcode] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [contactNo, setContactNo] = useState("");
+  const [district, setDistrict] = useState("");
+
+  const newAddress = {
+    address,
+    postalCode,
+    city,
+    country,
+    contactNo,
+    district,
+  };
+
   const handleSubmit = () => {
-    console.log(address, userId);
+    console.log(newAddress, userId);
+    console.log(newAddress);
     axios
       .post(
         `${BASE_URL}/user/api/${userId}/address`,
-        { address },
+        { newAddress },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -104,7 +131,9 @@ const User = () => {
       )
       .then((res) => {
         const { updatedUser } = res.data;
+        console.log(updatedUser);
         dispatch({ type: "ADD_ADDRESS", payload: updatedUser });
+        // localStorage.setItem("address", updatedUser.address);
       })
       .catch((err) => console.log(err));
     handleClose();
@@ -192,15 +221,75 @@ const User = () => {
                     To order your products, please enter your address here. We
                     will send updates occasionally.
                   </DialogContentText>
+
                   <TextField
-                    autoFocus
+                    label="Address"
+                    id="address"
                     margin="dense"
-                    id="name"
-                    label="Email Address"
-                    type="email"
-                    fullWidth
+                    name="address"
+                    variant="outlined"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
+                    className={classes.textField}
+                    helperText="Enter your address"
+                  />
+                  <TextField
+                    style={{ marginLeft: "20px" }}
+                    label="Postal Code"
+                    id="postal code"
+                    margin="dense"
+                    name="postalcode"
+                    variant="outlined"
+                    value={postalCode}
+                    onChange={(e) => setPostalcode(e.target.value)}
+                    className={classes.textField}
+                    helperText="Enter your postal code"
+                  />
+                  <TextField
+                    label="City"
+                    id="city"
+                    margin="dense"
+                    name="city"
+                    variant="outlined"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className={classes.textField}
+                    helperText="Enter your city"
+                  />
+                  <TextField
+                    style={{ marginLeft: "20px" }}
+                    label="District"
+                    id="district"
+                    margin="dense"
+                    name="district"
+                    variant="outlined"
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
+                    className={classes.textField}
+                    helperText="Enter your district"
+                  />
+                  <TextField
+                    label="Country"
+                    id="country"
+                    margin="dense"
+                    name="country"
+                    variant="outlined"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    className={classes.textField}
+                    helperText="Enter your country"
+                  />
+                  <TextField
+                    style={{ marginLeft: "20px" }}
+                    label="Contact No."
+                    id="phon no"
+                    margin="dense"
+                    name="contactno"
+                    variant="outlined"
+                    value={contactNo}
+                    onChange={(e) => setContactNo(e.target.value)}
+                    className={classes.textField}
+                    helperText="Enter your contact no."
                   />
                 </DialogContent>
                 <DialogActions>
@@ -302,11 +391,84 @@ const User = () => {
               <br />
               <div style={{ textAlign: "left", marginLeft: "20px" }}>
                 <Typography variant="subtitle1">
-                  <strong>Address</strong>
+                  <strong>Addressess:</strong>
                 </Typography>
-                <Typography variant="subtitle2">
-                  <strong>{state.user && state.user.address}</strong>
-                </Typography>
+                <Tabs
+                  style={{ marginRight: "50px" }}
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  scrollButtons="on"
+                  aria-label="scrollable auto tabs example"
+                >
+                  {state.user &&
+                    state.user.address &&
+                    state.user.address.map((address) => (
+                      <Tab
+                        label={
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-evenly",
+                              border: "2px solid black",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            <Typography
+                              variant="subtitle2"
+                              style={{ marginLeft: "20px" }}
+                            >
+                              {address.address}
+                              {", "}
+                              {address.postalCode}
+                              {", "}
+                              {address.city}
+                              {", "}
+                              {address.district}
+                              {", "}
+                              {address.country}
+                              {", "}
+                              {address.contactNo}
+                            </Typography>
+                          </div>
+                        }
+                        {...a11yProps(state.user.address.indexOf(address))}
+                      />
+                    ))}
+                </Tabs>
+                {/* <Typography variant="subtitle2">
+                  {state.user &&
+                    state.user.address &&
+                    state.user.address.map((address) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-evenly",
+                          border: "2px solid black",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          style={{ marginLeft: "20px" }}
+                        >
+                          {address.address}
+
+                          {address.postalcode}
+                          {", "}
+                          {address.city}
+                          {", "}
+                          {address.district}
+                          {", "}
+                          {address.country}
+                          {", "}
+                          {address.contactNo}
+                        </Typography>
+                      </div>
+                    ))}
+                    </Typography> */}
               </div>
             </FormControl>
           </Paper>
