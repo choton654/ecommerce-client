@@ -81,9 +81,7 @@ const Cartitem = ({ item, removeitem, addtocart }) => {
               paddingTop: "1px",
               lineHeight: "1",
             }}
-            onClick={() =>
-              removeitem(item.productId && item.productId._id, item.price)
-            }
+            onClick={removeitem}
           >
             <RemoveIcon fontSize="small" />
           </IconButton>
@@ -128,7 +126,7 @@ const Cartitem = ({ item, removeitem, addtocart }) => {
               paddingTop: "1px",
               lineHeight: "1",
             }}
-            onClick={() => addtocart(item.productId._id)}
+            onClick={addtocart}
           >
             <AddIcon fontSize="small" />
           </IconButton>
@@ -137,9 +135,7 @@ const Cartitem = ({ item, removeitem, addtocart }) => {
               style={{ height: "30px", marginRight: "20px" }}
               // variant="contained"
               color="secondary"
-              onClick={() =>
-                removeitem(item.productId && item.productId._id, item.price)
-              }
+              onClick={removeitem}
             >
               <RestoreFromTrashIcon style={{ marginRight: "10px" }} /> Remove
               Item

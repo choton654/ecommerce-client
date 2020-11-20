@@ -22,6 +22,12 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
+  Dialog,
+  DialogContentText,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from "@material-ui/core";
 import StarRateIcon from "@material-ui/icons/StarRate";
 import { useStyles } from "../layout/theme";
@@ -36,6 +42,8 @@ import Rating from "@material-ui/lab/Rating";
 import { useSnackbar } from "notistack";
 import { CartContext } from "../cart/cartcontext";
 import { AuthContext } from "../user/authcontext";
+import Slide from "@material-ui/core/Slide";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -68,7 +76,9 @@ function a11yProps(index) {
     "aria-controls": `scrollable-auto-tabpanel-${index}`,
   };
 }
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const Singleproduct = () => {
   const { state: userState, dispatch: userDispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
@@ -84,23 +94,32 @@ const Singleproduct = () => {
   const [value, setValue] = useState(1);
   const { enqueueSnackbar } = useSnackbar();
   const [productRating, setRatings] = useState(0);
-  console.log(productRating);
-  const handleRatings = (event) => {
-    setRatings(event.target.value);
+  const [isChecked, setisChecked] = useState({
+    checked_1: false,
+    checked_2: false,
+    checked_3: false,
+    checked_4: false,
+    checked_5: false,
+  });
+  const [open, setOpen] = useState(false);
+  const [content, setContent] = useState("");
+  const [errorReviews, setErrorReviews] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
-  useEffect(() => {
-    if (productRating !== 0) {
-      addRatings();
-    }
-  }, [productRating]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  console.log(productRating);
 
   const addRatings = () => {
-    console.log(productRating);
+    console.log(content);
     axios
       .put(
         `${BASE_URL}/product/api/${userId}/${productId}/addratings`,
-        { productRating },
+        { productRating, content },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -111,9 +130,32 @@ const Singleproduct = () => {
         const product = res.data.rateProduct;
         console.log(product);
         dispatch({ type: "ADD_RATINGS", payload: product });
+        handleClose();
+        setContent("");
+        setRatings(0);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err.response.data.err);
+        const { err: err1 } = err.response.data;
+        setErrorReviews(err1);
+      });
   };
+
+  const handleRatings = (event) => {
+    console.log(event.target.checked, event.target.name);
+    setRatings(event.target.value);
+    setisChecked({ [event.target.name]: event.target.checked });
+  };
+
+  const handleReview = () => {
+    if (productRating === 0 && content.trim() === "") {
+      console.log(productRating, content.trim());
+      setErrorReviews("Give some reviews & ratings");
+    } else {
+      addRatings();
+    }
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -164,13 +206,13 @@ const Singleproduct = () => {
   };
   const handleBuy = () => {
     addTocart();
-    history.push("/vieworder");
+    // history.push("/vieworder");
   };
   return (
     <Container maxWidth="lg" className={classes.root}>
       {state.product ? (
         <Grid item xs={12} sm={12}>
-          <Paper
+          <div
             style={{
               height: "670px",
               display: "flex",
@@ -245,22 +287,24 @@ const Singleproduct = () => {
                           color="secondary"
                           onClick={addTocart}
                           style={{
+                            background: "#ff9f00",
                             height: "50px",
-                            width: "150px",
+                            width: "78%",
                             display: "flex",
                             marginTop: "50px",
                             justifyContent: "space-evenly",
                           }}
                         >
                           <ShoppingCartIcon fontSize="small" />
-                          Go to Cart
+                          <strong>Go to Cart</strong>
                         </Button>
                         <Button
                           variant="contained"
                           color="primary"
                           style={{
+                            background: "#fb641b",
                             marginLeft: "10px",
-                            width: "150px",
+                            width: "78%",
                             display: "flex",
                             marginTop: "50px",
                             justifyContent: "space-evenly",
@@ -271,7 +315,7 @@ const Singleproduct = () => {
                             fontSize="small"
                             // style={{ marginLeft: "20px" }}
                           />
-                          Buy Now
+                          <strong>Buy Now</strong>
                         </Button>
                       </div>
                     </TabPanel>
@@ -315,7 +359,7 @@ const Singleproduct = () => {
                     >
                       <div style={{ display: "flex" }}>
                         <span style={{ marginTop: "3px", marginLeft: "2px" }}>
-                          <strong>4.2</strong>
+                          <strong>{state.product.ratings}</strong>
                         </span>
                         <StarRateIcon
                           fontSize="small"
@@ -331,7 +375,14 @@ const Singleproduct = () => {
                         marginLeft: "10px",
                       }}
                     >
-                      <strong>2009 ratings and 290 reviews</strong>
+                      <strong>
+                        {" "}
+                        {state.product.ratingsCollection &&
+                          state.product.ratingsCollection.length}{" "}
+                        ratings and{" "}
+                        {state.product.reviews && state.product.reviews.length}{" "}
+                        reviews
+                      </strong>
                     </Typography>
                     <span
                       style={{
@@ -351,161 +402,450 @@ const Singleproduct = () => {
                       />
                     </span>
                   </div>
+                  <div>
+                    <Typography
+                      variant="subtitle1"
+                      style={{
+                        color: "rgb(135, 135, 135)",
+                        marginLeft: "10px",
+                        marginTop: "30px",
+                      }}
+                    >
+                      <strong>Available offers</strong>
+                    </Typography>
+                    <div style={{ marginTop: "10px" }}>
+                      <span style={{ display: "flex" }}>
+                        <img
+                          src="https://rukminim1.flixcart.com/www/36/36/promos/06/09/2016/c22c9fc4-0555-4460-8401-bf5c28d7ba29.png?q=90"
+                          width="18"
+                          height="18"
+                          style={{ marginLeft: "10px" }}
+                        />
+                        <span
+                          style={{
+                            color: "#212121",
+                            fontWeight: "500",
+                            paddingLeft: "10px",
+                            // marginBottom: "20px",
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            style={{ marginLeft: "5px" }}
+                          >
+                            {" "}
+                            <strong>Spacial offer</strong>
+                            <span>
+                              {" "}
+                              Get extra 5% off (price inclusive of discount)
+                            </span>
+                          </Typography>
+                        </span>
+                      </span>
+                    </div>
+                    <div style={{ marginTop: "5px" }}>
+                      <span style={{ display: "flex" }}>
+                        <img
+                          src="https://rukminim1.flixcart.com/www/36/36/promos/06/09/2016/c22c9fc4-0555-4460-8401-bf5c28d7ba29.png?q=90"
+                          width="18"
+                          height="18"
+                          style={{ marginLeft: "10px" }}
+                        />
+                        <span
+                          style={{
+                            color: "#212121",
+                            fontWeight: "500",
+                            paddingLeft: "10px",
+                            // marginBottom: "20px",
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            style={{ marginLeft: "5px" }}
+                          >
+                            {" "}
+                            <strong>Bank offer</strong>
+                            <span>
+                              {" "}
+                              5% Unlimited Cashback on Flipkart Axis Bank Credit
+                              Card
+                            </span>
+                          </Typography>
+                        </span>
+                      </span>
+                    </div>
+                    <div style={{ marginTop: "5px" }}>
+                      <span style={{ display: "flex" }}>
+                        <img
+                          src="https://rukminim1.flixcart.com/www/36/36/promos/06/09/2016/c22c9fc4-0555-4460-8401-bf5c28d7ba29.png?q=90"
+                          width="18"
+                          height="18"
+                          style={{ marginLeft: "10px" }}
+                        />
+                        <span
+                          style={{
+                            color: "#212121",
+                            fontWeight: "500",
+                            paddingLeft: "10px",
+                            // marginBottom: "20px",
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            style={{ marginLeft: "5px" }}
+                          >
+                            {" "}
+                            <strong>Bank offer</strong>
+                            <span>
+                              {" "}
+                              5% off* with Axis Bank Buzz Credit Card
+                            </span>
+                          </Typography>
+                        </span>
+                      </span>
+                    </div>
+                    <div style={{ marginTop: "5px" }}>
+                      <span style={{ display: "flex" }}>
+                        <img
+                          src="https://rukminim1.flixcart.com/www/36/36/promos/06/09/2016/49f16fff-0a9d-48bf-a6e6-5980c9852f11.png?q=90"
+                          width="18"
+                          height="18"
+                          style={{ marginLeft: "10px" }}
+                        />
+                        <span
+                          style={{
+                            color: "#212121",
+                            fontWeight: "500",
+                            paddingLeft: "10px",
+                            // marginBottom: "20px",
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            style={{ marginLeft: "5px" }}
+                          >
+                            <span>
+                              {" "}
+                              No Cost EMI on Flipkart Axis Bank Credit Card
+                            </span>
+                          </Typography>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               )}
               <br />
               <Divider variant="middle" />
-              <div style={{ marginLeft: "20px" }}>
-                <Typography variant="h6">Rate this product</Typography>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    aria-label="gender"
-                    name="gender1"
-                    value={productRating}
-                    onChange={handleRatings}
-                  >
-                    <FormControlLabel
-                      value={5}
-                      control={<Radio />}
-                      label={
-                        <Rating
-                          name="customized-10"
-                          value={5}
-                          max={5}
-                          style={{ marginLeft: "10px", marginTop: "8px" }}
-                        />
-                      }
-                    />
-                    <FormControlLabel
-                      value={4}
-                      control={<Radio />}
-                      label={
-                        <Rating
-                          name="customized-10"
-                          value={4}
-                          max={4}
-                          style={{ marginLeft: "10px", marginTop: "8px" }}
-                        />
-                      }
-                    />
-                    <FormControlLabel
-                      value={3}
-                      control={<Radio />}
-                      label={
-                        <Rating
-                          name="customized-10"
-                          value={3}
-                          max={3}
-                          style={{ marginLeft: "10px", marginTop: "8px" }}
-                        />
-                      }
-                    />
-                    <FormControlLabel
-                      value={2}
-                      control={<Radio />}
-                      label={
-                        <Rating
-                          name="customized-10"
-                          value={2}
-                          max={2}
-                          style={{ marginLeft: "10px", marginTop: "8px" }}
-                        />
-                      }
-                    />
-                    <FormControlLabel
-                      value={1}
-                      control={<Radio />}
-                      label={
-                        <Rating
-                          name="customized-10"
-                          value={1}
-                          max={1}
-                          style={{ marginLeft: "10px", marginTop: "8px" }}
-                        />
-                      }
-                    />
-                  </RadioGroup>
-                </FormControl>
+              <div style={{ margin: "20px 0px 20px 30px" }}>
+                <Typography variant="h6">
+                  <strong>Product Details</strong>
+                </Typography>
+                <Typography>{state.product.description}</Typography>
               </div>
               <Divider variant="middle" />
+              <div
+                style={{
+                  margin: "20px 0px 20px 30px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="h6">
+                  <strong>Ratings & Reviews</strong>
+                </Typography>
+                <div style={{ display: "flex" }}>
+                  <div
+                    style={{
+                      height: "25px",
+                      padding: "2px 7px",
+                      borderRadius: "14px",
+                      fontSize: "16px",
+                      backgroundColor: "#26a541",
+                      verticalAlign: "baseline",
+                      lineHeight: "normal",
+                      display: "inline-block",
+                      color: "#fff",
+                      fontWeight: "900",
+                    }}
+                  >
+                    <div style={{ display: "flex" }}>
+                      <span style={{ marginTop: "3px", marginLeft: "2px" }}>
+                        <strong>{state.product.ratings}</strong>
+                      </span>
+                      <StarRateIcon
+                        fontSize="small"
+                        style={{ marginTop: "2px" }}
+                      />
+                    </div>
+                  </div>
+                  <Typography
+                    variant="subtitle1"
+                    style={{
+                      color: "rgb(135, 135, 135)",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    <strong>
+                      {state.product.ratingsCollection &&
+                        state.product.ratingsCollection.length}{" "}
+                      ratings and{" "}
+                      {state.product.reviews && state.product.reviews.length}{" "}
+                      reviews
+                    </strong>
+                  </Typography>
+                </div>
 
-              <Typography variant="h6" style={{ marginLeft: "20px" }}>
-                Similar products you can find
-              </Typography>
-              {state.diff_product ? (
-                <Tabs
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="scrollable auto tabs example"
-                  onChange={handleChange}
-                  value={value}
+                <Button
+                  onClick={handleClickOpen}
+                  style={{
+                    marginRight: "20px",
+                    background: "#2874f0",
+                    color: "white",
+                  }}
                 >
-                  {" "}
-                  (
-                  {state.diff_product.map((prod) => (
-                    <Tab
-                      key={prod._id}
-                      style={{
-                        marginLeft: "10px",
-                        opacity: 1,
-                      }}
-                      label={
-                        <Card className={classes.cardroot}>
-                          <CardMedia
-                            className={classes.media}
-                            // style={{ width: "100px" }}
-                            image={`${BASE_URL}${prod.photo[0].img}`}
-                            onClick={(e) => {
-                              history.push(`/${prod._id}/product`);
-                              setImage(0);
-                            }}
-                            title="Product"
+                  <strong>Rate product</strong>
+                </Button>
+                <Dialog
+                  open={open}
+                  TransitionComponent={Transition}
+                  keepMounted
+                  onClose={handleClose}
+                >
+                  <DialogTitle id="alert-dialog-slide-title">
+                    {"Use Google's location service?"}
+                  </DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id="alert-dialog-slide-description">
+                      Let Google help apps determine location. This means
+                      sending anonymous location data to Google, even when no
+                      apps are running.
+                    </DialogContentText>
+                  </DialogContent>
+
+                  <div
+                    style={{
+                      marginLeft: "40px",
+                      marginBottom: "20px",
+                      display: "flex",
+                    }}
+                  >
+                    <div>
+                      <Typography variant="h6">
+                        <strong style={{ color: "rgb(135, 135, 135)" }}>
+                          Rate this product
+                        </strong>
+                      </Typography>
+                      <FormControl component="fieldset">
+                        <RadioGroup
+                          aria-label="gender"
+                          name="gender1"
+                          value={productRating}
+                          onChange={handleRatings}
+                        >
+                          <FormControlLabel
+                            value={5}
+                            control={
+                              <Radio
+                                checked={isChecked.checked_5}
+                                name="checked_5"
+                              />
+                            }
+                            label={
+                              <Rating
+                                name="checked-5"
+                                value={5}
+                                max={5}
+                                style={{ marginLeft: "10px", marginTop: "8px" }}
+                              />
+                            }
                           />
-                          <CardContent
-                            style={{ padding: "0px", paddingBottom: "16px" }}
-                          >
-                            <div style={{ display: "flex" }}>
-                              <div className={classes.rating}>
-                                <Rating
-                                  name="half-rating"
-                                  defaultValue={prod.ratings}
-                                  precision={0.5}
-                                  style={{
-                                    paddingTop: "10px",
-                                    paddingLeft: "10px",
-                                  }}
-                                />
-                              </div>
-                              <Typography
-                                variant="subtitle1"
-                                color="textSecondary"
-                                component="p"
-                                style={{
-                                  paddingTop: "10px",
-                                  marginLeft: "30px",
-                                }}
-                              >
-                                <strong>₹{prod.price}</strong>
-                              </Typography>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      }
-                      value={prod._id}
-                    />
-                  ))}
-                  ){" "}
-                </Tabs>
-              ) : (
-                <h1>Loading..</h1>
-              )}
+                          <FormControlLabel
+                            value={4}
+                            control={
+                              <Radio
+                                checked={isChecked.checked_4}
+                                name="checked_4"
+                              />
+                            }
+                            label={
+                              <Rating
+                                name="checked-4"
+                                value={4}
+                                max={4}
+                                style={{ marginLeft: "10px", marginTop: "8px" }}
+                              />
+                            }
+                          />
+                          <FormControlLabel
+                            value={3}
+                            control={
+                              <Radio
+                                checked={isChecked.checked_3}
+                                name="checked_3"
+                              />
+                            }
+                            label={
+                              <Rating
+                                name="checked-3"
+                                value={3}
+                                max={3}
+                                style={{ marginLeft: "10px", marginTop: "8px" }}
+                              />
+                            }
+                          />
+                          <FormControlLabel
+                            value={2}
+                            control={
+                              <Radio
+                                checked={isChecked.checked_2}
+                                name="checked_2"
+                              />
+                            }
+                            label={
+                              <Rating
+                                name="checked-2"
+                                value={2}
+                                max={2}
+                                style={{ marginLeft: "10px", marginTop: "8px" }}
+                              />
+                            }
+                          />
+                          <FormControlLabel
+                            value={1}
+                            control={
+                              <Radio
+                                checked={isChecked.checked_1}
+                                name="checked_1"
+                              />
+                            }
+                            label={
+                              <Rating
+                                name="checked-1"
+                                value={1}
+                                max={1}
+                                style={{ marginLeft: "10px", marginTop: "8px" }}
+                              />
+                            }
+                          />
+                        </RadioGroup>
+                      </FormControl>
+                    </div>
+                    <div style={{ marginLeft: "40px" }}>
+                      <Typography variant="h6" style={{ marginBottom: "20px" }}>
+                        <strong style={{ color: "rgb(135, 135, 135)" }}>
+                          Say something about the product
+                        </strong>
+                      </Typography>
+                      <TextField
+                        style={{ marginLeft: "20px" }}
+                        id="outlined-multiline-flexible"
+                        label="Comment here"
+                        error={errorReviews === "" ? false : true}
+                        helperText={errorReviews}
+                        multiline
+                        rowsMax={4}
+                        value={content}
+                        onChange={(e) => {
+                          setErrorReviews("");
+                          setContent(e.target.value);
+                        }}
+                        variant="outlined"
+                      />
+                    </div>
+                  </div>
+                  <DialogActions>
+                    <Button
+                      onClick={handleReview}
+                      style={{
+                        background: "#2874f0",
+                        color: "white",
+                        width: "100%",
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+              <Divider variant="middle" />
             </Paper>
-          </Paper>
+          </div>
         </Grid>
       ) : (
         <h1>Loading...</h1>
+      )}
+      <Typography variant="h6" style={{ marginLeft: "20px" }}>
+        Similar products you can find
+      </Typography>
+      {state.diff_product ? (
+        <Tabs
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="scrollable auto tabs example"
+          onChange={handleChange}
+          value={value}
+        >
+          {" "}
+          (
+          {state.diff_product.map((prod) => (
+            <Tab
+              key={prod._id}
+              style={{
+                marginLeft: "10px",
+                opacity: 1,
+              }}
+              label={
+                <Card className={classes.cardroot}>
+                  <CardMedia
+                    className={classes.media}
+                    // style={{ width: "100px" }}
+                    image={`${BASE_URL}${prod.photo[0].img}`}
+                    onClick={(e) => {
+                      history.push(`/${prod._id}/product`);
+                      setImage(0);
+                    }}
+                    title="Product"
+                  />
+                  <CardContent
+                    style={{ padding: "0px", paddingBottom: "16px" }}
+                  >
+                    <div style={{ display: "flex" }}>
+                      <div className={classes.rating}>
+                        <Rating
+                          name="half-rating"
+                          defaultValue={prod.ratings}
+                          precision={0.5}
+                          style={{
+                            paddingTop: "10px",
+                            paddingLeft: "10px",
+                          }}
+                        />
+                      </div>
+                      <Typography
+                        variant="subtitle1"
+                        color="textSecondary"
+                        component="p"
+                        style={{
+                          paddingTop: "10px",
+                          marginLeft: "30px",
+                        }}
+                      >
+                        <strong>₹{prod.price}</strong>
+                      </Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              }
+              value={prod._id}
+            />
+          ))}
+          ){" "}
+        </Tabs>
+      ) : (
+        <h1>Loading..</h1>
       )}
     </Container>
   );

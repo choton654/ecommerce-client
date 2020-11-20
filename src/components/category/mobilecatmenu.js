@@ -27,10 +27,10 @@ const Mobilecatmenu = ({ catMenu, isCatMenuOpen, catmenuClose }) => {
   return (
     <Menu
       anchorEl={catMenu}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       id="primary-search-account-menu"
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "center" }}
       open={isCatMenuOpen}
       onClose={catmenuClose}
       style={{ marginLeft: "30px" }}
@@ -47,10 +47,10 @@ const Mobilecatmenu = ({ catMenu, isCatMenuOpen, catmenuClose }) => {
               </MenuItem>
               <Menu
                 anchorEl={subcatMenu}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 id="primary-search-account-menu"
                 keepMounted
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "center" }}
                 open={isSubCatMenuOpen}
                 onClose={handleSubCatMenuClose}
                 style={{ marginLeft: "30px" }}

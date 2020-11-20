@@ -68,12 +68,14 @@ const Category = () => {
                     <strong>{cat.name}</strong>
                   </Typography>
                   <Menu
+                    elevation={1}
+                    getContentAnchorEl={null}
                     transitionDuration="auto"
                     anchorEl={subcatMenu}
-                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                     id="primary-search-account-menu"
                     // keepMounted
-                    transformOrigin={{ vertical: "top", horizontal: "right" }}
+                    transformOrigin={{ vertical: "top", horizontal: "center" }}
                     open={isSubCatMenuOpen}
                     onClose={handleSubCatMenuClose}
                     style={{ marginLeft: "30px" }}

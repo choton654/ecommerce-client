@@ -21,5 +21,10 @@ export const reducer = (state, action) => {
         ...state,
         error: action.payload,
       };
+    case "ADD_ADDRESS":
+      return {
+        ...state,
+        orders: action.payload,
+      };
   }
 };

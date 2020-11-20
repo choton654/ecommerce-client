@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Protectuser from "../user/protectuser";
+import { getCartItems, handleRemove, addTocart } from "../cart/cartaction";
 import {
   Collapse,
   Container,
@@ -15,8 +16,14 @@ import {
   ListItemAvatar,
   Avatar,
   Button,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@material-ui/core";
 import VpnKeyTwoToneIcon from "@material-ui/icons/VpnKeyTwoTone";
+import PaymentTwoToneIcon from "@material-ui/icons/PaymentTwoTone";
 import ChildFriendlyTwoToneIcon from "@material-ui/icons/ChildFriendlyTwoTone";
 import LocationOnTwoToneIcon from "@material-ui/icons/LocationOnTwoTone";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -32,11 +39,14 @@ import { CartContext } from "../cart/cartcontext";
 import axios from "axios";
 import BASE_URL from "../../api";
 import Cartitem from "../cart/cartitem";
+import { useSnackbar } from "notistack";
+
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 const Order = () => {
   const history = useHistory();
   const { orderid } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   console.log(orderid);
   const classes = useStyles();
   const { state, dispatch } = useContext(AuthContext);
@@ -44,8 +54,10 @@ const Order = () => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
+  user.history = orderid;
+  localStorage.setItem("user", JSON.stringify(user));
   const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
+  const [open2, setOpen2] = useState(true);
   const [open3, setOpen3] = useState(false);
   const [open4, setOpen4] = useState(false);
   const [deliveryAdd, setDeliveryAdd] = useState({
@@ -93,10 +105,19 @@ const Order = () => {
           },
         }
       )
-      .then((res) => console.log(res.data))
+      .then((res) => {
+        const { neworder } = res.data;
+        console.log(neworder);
+        cartdispatch({ type: "ADD_ADDRESS", payload: neworder });
+        setOpen2(false);
+      })
       .catch((err) => console.log(err));
   };
+  const [value, setValue] = useState("");
 
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
   const handleClick1 = () => {
     setOpen1(!open1);
   };
@@ -165,7 +186,7 @@ const Order = () => {
                   <VpnKeyTwoToneIcon style={{ marginTop: "10px" }} />
                 </ListItemIcon>
                 <div>
-                  <Typography>Login</Typography>
+                  <Typography>LOGIN</Typography>
                   <Typography>
                     <strong>{user.username}</strong> {user.email}
                   </Typography>
@@ -238,7 +259,17 @@ const Order = () => {
               <ListItemIcon>
                 <LocationOnTwoToneIcon />
               </ListItemIcon>
-              <ListItemText primary="Delivery Address" />
+              <ListItemText primary="DELIVERY ADDRESS" />
+              <ListItemText
+                style={{ marginRight: "250px" }}
+                primary={
+                  cartstate.orders.length === 0 &&
+                  cartstate.orders.shippingaddress === undefined
+                    ? ""
+                    : cartstate.orders.shippingaddress &&
+                      cartstate.orders.shippingaddress.address
+                }
+              />
               {open2 ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open2} timeout="auto" unmountOnExit>
@@ -270,7 +301,18 @@ const Order = () => {
                             variant="subtitle1"
                             style={{ marginRight: "30px" }}
                           >
-                            <strong>{address.address}</strong>
+                            <strong>
+                              {address.address}
+                              {address.postalCode}
+                              {","}
+                              {address.city}
+                              {","}
+                              {address.district}
+                              {","}
+                              {address.country}
+                              {","}
+                              {address.contactNo}
+                            </strong>
                           </Typography>
 
                           <Checkbox
@@ -290,11 +332,20 @@ const Order = () => {
                       </div>
                     ))}
                 </List>
-                <Button style={{ marginBottom: "10px", background: "orange" }}>
-                  <strong
-                    style={{ color: "red" }}
-                    onClick={() => addressSubmit(orderid)}
-                  >
+                <Button
+                  style={{
+                    marginBottom: "10px",
+                    background: "#fb641b",
+                    boxShadow: "0 1px 2px 0 rgba(0,0,0,.2)",
+                    border: "none",
+                    color: "#fff",
+                    height: "48px",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    minWidth: "200px",
+                  }}
+                >
+                  <strong onClick={() => addressSubmit(orderid)}>
                     Deliver here
                   </strong>
                 </Button>
@@ -321,7 +372,24 @@ const Order = () => {
                 cartstate.cart.cartItem &&
                 cartstate.cart.cartItem.map((item) => (
                   <Paper>
-                    <Cartitem item={item} />
+                    <Cartitem
+                      item={item}
+                      addtocart={() =>
+                        addTocart(
+                          item.productId._id,
+                          item.productId.price,
+                          cartdispatch,
+                          enqueueSnackbar
+                        )
+                      }
+                      removeitem={() =>
+                        handleRemove(
+                          item.productId._id,
+                          item.productId.price,
+                          cartdispatch
+                        )
+                      }
+                    />
                   </Paper>
                 ))}
             </Collapse>
@@ -335,17 +403,52 @@ const Order = () => {
                 marginBottom: "20px",
               }}
             >
-              <ListItemIcon></ListItemIcon>
-              <ListItemText primary="Inbox" />
+              <ListItemIcon>
+                <PaymentTwoToneIcon />
+              </ListItemIcon>
+              <ListItemText primary="PAYMENT OPTIONS" />
               {open4 ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open4} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon></ListItemIcon>
-                  <ListItemText primary="Starred" />
-                </ListItem>
-              </List>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  aria-label="payment"
+                  name="payment1"
+                  value={value}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="PayPal"
+                  />
+                  {/* <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                  <FormControlLabel
+                    value="other"
+                    control={<Radio />}
+                    label="Other"
+                  /> */}
+                </RadioGroup>
+                <Button
+                  style={{
+                    background: "#fb641b",
+                    boxShadow: "0 1px 2px 0 rgba(0,0,0,.2)",
+                    border: "none",
+                    color: "#fff",
+                    height: "48px",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    minWidth: "200px",
+                    marginTop: "15px",
+                  }}
+                >
+                  <strong>PAY ₹{cartstate.cart.price}</strong>
+                </Button>
+              </FormControl>
             </Collapse>
           </List>
         </Grid>
