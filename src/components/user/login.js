@@ -10,13 +10,14 @@ import {
   Typography,
 } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
+import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import React, { useState, useContext } from "react";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Signup from "./signup";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { AuthContext } from "./authcontext";
 import BASE_URL from "../../api";
@@ -79,6 +80,12 @@ const Login = ({ openModal, close }) => {
   const handleFacebook = () => {
     axios
       .get(`${BASE_URL}/auth/facebook`)
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+  const handleGoogle = () => {
+    axios
+      .get(`${BASE_URL}/auth/google`)
       .then((res) => console.log(res.data))
       .catch((err) => console.log(err));
   };
@@ -169,8 +176,19 @@ const Login = ({ openModal, close }) => {
               </FormControl>
             </div>
             <br />
-            <IconButton onClick={handleFacebook}>
+            <IconButton
+              onClick={() => {
+                window.location.assign(`${BASE_URL}/auth/facebook`);
+              }}
+            >
               <FacebookIcon style={{ color: "#287aed" }} />
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                window.location.assign(`${BASE_URL}/auth/google`);
+              }}
+            >
+              <VpnKeyIcon style={{ color: "#287aed" }} />
             </IconButton>
             <div className={classes.modalDiv2}>
               <Typography variant="subtitle1" color="error">

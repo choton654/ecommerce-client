@@ -19,7 +19,9 @@ import {
   Tabs,
   Tab,
 } from "@material-ui/core";
+
 import AirportShuttleIcon from "@material-ui/icons/AirportShuttle";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import EditLocationIcon from "@material-ui/icons/EditLocation";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import axios from "axios";
@@ -27,12 +29,9 @@ import { AuthContext } from "./authcontext";
 import { useStyles } from "../layout/theme";
 import BASE_URL from "../../api";
 import Protectuser from "./protectuser";
-function a11yProps(index) {
-  return {
-    id: `scrollable-auto-tab-${index}`,
-    "aria-controls": `scrollable-auto-tabpanel-${index}`,
-  };
-}
+import Useraddress from "./useraddress";
+import Userorder from "./userorder";
+
 const User = () => {
   const history = useHistory();
   const user = JSON.parse(localStorage.getItem("user"));
@@ -95,6 +94,9 @@ const User = () => {
   };
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
+    history.push("/user/address");
+  };
+  const handleaddressOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
@@ -137,6 +139,9 @@ const User = () => {
       })
       .catch((err) => console.log(err));
     handleClose();
+  };
+  const handleProfile = () => {
+    history.push("/user");
   };
   return (
     <Container className={classes.root}>
@@ -187,7 +192,20 @@ const User = () => {
             }}
           >
             <div style={{ textAlign: "left" }}>
-              <MenuItem style={{ display: "flex" }}>
+              <MenuItem style={{ display: "flex" }} onClick={handleProfile}>
+                <AssignmentIndIcon fontSize="default" color="primary" />
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  style={{ marginLeft: "20px" }}
+                >
+                  Profile Information
+                </Typography>
+              </MenuItem>
+              <MenuItem
+                style={{ display: "flex" }}
+                onClick={() => history.push("/user/order")}
+              >
                 <AirportShuttleIcon fontSize="default" color="primary" />
                 <Typography
                   variant="h6"
@@ -316,162 +334,91 @@ const User = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} sm={8}>
-          <Paper
-            className={classes.paper}
-            style={{
-              background: "whitesmoke",
-              height: "400px",
-              border: "2px solid #287aed",
-            }}
-          >
-            <FormControl
-              className={classes.control}
-              margin="dense"
-              style={{ marginRight: "8rem" }}
+          {history.location.pathname === "/user/address" ? (
+            <Useraddress
+              state={state}
+              value={value}
+              handleChange={handleChange}
+              handleaddressOpen={handleaddressOpen}
+            />
+          ) : history.location.pathname === "/user/order" ? (
+            <Userorder />
+          ) : (
+            <Paper
+              className={classes.paper}
+              style={{
+                background: "whitesmoke",
+                height: "400px",
+                border: "2px solid #287aed",
+              }}
             >
-              <Typography variant="h6" style={{ marginRight: "4rem" }}>
-                Personal Information
-              </Typography>
-              <br />
-              <div className={classes.userfield}>
-                <Typography
-                  color="primary"
-                  variant="subtitle1"
-                  onClick={handleClick1}
-                  style={{ cursor: "pointer" }}
-                >
-                  {isEdit1 ? "cancle" : "Edit"}
+              <FormControl
+                className={classes.control}
+                margin="dense"
+                style={{ marginRight: "8rem" }}
+              >
+                <Typography variant="h6" style={{ marginRight: "4rem" }}>
+                  Personal Information
                 </Typography>
-                <TextField
-                  label="Username"
-                  id="outlined-margin-none"
-                  name="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  disabled={isEdit1 ? false : true}
-                  required={true}
-                  variant="outlined"
-                />
-                <Button
-                  onClick={editProfile}
-                  variant="contained"
-                  color="primary"
-                  style={isEdit1 ? { opacity: "1" } : { opacity: "0" }}
-                >
-                  Save
-                </Button>
-              </div>
-              <br />
-              <div className={classes.userfield}>
-                <Typography
-                  variant="subtitle1"
-                  onClick={handleClick2}
-                  style={{ cursor: "pointer" }}
-                >
-                  {isEdit2 ? "cancle" : "Edit"}
-                </Typography>
-                <TextField
-                  label="Email"
-                  id="outlined-margin-none"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={isEdit2 ? false : true}
-                  required={true}
-                  variant="outlined"
-                />
-                <Button
-                  onClick={editProfile}
-                  variant="contained"
-                  color="primary"
-                  style={isEdit2 ? { opacity: "1" } : { opacity: "0" }}
-                >
-                  Save
-                </Button>
-              </div>
-              <br />
-              <div style={{ textAlign: "left", marginLeft: "20px" }}>
-                <Typography variant="subtitle1">
-                  <strong>Addressess:</strong>
-                </Typography>
-                <Tabs
-                  style={{ marginRight: "50px" }}
-                  value={value}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="scrollable"
-                  scrollButtons="on"
-                  aria-label="scrollable auto tabs example"
-                >
-                  {state.user &&
-                    state.user.address &&
-                    state.user.address.map((address) => (
-                      <Tab
-                        label={
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-evenly",
-                              border: "2px solid black",
-                              marginBottom: "10px",
-                            }}
-                          >
-                            <Typography
-                              variant="subtitle2"
-                              style={{ marginLeft: "20px" }}
-                            >
-                              {address.address}
-                              {", "}
-                              {address.postalCode}
-                              {", "}
-                              {address.city}
-                              {", "}
-                              {address.district}
-                              {", "}
-                              {address.country}
-                              {", "}
-                              {address.contactNo}
-                            </Typography>
-                          </div>
-                        }
-                        {...a11yProps(state.user.address.indexOf(address))}
-                      />
-                    ))}
-                </Tabs>
-                {/* <Typography variant="subtitle2">
-                  {state.user &&
-                    state.user.address &&
-                    state.user.address.map((address) => (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-evenly",
-                          border: "2px solid black",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        <Typography
-                          variant="subtitle2"
-                          style={{ marginLeft: "20px" }}
-                        >
-                          {address.address}
-
-                          {address.postalcode}
-                          {", "}
-                          {address.city}
-                          {", "}
-                          {address.district}
-                          {", "}
-                          {address.country}
-                          {", "}
-                          {address.contactNo}
-                        </Typography>
-                      </div>
-                    ))}
-                    </Typography> */}
-              </div>
-            </FormControl>
-          </Paper>
+                <br />
+                <div className={classes.userfield}>
+                  <Typography
+                    color="primary"
+                    variant="subtitle1"
+                    onClick={handleClick1}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {isEdit1 ? "cancle" : "Edit"}
+                  </Typography>
+                  <TextField
+                    label="Username"
+                    id="outlined-margin-none"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    disabled={isEdit1 ? false : true}
+                    required={true}
+                    variant="outlined"
+                  />
+                  <Button
+                    onClick={editProfile}
+                    variant="contained"
+                    color="primary"
+                    style={isEdit1 ? { opacity: "1" } : { opacity: "0" }}
+                  >
+                    Save
+                  </Button>
+                </div>
+                <br />
+                <div className={classes.userfield}>
+                  <Typography
+                    variant="subtitle1"
+                    onClick={handleClick2}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {isEdit2 ? "cancle" : "Edit"}
+                  </Typography>
+                  <TextField
+                    label="Email"
+                    id="outlined-margin-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={isEdit2 ? false : true}
+                    required={true}
+                    variant="outlined"
+                  />
+                  <Button
+                    onClick={editProfile}
+                    variant="contained"
+                    color="primary"
+                    style={isEdit2 ? { opacity: "1" } : { opacity: "0" }}
+                  >
+                    Save
+                  </Button>
+                </div>
+              </FormControl>
+            </Paper>
+          )}
         </Grid>
       </Grid>
     </Container>

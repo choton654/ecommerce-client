@@ -87,7 +87,8 @@ const Singleproduct = () => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
-  const { productId } = useParams();
+  const { productId, productname } = useParams();
+  console.log(productname);
   const history = useHistory();
   const [image, setImage] = useState(0);
   const classes = useStyles();
@@ -232,7 +233,7 @@ const Singleproduct = () => {
                   orientation="vertical"
                   scrollButtons="auto"
                   aria-label="scrollable auto tabs example"
-                  style={{ width: "100px" }}
+                  style={{ width: "100px", height: "500px" }}
                 >
                   {state.product.photo ? (
                     state.product.photo.map((pic) => (
@@ -273,7 +274,7 @@ const Singleproduct = () => {
                         alt="no-image"
                         style={{
                           height: "500px",
-                          width: "350px",
+                          width: "300px",
                         }}
                       />
                       <div

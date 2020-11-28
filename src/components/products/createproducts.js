@@ -13,53 +13,16 @@ import {
   Input,
   InputLabel,
   Button,
-  TextField,
-  Tab,
-  TabScrollButton,
-  Tabs,
-  Box,
-  AppBar,
-  IconButton,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import Adminresource from "../user/adminresource";
 import { useSnackbar } from "notistack";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Editproduct from "./editproduct";
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`scrollable-auto-tabpanel-${index}`}
-      aria-labelledby={`scrollable-auto-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `scrollable-auto-tab-${index}`,
-    "aria-controls": `scrollable-auto-tabpanel-${index}`,
-  };
-}
+import Productlist from "./productlist";
+import { CategoryContext } from "../category/categorycontext";
 
 const Createproducts = () => {
+  const { catstate, catdispatch } = useContext(CategoryContext);
   const { state, dispatch } = useContext(ProductContext);
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
@@ -73,6 +36,11 @@ const Createproducts = () => {
   const [category, setCategory] = useState("");
   const [photo, setPhoto] = useState([]);
   const [value, setValue] = useState(0);
+
+  const selectCategory =
+    catstate.categories &&
+    catstate.categories.filter((category) => category.parentId !== undefined);
+  console.log(category);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -289,26 +257,27 @@ const Createproducts = () => {
                 </div>
               </FormControl>
               <br />
-              <FormControl
-                margin="dense"
-                style={{ marginRight: "1rem", width: "60%" }}
-              >
-                <div className={classes.userfield}>
-                  <InputLabel htmlFor="category">Category</InputLabel>
-                  <Input
-                    autoFocus
-                    fullWidth
-                    margin="dense"
-                    id="category"
-                    name="prod_cat"
-                    type="text"
-                    inputProps={{ "aria-label": "description" }}
+
+              <div>
+                <FormControl style={{ marginRight: "1rem", width: "60%" }}>
+                  <InputLabel id="demo-simple-select-label">
+                    Category
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    variant="outlined"
-                  />
-                </div>
-              </FormControl>
+                  >
+                    {selectCategory.map((category, idx) => (
+                      <MenuItem key={idx} value={category.name}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+
               <br />
               <FormControl
                 margin="dense"
@@ -350,199 +319,12 @@ const Createproducts = () => {
               border: "2px solid #287aed",
             }}
           >
-            <Typography variant="h6">Products List</Typography>
-            <div className={classes.tabroot}>
-              {state.products && (
-                <div className={classes.root}>
-                  <AppBar position="static" color="default">
-                    <Tabs
-                      value={value}
-                      onChange={handleChange}
-                      indicatorColor="primary"
-                      textColor="primary"
-                      variant="scrollable"
-                      scrollButtons="on"
-                      aria-label="scrollable auto tabs example"
-                    >
-                      {state.products.map((prod) => (
-                        <Tab
-                          label={
-                            <div style={{ display: "flex" }}>
-                              <Typography variant="subtitle2">
-                                <strong>{prod.name}</strong>
-                              </Typography>
-                              <DeleteForeverIcon
-                                onClick={() => deleteProd(prod._id)}
-                                fontSize="small"
-                                style={{
-                                  float: "right",
-                                  cursor: "pointer",
-                                  color: "red",
-                                }}
-                              />
-                            </div>
-                          }
-                          {...a11yProps(state.products.indexOf(prod))}
-                        />
-                      ))}
-                    </Tabs>
-                  </AppBar>
-                  {state.products.map((prod) => (
-                    <TabPanel
-                      value={value}
-                      index={state.products.indexOf(prod)}
-                      style={{ background: "azure", cursor: "pointer" }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          background: "azure",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            textAlign: "center",
-                          }}
-                        >
-                          <Typography variant="h6">
-                            <strong>Product Name:</strong> {prod.name}
-                          </Typography>
-                          <Typography>
-                            <strong>About product:</strong> {prod.description}
-                          </Typography>
-                          <Typography>
-                            <strong>Price:</strong> {prod.price}
-                          </Typography>
-                          <Typography>
-                            <strong>No. of products:</strong> {prod.count}
-                          </Typography>
-                          <Typography>
-                            <strong>Brand:</strong> {prod.brand}
-                          </Typography>
-                          <Typography>
-                            <strong>Category:</strong>{" "}
-                            {prod.category && prod.category.name}
-                          </Typography>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            flexFlow: "row-reverse",
-                            marginTop: "10px",
-                            marginBottom: "10px",
-                          }}
-                        >
-                          <IconButton onClick={editProduct} color="primary">
-                            <EditIcon
-                              fontSize="medium"
-                              style={{
-                                float: "right",
-                                cursor: "pointer",
-                              }}
-                            />
-                          </IconButton>
-                          <Editproduct
-                            open={open}
-                            close={handleClose}
-                            productid={prod._id}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            width: "100%",
-                            display: "flex",
-                            flexWrap: "nowrap",
-                            justifyContent: "space-evenly",
-                            marginTop: "10px",
-                            // overflowX: "scroll",
-                          }}
-                        >
-                          <Tabs
-                            value={valuePic}
-                            onChange={picChange}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            variant="scrollable"
-                            scrollButtons="on"
-                            aria-label="scrollable auto tabs example"
-                          >
-                            {prod.photo &&
-                              prod.photo.map((pic) => (
-                                <Tab
-                                  label={
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        width: "100px",
-                                      }}
-                                    >
-                                      <Grid container item xs={4} sm={3}>
-                                        <div
-                                          style={{
-                                            display: "flex",
-                                            width: "50%",
-                                            flexWrap: "wrap",
-                                          }}
-                                        >
-                                          <div
-                                            style={{
-                                              display: "flex",
-
-                                              justifyContent: "space-between",
-                                            }}
-                                          >
-                                            <IconButton
-                                              style={{ marginBottom: "5px" }}
-                                              color="secondary"
-                                            >
-                                              <EditIcon
-                                                fontSize="small"
-                                                // onClick={() => picDelete(pic._id, prod._id)}
-                                              />
-                                            </IconButton>
-                                            <IconButton
-                                              style={{
-                                                marginBottom: "5px",
-                                                marginLeft: "10px",
-                                              }}
-                                              color="secondary"
-                                            >
-                                              <DeleteForeverIcon
-                                                fontSize="small"
-                                                onClick={() =>
-                                                  picDelete(pic._id, prod._id)
-                                                }
-                                              />
-                                            </IconButton>
-                                          </div>
-
-                                          <img
-                                            // src={`${BASE_URL}/${pic.img}`}
-                                            src={`${BASE_URL}${pic.img}`}
-                                            style={{
-                                              height: "100px",
-                                              width: "100px",
-                                              marginLeft: "10px",
-                                            }}
-                                          />
-                                        </div>
-                                      </Grid>
-                                    </div>
-                                  }
-                                  {...a11yProps(state.products.indexOf(prod))}
-                                />
-                              ))}
-                          </Tabs>
-                        </div>
-                      </div>
-                    </TabPanel>
-                  ))}
-                </div>
-              )}
-            </div>
+            <Productlist
+              editProduct={editProduct}
+              deleteProduct={deleteProd}
+              open={open}
+              close={handleClose}
+            />
           </Paper>
         </Grid>
       </Grid>

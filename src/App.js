@@ -13,8 +13,10 @@ import Shipping from "./components/order/shipping";
 import JwtDecode from "jwt-decode";
 import Homeproduct from "./components/homeproduct";
 import Searchitems from "./components/layout/searchitems";
+import Productdetails from "./components/products/productdetails";
 import axios from "axios";
 import BASE_URL from "./api";
+import Useraddress from "./components/user/useraddress";
 function App() {
   const history = useHistory();
   const token = localStorage.getItem("token") || "";
@@ -53,12 +55,25 @@ function App() {
         <Route exact path="/user" component={User} />
         <Route exact path="/allusers" component={Allusers} />
         <Route exact path="/products" component={Createproducts} />
-        <Route exact path="/:productId/product" component={Singleproduct} />
+        <Route exact path="/:orderid/vieworder" component={Order} />
+        <Route exact path="/user/address" component={User} />
+        <Route exact path="/user/order" component={User} />
+
+        <Route
+          exact
+          path="/:productid/productdetails"
+          component={Productdetails}
+        />
+        <Route
+          exact
+          path="/:productId/:productname"
+          component={Singleproduct}
+        />
         <Route exact path="/addcategory" component={Createcategory} />
         <Route exact path="/:id/subcategory/:name" component={Subcategory} />
         <Route exact path="/viewcart" component={Cart} />
-        <Route exact path="/:orderid/vieworder" component={Order} />
         <Route exact path="/shipping" component={Shipping} />
+        <Route exact path="/payment" component={Shipping} />
       </Switch>
     </div>
   );

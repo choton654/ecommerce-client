@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Menu, MenuItem } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { CartContext } from "../cart/cartcontext";
 const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
+  const { cartstate, cartdispatch } = useContext(CartContext);
+
   const user = JSON.parse(localStorage.getItem("user"));
   const history = useHistory();
 
@@ -12,6 +15,8 @@ const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
   };
   const handleClick2 = (menuClose) => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    cartdispatch({ type: "CLEAR_CART" });
     history.push("/");
     menuClose();
   };
@@ -27,7 +32,7 @@ const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
     >
       <MenuItem onClick={() => handleClick1(menuClose)}>Profile</MenuItem>
       <MenuItem onClick={() => handleClick2(menuClose)}>Log Out</MenuItem>
-      {user.role === 1 && (
+      {user && user.role === 1 && (
         <div>
           <MenuItem>
             <Link to="/addcategory" style={{ textDecoration: "none" }}>

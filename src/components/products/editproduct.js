@@ -8,35 +8,63 @@ import {
   FormControl,
   Input,
   InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from "@material-ui/core";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useStyles } from "../layout/theme";
 import axios from "axios";
 import BASE_URL from "../../api";
 import { ProductContext } from "./productcontext";
-
-const Editproduct = ({ open, close, productid }) => {
+import { CategoryContext } from "../category/categorycontext";
+import { useParams } from "react-router-dom";
+const Editproduct = ({ open, close }) => {
   const { state, dispatch } = useContext(ProductContext);
-  const singleProduct = state
-    ? state.products.find(
-        (prod) => prod._id.toString() === productid.toString()
-      )
-    : null;
+  const { catstate, catdispatch } = useContext(CategoryContext);
+  const { productid } = useParams();
+  let selectCategory;
+  const [singleProduct, setSingleproduct] = useState({});
+  useEffect(() => {
+    getProduct();
+  }, []);
+  const getProduct = (e) => {
+    axios
+      .get(`${BASE_URL}/product/api/${productid}/getproduct`)
+      .then((res) => {
+        const { product } = res.data;
+        setSingleproduct(product);
+        // dispatch({ type: "PRODUCT", payload: { product, diffProducts } });
+        setName(product.name);
+        setDesc(product.description);
+        setPrice(product.price);
+        setCount(product.count);
+        setBrand(product.brand);
+        setCategory(product.category.name);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  if (catstate) {
+    selectCategory = catstate.categories.filter(
+      (category) => category.parentid !== null
+    );
+  } else {
+    console.log("no cat");
+  }
+
   const classes = useStyles();
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const id = user._id;
-  const [name, setName] = useState(singleProduct.name);
-  const [description, setDesc] = useState(singleProduct.description);
-  const [price, setPrice] = useState(singleProduct.price);
-  const [count, setCount] = useState(singleProduct.count);
-  const [brand, setBrand] = useState(singleProduct.brand);
-  const [category, setCategory] = useState(
-    singleProduct.category && singleProduct.category.name
-  );
+  const [name, setName] = useState("");
+  const [description, setDesc] = useState("");
+  const [price, setPrice] = useState("");
+  const [count, setCount] = useState("");
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
+
   const submitProduct = () => {
-    console.log(singleProduct);
     axios
       .put(
         `${BASE_URL}/product/api/${productid}/${id}/updateproduct`,
@@ -64,7 +92,7 @@ const Editproduct = ({ open, close, productid }) => {
       .catch((err) => console.log(err));
   };
   return (
-    <div>
+    <>
       <Dialog open={open} onClose={close} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Edit Product</DialogTitle>
         <DialogContent style={{ width: "350px" }}>
@@ -173,26 +201,23 @@ const Editproduct = ({ open, close, productid }) => {
             </div>
           </FormControl>
           <br />
-          <FormControl
-            margin="dense"
-            style={{ marginRight: "1rem", width: "95%" }}
-          >
-            <div className={classes.userfield}>
-              <InputLabel htmlFor="category">Category</InputLabel>
-              <Input
-                autoFocus
-                fullWidth
-                margin="dense"
-                id="category"
-                name="prod_cat"
-                type="text"
-                inputProps={{ "aria-label": "description" }}
+          <div>
+            <FormControl style={{ marginRight: "1rem", width: "95%" }}>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                variant="outlined"
-              />
-            </div>
-          </FormControl>
+              >
+                {selectCategory.map((category) => (
+                  <MenuItem key={category._id} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={close} color="primary">
@@ -203,7 +228,7 @@ const Editproduct = ({ open, close, productid }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 };
 

@@ -1,12 +1,12 @@
 import BASE_URL from "../../api";
-
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-const user = JSON.parse(localStorage.getItem("user"));
-const userId = user && user._id;
-
-export const getCartItems = (cartdispatch) => {
+// const token = localStorage.getItem("token");
+// console.log(token);
+// const user = JSON.parse(localStorage.getItem("user"));
+// const userId = user && user._id;
+// console.log(userId);
+export const getCartItems = (cartdispatch, token, userId) => {
   axios
     .get(`${BASE_URL}/cart/api/${userId}/getcart`, {
       headers: {
@@ -18,9 +18,13 @@ export const getCartItems = (cartdispatch) => {
       const cart = res.data.cart;
       cartdispatch({ type: "ADD_TO_CART", payload: cart });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      // const error = err.response.data;
+      // cartdispatch({ type: "CART_ERROR", payload: error });
+    });
 };
-export const handleRemove = (productId, price, cartdispatch) => {
+export const handleRemove = (productId, price, cartdispatch, userId, token) => {
   console.log(productId);
   axios
     .post(
@@ -34,11 +38,18 @@ export const handleRemove = (productId, price, cartdispatch) => {
     )
     .then((res) => {
       console.log(res.data);
-      getCartItems(cartdispatch);
+      getCartItems(cartdispatch, token, userId);
     })
     .catch((err) => console.log(err));
 };
-export const addTocart = (productId, price, cartdispatch, enqueueSnackbar) => {
+export const addTocart = (
+  productId,
+  price,
+  cartdispatch,
+  enqueueSnackbar,
+  userId,
+  token
+) => {
   console.log(productId);
   // const price = state.product && state.product.price;
   axios
@@ -54,13 +65,13 @@ export const addTocart = (productId, price, cartdispatch, enqueueSnackbar) => {
     .then((res) => {
       const { success } = res.data;
       enqueueSnackbar(success, { variant: "success" });
-      getCartItems(cartdispatch);
+      getCartItems(cartdispatch, token, userId);
     })
     .catch((err) => {
       const error = err.response.data.err;
       cartdispatch({ type: "ERROR", payload: error });
       enqueueSnackbar(`${error}.Login first`, { variant: "error" });
       // userDispatch({ type: "LOGIN" });
-      console.log(error);
+      console.log(err);
     });
 };

@@ -26,5 +26,15 @@ export const reducer = (state, action) => {
         ...state,
         orders: action.payload,
       };
+    case "CART_ERROR":
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case "CLEAR_CART":
+      return {
+        ...state,
+        cart: {},
+      };
   }
 };

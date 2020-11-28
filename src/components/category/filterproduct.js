@@ -36,20 +36,23 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
   const [brandName, setBeandName] = useState([]);
   const [price, setPrice] = useState([30, 70]);
   const [min, setMinMoney] = useState(0);
-  const [max, setMaxMoney] = useState(2500);
   const [open, setOpen] = useState(true);
   const { id, name } = useParams();
 
-  const bigSubcategory = ["Computer", "Mobile", "Television", "Sports"];
+  const bigSubcategory = ["Computer", "Mi", "Television", "Sports"];
   let smallPriceRange;
+  let maxRange;
   let priceRange = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
   if (bigSubcategory.includes(name)) {
     smallPriceRange = priceRange.map((price) => price * 50);
+    maxRange = 25000;
     console.log("big cat");
   } else {
     console.log("small cat");
     smallPriceRange = priceRange.map((price) => price * 5);
+    maxRange = 2500;
   }
+  const [max, setMaxMoney] = useState(maxRange);
 
   const marks = smallPriceRange.map((mark) => ({
     value: mark,
@@ -104,7 +107,7 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
         cursor: "pointer",
         background: "white",
         padding: "10px 15px",
-        border: "3px solid #287aed",
+        border: "2px solid rgb(135, 135, 135)",
       }}
     >
       <Typography variant="h6">
@@ -195,7 +198,6 @@ const Filterproduct = ({ prodbrand, subcatid, subcatname }) => {
           />
         )}
       />
-      ;
     </Paper>
   );
 };

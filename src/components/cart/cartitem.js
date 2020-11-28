@@ -54,11 +54,11 @@ const Cartitem = ({ item, removeitem, addtocart }) => {
             <strong>{item.productId && item.productId.name}</strong>
           </Typography>
           <Typography style={{ marginTop: "10px" }}>
-            Seller:<span>{item.productId.brand}</span>
+            {/* Seller:<span>{item.productId.brand}</span> */}
           </Typography>
           <Typography style={{ marginTop: "10px" }}>
             <strong>
-              ₹<span>{item.productId.price}</span>
+              ₹<span>{item.price}</span>
             </strong>
           </Typography>
         </div>

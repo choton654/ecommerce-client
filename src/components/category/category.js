@@ -1,11 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Paper, Menu, MenuItem, Divider, Typography } from "@material-ui/core";
+import {
+  Paper,
+  Menu,
+  MenuItem,
+  Divider,
+  Typography,
+  Collapse,
+  List,
+  ListItem,
+} from "@material-ui/core";
 import { useStyles } from "../layout/theme";
 import { CategoryContext } from "./categorycontext";
 import axios from "axios";
 import BASE_URL from "../../api";
 import { Link } from "react-router-dom";
-
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
 const Category = () => {
   const classes = useStyles();
   const { catstate, catdispatch } = useContext(CategoryContext);
@@ -43,6 +53,28 @@ const Category = () => {
   };
   const handleSubCatMenuClose = () => {
     setSubCatMenu(null);
+  };
+  const [open, setOpen] = useState(true);
+  const [subcatMenu2, setSubCatMenu2] = useState(null);
+  const isSubCatMenuOpen2 = Boolean(subcatMenu2);
+  const subCatMenu2Open = (event, id) => {
+    const subCatArr2 = catstate.categories.filter((subcat) => {
+      if (
+        subcat.parentId !== undefined &&
+        subcat.parentId._id.toString() === id.toString()
+      ) {
+        setOpen(!open);
+        return subcat;
+      } else {
+        return null;
+      }
+    });
+
+    catdispatch({ type: "SUBCATEGORY2", payload: subCatArr2 });
+    setSubCatMenu2(event.currentTarget);
+  };
+  const handleSubCatMenuClose2 = () => {
+    setSubCatMenu2(null);
   };
   return (
     <div className={classes.mainpaper}>
@@ -83,17 +115,51 @@ const Category = () => {
                     {catstate.subcategories ? (
                       catstate.subcategories.map((subcat) => (
                         <div key={subcat._id}>
-                          <Link
-                            to={`/${subcat._id}/subcategory/${subcat.name}`}
-                            style={{ textDecoration: "none" }}
-                          >
-                            <MenuItem>
-                              <Typography variant="subtitle1">
-                                {subcat.name}
-                              </Typography>
-                            </MenuItem>
-                          </Link>
+                          <MenuItem>
+                            <Typography
+                              variant="subtitle1"
+                              onClick={(event) => {
+                                subCatMenu2Open(event, subcat._id);
+                              }}
+                            >
+                              {subcat.name}
+                            </Typography>
+                          </MenuItem>
                           <Divider />
+                          <Menu
+                            elevation={1}
+                            getContentAnchorEl={null}
+                            transitionDuration="auto"
+                            anchorEl={subcatMenu2}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "center",
+                            }}
+                            id="primary-search-account-menu"
+                            // keepMounted
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "center",
+                            }}
+                            open={isSubCatMenuOpen2}
+                            onClose={handleSubCatMenuClose2}
+                            style={{ marginLeft: "30px" }}
+                          >
+                            {catstate.subcategories2 &&
+                              catstate.subcategories2.map((cat) => (
+                                <Link
+                                  key={cat._id}
+                                  to={`/${cat._id}/subcategory/${cat.name}`}
+                                  style={{ textDecoration: "none" }}
+                                >
+                                  <MenuItem>
+                                    <Typography variant="subtitle1">
+                                      {cat.name}
+                                    </Typography>
+                                  </MenuItem>
+                                </Link>
+                              ))}
+                          </Menu>
                         </div>
                       ))
                     ) : (

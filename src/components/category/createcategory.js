@@ -21,6 +21,8 @@ import {
   DialogActions,
   DialogContent,
   Avatar,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { useSnackbar } from "notistack";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -75,6 +77,8 @@ const Createcategory = () => {
   const [isEdit1, setState1] = useState(false);
   const [catname, setcat] = useState("");
   const { enqueueSnackbar } = useSnackbar();
+  const selectCategory =
+    catstate.categories && catstate.categories.map((category) => category);
   const handleClick1 = () => {
     setState1(!isEdit1);
   };
@@ -200,7 +204,24 @@ const Createcategory = () => {
                 </div>
               </FormControl>
               <br />
-              <FormControl
+              <div>
+                <FormControl style={{ marginRight: "1rem", width: "60%" }}>
+                  <InputLabel id="demo-simple-select-label">
+                    Parent category
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={parentCatname}
+                    onChange={(e) => setCatid(e.target.value)}
+                  >
+                    {selectCategory.map((category) => (
+                      <MenuItem value={category.name}>{category.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              {/* <FormControl
                 margin="dense"
                 style={{ marginRight: "1rem", width: "60%" }}
               >
@@ -216,7 +237,7 @@ const Createcategory = () => {
                     variant="outlined"
                   />
                 </div>
-              </FormControl>
+              </FormControl> */}
               <Button
                 variant="contained"
                 color="primary"

@@ -235,6 +235,7 @@ const Order = () => {
                   style={{
                     marginLeft: "20px",
                     marginTop: "10px",
+                    marginBottom: "10px",
                   }}
                 >
                   <strong
@@ -299,18 +300,27 @@ const Order = () => {
                           </ListItemAvatar>
                           <Typography
                             variant="subtitle1"
-                            style={{ marginRight: "30px" }}
+                            style={{ marginRight: "30px", maxWidth: "60%" }}
                           >
-                            <strong>
+                            <strong
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
                               {address.address}
+                              {","}
                               {address.postalCode}
                               {","}
                               {address.city}
                               {","}
+                              <br />
                               {address.district}
                               {","}
+                              <br />
                               {address.country}
                               {","}
+                              <br />
                               {address.contactNo}
                             </strong>
                           </Typography>
@@ -379,14 +389,18 @@ const Order = () => {
                           item.productId._id,
                           item.productId.price,
                           cartdispatch,
-                          enqueueSnackbar
+                          enqueueSnackbar,
+                          userId,
+                          token
                         )
                       }
                       removeitem={() =>
                         handleRemove(
                           item.productId._id,
                           item.productId.price,
-                          cartdispatch
+                          cartdispatch,
+                          userId,
+                          token
                         )
                       }
                     />
@@ -418,20 +432,10 @@ const Order = () => {
                   onChange={handleChange}
                 >
                   <FormControlLabel
-                    value="female"
+                    value="paytm"
                     control={<Radio />}
-                    label="PayPal"
+                    label="Paytm"
                   />
-                  {/* <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                  <FormControlLabel
-                    value="other"
-                    control={<Radio />}
-                    label="Other"
-                  /> */}
                 </RadioGroup>
                 <Button
                   style={{
@@ -444,6 +448,12 @@ const Order = () => {
                     fontWeight: "400",
                     minWidth: "200px",
                     marginTop: "15px",
+                  }}
+                  onClick={() => {
+                    window.location.assign(
+                      `${BASE_URL}/pay/${cartstate.cart.price}/orderid/${orderid}/cartid/${cartstate.cart._id}`
+                    );
+                    // history.push(`${BASE_URL}`);
                   }}
                 >
                   <strong>PAY ₹{cartstate.cart.price}</strong>

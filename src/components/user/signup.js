@@ -101,9 +101,7 @@ const Signup = ({ isOpen, close }) => {
               }}
             />
           </div>
-          {/* <Typography variant="h6" style={{ marginLeft: "60px" }}>
-              Register Here
-            </Typography> */}
+
           <div>
             <div className={classes.modalDiv}>
               <FormControl style={{ width: "100%" }}>

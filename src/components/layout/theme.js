@@ -155,7 +155,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     height: "190%",
     [theme.breakpoints.up("sm")]: {
-      height: "120%",
+      height: "100%",
     },
   },
   paper6: {

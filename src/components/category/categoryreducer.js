@@ -1,6 +1,7 @@
 export const initialState = {
   categories: [],
   subcategories: [],
+  subcategories2: [],
   product_cat: [],
   filtered_prod: [],
   product_by_choice: [],
@@ -31,6 +32,11 @@ export const reducer = (state, action) => {
         ...state,
         subcategories: action.payload,
       };
+    case "SUBCATEGORY2":
+      return {
+        ...state,
+        subcategories2: action.payload,
+      };
     case "DELETE_CAT":
       return {
         ...state,
@@ -59,7 +65,7 @@ export const reducer = (state, action) => {
         ...state,
         categories: state.categories.map((cat) => {
           if (cat._id.toString() === action.payload.catid.toString()) {
-            console.log(cat)
+            console.log(cat);
             return action.payload.category;
           } else {
             return cat;
