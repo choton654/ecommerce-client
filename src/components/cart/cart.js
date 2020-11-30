@@ -140,19 +140,20 @@ const Cart = () => {
               <div style={{ position: "sticky", bottom: "0" }}>
                 <div
                   style={{
-                    borderTop: "1px solid #f0f0f0",
+                    border: "1px solid #fb641b",
                     background: "#fff",
                     padding: "16px 22px",
                     boxShadow: "0 -2px 10px 0 rgba(0,0,0,.1)",
-                    textAlign: "center",
+                    textAlign: "right",
+                    height: "50px",
                   }}
                 >
                   <Button
                     style={{
-                      background: "#287aed",
-                      height: "30px",
+                      background: "#fb641b",
+                      height: "40px",
                       marginLeft: "20px",
-                      width: "90%",
+                      width: "25%",
                       marginTop: "auto",
                       marginBottom: "20px",
                     }}

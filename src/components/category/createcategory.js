@@ -221,23 +221,6 @@ const Createcategory = () => {
                   </Select>
                 </FormControl>
               </div>
-              {/* <FormControl
-                margin="dense"
-                style={{ marginRight: "1rem", width: "60%" }}
-              >
-                <div className={classes.userfield}>
-                  <InputLabel htmlFor="catid">Parent Category</InputLabel>
-                  <Input
-                    id="catid"
-                    name="cat_id"
-                    type="text"
-                    inputProps={{ "aria-label": "description" }}
-                    value={parentCatname}
-                    onChange={(e) => setCatid(e.target.value)}
-                    variant="outlined"
-                  />
-                </div>
-              </FormControl> */}
               <Button
                 variant="contained"
                 color="primary"
@@ -253,14 +236,14 @@ const Createcategory = () => {
           <Paper
             className={classes.paper}
             style={{
-              background: "whitesmoke",
+              background: "#b0bec5",
               height: "400px",
               border: "2px solid #287aed",
             }}
           >
             <Typography variant="h6">Category List</Typography>
             <div className={classes.tabroot}>
-              <AppBar position="static" color="default">
+              <AppBar position="static" style={{ background: "#90caf9" }}>
                 <Tabs
                   value={value}
                   onChange={handleChange}
@@ -340,13 +323,15 @@ const Createcategory = () => {
                       </Button>
                     </div>
                     <div style={{ display: "flex", marginLeft: "20px" }}>
-                      <IconButton
-                        color="primary"
-                        style={{ marginLeft: "10px" }}
+                      <Button
+                        variant="contained"
+                        style={{ marginLeft: "10px", background: "#90caf9" }}
                         onClick={handleClickOpen}
                       >
+                        {" "}
+                        Add photo
                         <AddAPhotoIcon fontSize="medium" />
-                      </IconButton>
+                      </Button>
                       {cat.photo &&
                         cat.photo.map((pic) => (
                           <Avatar

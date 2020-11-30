@@ -1,10 +1,13 @@
 import { Button, IconButton, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import BASE_URL from "../../api";
 import RemoveIcon from "@material-ui/icons/Remove";
-import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
 import AddIcon from "@material-ui/icons/Add";
 const Cartitem = ({ item, removeitem, addtocart }) => {
+  const [itemNumber, setItemnumber] = useState(item.quantity);
+  const itemChange = (e) => {
+    setItemnumber(e.target.value);
+  };
   return (
     <div
       key={item._id}
@@ -85,34 +88,22 @@ const Cartitem = ({ item, removeitem, addtocart }) => {
           >
             <RemoveIcon fontSize="small" />
           </IconButton>
-
-          <div
+          <input
+            type="number"
+            value={item.quantity}
+            // onChange={(e) => itemChange(e)}
             style={{
-              display: "inline-block",
-              padding: "3px 6px",
-              width: "calc(100% - 60px)",
-              height: "100%",
-              width: "46px",
-              height: "28px",
-              borderRadius: "2px",
-              backgroundColor: "#fff",
               border: "1px solid #c2c2c2",
-              margin: "0 5px",
+              marginLeft: "5px",
+              marginRight: "5px",
+              width: "40px",
+              fontSize: "14px",
+              fontWeight: "500",
+              verticalAlign: "middle",
+              textAlign: "center",
             }}
-          >
-            <input
-              type="text"
-              value={item.quantity}
-              style={{
-                border: "none",
-                width: "100%",
-                fontSize: "14px",
-                fontWeight: "500",
-                verticalAlign: "middle",
-                textAlign: "center",
-              }}
-            />
-          </div>
+          />
+
           <IconButton
             style={{
               width: "28px",
@@ -130,17 +121,18 @@ const Cartitem = ({ item, removeitem, addtocart }) => {
           >
             <AddIcon fontSize="small" />
           </IconButton>
-          <div style={{ paddingLeft: "20px", display: "inline-block" }}>
-            <Button
-              style={{ height: "30px", marginRight: "20px" }}
-              // variant="contained"
-              color="secondary"
-              onClick={removeitem}
-            >
-              <RestoreFromTrashIcon style={{ marginRight: "10px" }} /> Remove
-              Item
-            </Button>
-          </div>
+          <Typography
+            onClick={removeitem}
+            variant="subtitle2"
+            style={{
+              paddingLeft: "20px",
+              display: "inline-block",
+              color: "#287aed",
+              cursor: "pointer",
+            }}
+          >
+            <strong>REMOVE ITEM</strong>
+          </Typography>
         </div>
       </div>
     </div>

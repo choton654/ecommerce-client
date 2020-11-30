@@ -34,20 +34,37 @@ const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
       <MenuItem onClick={() => handleClick2(menuClose)}>Log Out</MenuItem>
       {user && user.role === 1 && (
         <div>
-          <MenuItem>
-            <Link to="/addcategory" style={{ textDecoration: "none" }}>
-              Add category
-            </Link>
+          <MenuItem
+            onClick={() => {
+              history.push("/addcategory");
+              menuClose();
+            }}
+          >
+            All category
           </MenuItem>
-          <MenuItem>
-            <Link to="/products" style={{ textDecoration: "none" }}>
-              Add product
-            </Link>
+          <MenuItem
+            onClick={() => {
+              history.push("/products");
+              menuClose();
+            }}
+          >
+            All product
           </MenuItem>
-          <MenuItem>
-            <Link to="/allUsers" style={{ textDecoration: "none" }}>
-              All Users
-            </Link>
+          <MenuItem
+            onClick={() => {
+              history.push("/allUsers");
+              menuClose();
+            }}
+          >
+            All Users
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              history.push("/allorders");
+              menuClose();
+            }}
+          >
+            All Orders
           </MenuItem>
         </div>
       )}

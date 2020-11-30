@@ -17,6 +17,7 @@ import Productdetails from "./components/products/productdetails";
 import axios from "axios";
 import BASE_URL from "./api";
 import Useraddress from "./components/user/useraddress";
+import Allorders from "./components/order/allorders";
 function App() {
   const history = useHistory();
   const token = localStorage.getItem("token") || "";
@@ -74,6 +75,7 @@ function App() {
         <Route exact path="/viewcart" component={Cart} />
         <Route exact path="/shipping" component={Shipping} />
         <Route exact path="/payment" component={Shipping} />
+        <Route exact path="/allorders" component={Allorders} />
       </Switch>
     </div>
   );

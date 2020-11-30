@@ -13,10 +13,11 @@ import { useStyles } from "../layout/theme";
 import { CategoryContext } from "./categorycontext";
 import axios from "axios";
 import BASE_URL from "../../api";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 const Category = () => {
+  const history = useHistory();
   const classes = useStyles();
   const { catstate, catdispatch } = useContext(CategoryContext);
   useEffect(() => {
@@ -147,17 +148,25 @@ const Category = () => {
                           >
                             {catstate.subcategories2 &&
                               catstate.subcategories2.map((cat) => (
-                                <Link
+                                /* <Link
                                   key={cat._id}
                                   to={`/${cat._id}/subcategory/${cat.name}`}
                                   style={{ textDecoration: "none" }}
+                                > */
+                                <MenuItem
+                                  onClick={() => {
+                                    history.push(
+                                      `/${cat._id}/subcategory/${cat.name}`
+                                    );
+                                    handleSubCatMenuClose2();
+                                    handleSubCatMenuClose();
+                                  }}
                                 >
-                                  <MenuItem>
-                                    <Typography variant="subtitle1">
-                                      {cat.name}
-                                    </Typography>
-                                  </MenuItem>
-                                </Link>
+                                  <Typography variant="subtitle1">
+                                    {cat.name}
+                                  </Typography>
+                                </MenuItem>
+                                /* </Link> */
                               ))}
                           </Menu>
                         </div>

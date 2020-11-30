@@ -5,6 +5,7 @@ import {
   Paper,
   Typography,
   Collapse,
+  Button,
 } from "@material-ui/core";
 import React, { useEffect, useContext, useState } from "react";
 import { useStyles } from "../layout/theme";
@@ -61,11 +62,20 @@ const Userorder = () => {
               style={{
                 border: "3px solid #287aed",
                 background: "whiteSmoke",
+                display: "flex",
+                justifyContent: "space-between",
                 height: "80px",
-                marginBottom: "20px",
+                marginBottom: "10px",
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                }}
+              >
                 <div>
                   <Typography>
                     Order Id:<strong> {order._id}</strong>
@@ -75,24 +85,43 @@ const Userorder = () => {
                     {order.orderItems && order.orderItems.length} items
                   </Typography>
                 </div>
+                <div style={{ display: "flex" }}>
+                  <Typography variant="subtitle1">Shipping Address:</Typography>
+                  <Typography variant="subtitle1" style={{ marginLeft: "5px" }}>
+                    <strong>
+                      {order.shippingaddress && order.shippingaddress.address}
+                    </strong>
+                  </Typography>
+                </div>
               </div>
 
-              {open1 ? (
-                <ExpandLess style={{ marginLeft: "auto" }} />
+              {order.isPaid === false ? (
+                <div
+                  style={{
+                    display: "flex",
+                    width: "200px",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography vatiant="subtitle1" style={{ color: "red" }}>
+                    <strong>NOT PAID</strong>
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    style={{ background: "#fb641b", color: "#fff" }}
+                    onClick={() =>
+                      window.location.assign(`/${order._id}/vieworder`)
+                    }
+                  >
+                    PAY ₹{order.totalPrice}
+                  </Button>
+                </div>
               ) : (
-                <ExpandMore style={{ marginLeft: "auto" }} />
+                <Typography vatiant="subtitle1" style={{ color: "green" }}>
+                  <strong>PAID</strong>{" "}
+                </Typography>
               )}
             </ListItem>
-            <Collapse in={open1} timeout="auto" unmountOnExit>
-              <div style={{ display: "flex", marginLeft: "20px" }}>
-                <Typography variant="subtitle1">
-                  <strong>Shipping Address:</strong>
-                </Typography>
-                <Typography variant="subtitle1" style={{ marginLeft: "5px" }}>
-                  {order.shippingaddress && order.shippingaddress.address}
-                </Typography>
-              </div>
-            </Collapse>
           </List>
         ))}
     </Paper>
