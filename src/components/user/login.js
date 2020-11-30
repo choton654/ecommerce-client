@@ -8,6 +8,7 @@ import {
   Modal,
   Paper,
   Typography,
+  Grid,
 } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
@@ -101,16 +102,7 @@ const Login = ({ openModal, close }) => {
         aria-describedby="simple-modal-description"
       >
         <Paper className={classes.paper2}>
-          <div
-            style={{
-              width: "50%",
-              height: "100%",
-              background: "#287aed",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className={classes.loginDiv}>
             <div className={classes.modalDiv} style={{ paddingRight: "30px" }}>
               <Typography variant="h5" style={{ marginTop: "20px" }}>
                 <strong style={{ color: "white" }}>Login</strong>

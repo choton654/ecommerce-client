@@ -180,3 +180,11 @@
 [1128/193802.255:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
 [1129/143617.382:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
 [1129/174351.830:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1130/135335.258:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1130/140939.337:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/140950.165:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/141022.616:ERROR:file_io.cc(135)] WriteFile: The pipe is being closed. (0xE8)
+[1130/141221.636:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/141225.752:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/141228.594:ERROR:process_info.cc(359)] UncheckedAllocate
+[1130/160023.109:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)

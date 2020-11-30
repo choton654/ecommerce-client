@@ -49,7 +49,7 @@ import axios from "axios";
 import JwtDecode from "jwt-decode";
 const useNavstyles = makeStyles((theme) => ({
   menuButton: {
-    marginLeft: theme.spacing(2),
+    // marginLeft: "5px",
     display: "block",
     [theme.breakpoints.up("md")]: {
       display: "none",
@@ -150,7 +150,7 @@ const Navbar = ({ searchitem, search }) => {
             className={navclasses.menuButton}
             onClick={toggleDrawer}
           >
-            <MenuIcon />
+            <MenuIcon fontSize="large" />
           </IconButton>
           <Drawer open={isOpen} onClose={toggleDrawer}>
             <List
@@ -314,7 +314,6 @@ const Navbar = ({ searchitem, search }) => {
               </div>
             </Link>
           </Typography>
-
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -405,6 +404,21 @@ const Navbar = ({ searchitem, search }) => {
             )}
           </div>
         </Toolbar>
+        <div className={classes.search1}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search items"
+            value={search}
+            onChange={searchitem}
+            classes={{
+              root: navclasses.inputRoot,
+              input: navclasses.inputInput,
+            }}
+            inputProps={{ "aria-label": "search" }}
+          />
+        </div>
       </AppBar>
     </div>
   );

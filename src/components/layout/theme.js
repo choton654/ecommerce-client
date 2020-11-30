@@ -24,6 +24,26 @@ export const useStyles = makeStyles((theme) => ({
       marginLeft: theme.spacing(2),
       width: "50%",
     },
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+    },
+  },
+  search1: {
+    border: "10px solid #287aed",
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 1),
+    marginRight: "50px",
+    width: "96.5%",
+    [theme.breakpoints.up("md")]: {
+      marginLeft: theme.spacing(2),
+      width: "50%",
+    },
+    display: "block",
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -62,25 +82,49 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: "space-around",
   },
   paper2: {
-    position: "absolute",
     display: "flex",
     justifyContent: "space-between",
-    width: 700,
     height: 500,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
+    width: "400px",
+    [theme.breakpoints.up("md")]: {
+      width: "50%",
+    },
+    marginLeft: "20px",
+    [theme.breakpoints.up("md")]: {
+      margin: "0px auto",
+      width: "50%",
+    },
+  },
+  loginDiv: {
+    width: "30%",
+    [theme.breakpoints.up("md")]: {
+      width: "50%",
+    },
+    height: "100%",
+    background: "#287aed",
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
+    },
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     height: "600px",
+    position: "absolute",
     marginTop: "100px",
+    width: "400px",
+    [theme.breakpoints.up("md")]: {
+      width: "90%",
+    },
   },
   modalDiv: {
-    // marginLeft: "80px",
-    // width: "60%",
     padding: theme.spacing(2, 3, 3),
   },
   modalDiv2: {
