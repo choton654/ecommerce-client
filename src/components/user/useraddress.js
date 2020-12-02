@@ -1,4 +1,10 @@
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   IconButton,
   Menu,
   MenuItem,
@@ -8,10 +14,12 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useStyles } from "../layout/theme";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-// import { AuthContext } from "../user/authcontext";
+import axios from "axios";
+import { AuthContext } from "./authcontext";
+import BASE_URL from "../../api";
 import AddIcon from "@material-ui/icons/Add";
 function a11yProps(index) {
   return {
@@ -20,12 +28,17 @@ function a11yProps(index) {
   };
 }
 const Useraddress = ({ state, value, handleChange, handleaddressOpen }) => {
+  // const { dispatch } = useContext(AuthContext);
   const classes = useStyles();
   const user = JSON.parse(localStorage.getItem("user"));
-  // const { state, dispatch } = useContext(AuthContext);
+  const token = localStorage.getItem("token");
+  const userId = user._id;
+  let editAddressname = {};
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const [address, setAddress] = useState({
+  const [addOpen, setAddOpen] = useState(false);
+  const [delAddOpen, setdelAddOpen] = useState(false);
+  const [add, setAddress] = useState({
     address: "",
     postalCode: "",
     city: "",
@@ -33,6 +46,16 @@ const Useraddress = ({ state, value, handleChange, handleaddressOpen }) => {
     contactNo: "",
     district: "",
   });
+  const deleteAddressOpen = () => {
+    setdelAddOpen(true);
+  };
+  const deleteAddressClose = () => {
+    setdelAddOpen(false);
+  };
+  const addressChange = (e) => {
+    setAddress({ ...add, [e.target.name]: e.target.value });
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -40,9 +63,63 @@ const Useraddress = ({ state, value, handleChange, handleaddressOpen }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const editAddress = () => {
+
+  const editAddress = (e, id) => {
+    editAddressname =
+      state.user &&
+      state.user.address &&
+      state.user.address.find(
+        (address) => address._id.toString() === id.toString()
+      );
+    setAddress({
+      address: editAddressname.address,
+      postalCode: editAddressname.postalCode,
+      city: editAddressname.city,
+      country: editAddressname.country,
+      contactNo: editAddressname.contactNo,
+      district: editAddressname.district,
+    });
+    console.log(editAddressname);
     setAnchorEl(null);
-    handleaddressOpen();
+    setAddOpen(true);
+  };
+  const handleAddresssClose = () => {
+    setAddOpen(false);
+  };
+  const handleAddressSubmit = (id) => {
+    console.log(add);
+    axios
+      .put(
+        `${BASE_URL}/user/api/${userId}/${id}/updateaddress`,
+        { add },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const { updatedUserAddress } = res.data;
+        state.user.address = updatedUserAddress;
+        handleAddresssClose();
+      })
+      .catch((err) => console.log(err));
+  };
+  const deleteAddress = (e, id) => {
+    axios
+      .delete(`${BASE_URL}/user/api/${userId}/${id}/deleteaddress`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const { updatedUserAddress } = res.data;
+        state.user.address = updatedUserAddress;
+        handleClose();
+        deleteAddressClose();
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <Paper
@@ -151,13 +228,145 @@ const Useraddress = ({ state, value, handleChange, handleaddressOpen }) => {
                       open={open}
                       onClose={handleClose}
                     >
-                      <MenuItem onClick={() => editAddress(address._id)}>
-                        <Typography>Edit</Typography>
+                      <MenuItem onClick={(e) => editAddress(e, address._id)}>
+                        <Typography style={{ color: "#33691e" }}>
+                          <strong>Edit</strong>
+                        </Typography>
                       </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <Typography>Delete</Typography>
+                      <MenuItem onClick={deleteAddressOpen}>
+                        <Typography style={{ color: "#b71c1c" }}>
+                          <strong>Delete</strong>
+                        </Typography>
                       </MenuItem>
                     </Menu>
+                    <Dialog
+                      open={addOpen}
+                      onClose={handleAddresssClose}
+                      aria-labelledby="form-dialog-title"
+                    >
+                      <DialogTitle id="form-dialog-title">Address</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          To order your products, please enter your address
+                          here. We will send updates occasionally.
+                        </DialogContentText>
+
+                        <TextField
+                          label="Address"
+                          id="address"
+                          margin="dense"
+                          name="address"
+                          variant="outlined"
+                          value={add.address}
+                          onChange={(event) => addressChange(event)}
+                          className={classes.textField}
+                          helperText="Enter your address"
+                        />
+                        <TextField
+                          style={{ marginLeft: "20px" }}
+                          label="Postal Code"
+                          id="postal code"
+                          margin="dense"
+                          name="postalCode"
+                          variant="outlined"
+                          value={add.postalCode}
+                          onChange={(event) => addressChange(event)}
+                          className={classes.textField}
+                          helperText="Enter your postal code"
+                        />
+                        <TextField
+                          label="City"
+                          id="city"
+                          margin="dense"
+                          name="city"
+                          variant="outlined"
+                          value={add.city}
+                          onChange={(event) => addressChange(event)}
+                          className={classes.textField}
+                          helperText="Enter your city"
+                        />
+                        <TextField
+                          style={{ marginLeft: "20px" }}
+                          label="District"
+                          id="district"
+                          margin="dense"
+                          name="district"
+                          variant="outlined"
+                          value={add.district}
+                          onChange={(event) => addressChange(event)}
+                          className={classes.textField}
+                          helperText="Enter your district"
+                        />
+                        <TextField
+                          label="Country"
+                          id="country"
+                          margin="dense"
+                          name="country"
+                          variant="outlined"
+                          value={add.country}
+                          onChange={(event) => addressChange(event)}
+                          className={classes.textField}
+                          helperText="Enter your country"
+                        />
+                        <TextField
+                          style={{ marginLeft: "20px" }}
+                          label="Contact No."
+                          id="phon no"
+                          margin="dense"
+                          name="contactNo"
+                          variant="outlined"
+                          value={add.contactNo}
+                          onChange={(event) => addressChange(event)}
+                          className={classes.textField}
+                          helperText="Enter your contact no."
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          onClick={handleAddresssClose}
+                          color="secondery"
+                          variant="contained"
+                        >
+                          <strong>Cancel</strong>
+                        </Button>
+                        <Button
+                          onClick={() => handleAddressSubmit(address._id)}
+                          color="primary"
+                          variant="contained"
+                        >
+                          <strong>Submit</strong>
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                    <Dialog
+                      open={delAddOpen}
+                      onClose={deleteAddressClose}
+                      aria-labelledby="alert-dialog-title"
+                      aria-describedby="alert-dialog-description"
+                    >
+                      <DialogTitle id="alert-dialog-title">
+                        {"Do you want to delete address ?"}
+                      </DialogTitle>
+
+                      <DialogActions style={{ margin: "0px auto" }}>
+                        <Button
+                          onClick={deleteAddressClose}
+                          autoFocus
+                          variant="contained"
+                          style={{ background: "#8bc34a" }}
+                        >
+                          <strong style={{ color: "white" }}>Cancel</strong>
+                        </Button>
+                        <Button
+                          style={{ background: "#d32f2f" }}
+                          onClick={(e) => deleteAddress(e, address._id)}
+                          variant="contained"
+                          autoFocus
+                        >
+                          <strong style={{ color: "white" }}>Delete</strong>
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </div>
                 </div>
               }

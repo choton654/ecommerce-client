@@ -59,7 +59,6 @@ function App() {
         <Route exact path="/:orderid/vieworder" component={Order} />
         <Route exact path="/user/address" component={User} />
         <Route exact path="/user/order" component={User} />
-
         <Route
           exact
           path="/:productid/productdetails"
