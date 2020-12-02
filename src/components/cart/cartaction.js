@@ -24,7 +24,15 @@ export const getCartItems = (cartdispatch, token, userId) => {
       // cartdispatch({ type: "CART_ERROR", payload: error });
     });
 };
-export const handleRemove = (productId, price, cartdispatch, userId, token) => {
+export const handleRemove = (
+  productId,
+  price,
+  cartdispatch,
+  userId,
+  token,
+  itemNumber,
+  setItemnumber
+) => {
   console.log(productId);
   axios
     .post(
@@ -37,7 +45,26 @@ export const handleRemove = (productId, price, cartdispatch, userId, token) => {
       }
     )
     .then((res) => {
-      console.log(res.data);
+      // console.log(res.data);
+      setItemnumber(parseInt(itemNumber) - 1);
+      getCartItems(cartdispatch, token, userId);
+    })
+    .catch((err) => console.log(err));
+};
+export const removeCartitem = (productId, cartdispatch, userId, token) => {
+  console.log(productId);
+  axios
+    .post(
+      `${BASE_URL}/cart/api/${userId}/removewholeitem`,
+      { productId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      // console.log(res.data.updatedCart);
       getCartItems(cartdispatch, token, userId);
     })
     .catch((err) => console.log(err));
@@ -48,7 +75,9 @@ export const addTocart = (
   cartdispatch,
   enqueueSnackbar,
   userId,
-  token
+  token,
+  itemNumber,
+  setItemnumber
 ) => {
   console.log(productId);
   // const price = state.product && state.product.price;
@@ -63,6 +92,7 @@ export const addTocart = (
       }
     )
     .then((res) => {
+      setItemnumber(parseInt(itemNumber) + 1);
       const { success } = res.data;
       enqueueSnackbar(success, { variant: "success" });
       getCartItems(cartdispatch, token, userId);

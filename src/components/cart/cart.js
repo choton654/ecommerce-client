@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
 import Cartitem from "./cartitem";
 import {
@@ -22,7 +22,12 @@ import BASE_URL from "../../api";
 import { useSnackbar } from "notistack";
 // import { ProductContext } from "../products/productcontext";
 import Placeorder from "./placeorder";
-import { getCartItems, handleRemove, addTocart } from "./cartaction";
+import {
+  getCartItems,
+  handleRemove,
+  addTocart,
+  removeCartitem,
+} from "./cartaction";
 const Cart = () => {
   const history = useHistory();
   const classes = useStyles();
@@ -33,6 +38,7 @@ const Cart = () => {
   const orderId = user ? user.history : undefined;
   console.log(orderId);
   // const { state, dispatch } = useContext(ProductContext);
+
   const { enqueueSnackbar } = useSnackbar();
   const cartItems =
     cartstate.cart &&
@@ -85,29 +91,7 @@ const Cart = () => {
             cartstate.cart.quantity &&
             cartstate.cart.quantity > 0 ? (
               cartstate.cart.cartItem.map((item, idx) => (
-                <Cartitem
-                  key={idx}
-                  item={item}
-                  removeitem={() =>
-                    handleRemove(
-                      item.productId._id,
-                      item.productId.price,
-                      cartdispatch,
-                      userId,
-                      token
-                    )
-                  }
-                  addtocart={() =>
-                    addTocart(
-                      item.productId._id,
-                      item.productId.price,
-                      cartdispatch,
-                      enqueueSnackbar,
-                      userId,
-                      token
-                    )
-                  }
-                />
+                <Cartitem key={idx} item2={item} />
               ))
             ) : (
               <Paper

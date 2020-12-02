@@ -383,7 +383,7 @@ const Order = () => {
                 cartstate.cart.cartItem.map((item) => (
                   <Paper>
                     <Cartitem
-                      item={item}
+                      item2={item}
                       addtocart={() =>
                         addTocart(
                           item.productId._id,
