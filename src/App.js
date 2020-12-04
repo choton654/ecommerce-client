@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Createproducts from "./components/products/createproducts";
 import User from "./components/user/user";
 import { Route, Switch, useHistory } from "react-router-dom";
@@ -16,10 +16,20 @@ import Searchitems from "./components/layout/searchitems";
 import Productdetails from "./components/products/productdetails";
 import axios from "axios";
 import BASE_URL from "./api";
-import Useraddress from "./components/user/useraddress";
 import Allorders from "./components/order/allorders";
+import firebase from "firebase";
+import firebaseConfig from "./components/firebase/firebaseconfig";
+import { useSnackbar } from "notistack";
+import { AuthContext } from "./components/user/authcontext";
+import Login from "./components/user/login";
+
 function App() {
+  const { state, dispatch } = useContext(AuthContext);
+  const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
+  useEffect(() => {
+    firebase.initializeApp(firebaseConfig);
+  }, []);
   const token = localStorage.getItem("token") || "";
   const decode = token && JwtDecode(token);
   const date = Date.now() / 1000;

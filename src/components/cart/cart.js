@@ -22,12 +22,7 @@ import BASE_URL from "../../api";
 import { useSnackbar } from "notistack";
 // import { ProductContext } from "../products/productcontext";
 import Placeorder from "./placeorder";
-import {
-  getCartItems,
-  handleRemove,
-  addTocart,
-  removeCartitem,
-} from "./cartaction";
+import { getCartItems, handleOrder } from "./cartaction";
 const Cart = () => {
   const history = useHistory();
   const classes = useStyles();
@@ -56,31 +51,31 @@ const Cart = () => {
     console.log(cartstate);
   }
 
-  const handleOrder = (price) => {
-    axios
-      .post(
-        `${BASE_URL}/order/api/${userId}/createorder`,
-        { cartItems, price, orderId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        const { order, user: updatedUser } = res.data;
-        const { success } = res.data;
-        console.log(user.history, typeof updatedUser);
-        user.history = updatedUser === "" ? orderId : updatedUser.history;
-        console.log(user.history);
-        cartdispatch({ type: "PLACE_ORDER", payload: order });
-        enqueueSnackbar(success, { variant: "success" });
-        window.location.assign(`/${order._id}/vieworder`);
-        // history.push(`/${order._id}/vieworder`);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const handleOrder = (price) => {
+  //   axios
+  //     .post(
+  //       `${BASE_URL}/order/api/${userId}/createorder`,
+  //       { cartItems, price, orderId },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       const { order, user: updatedUser } = res.data;
+  //       const { success } = res.data;
+  //       console.log(user.history, typeof updatedUser);
+  //       user.history = updatedUser === "" ? orderId : updatedUser.history;
+  //       console.log(user.history);
+  //       cartdispatch({ type: "PLACE_ORDER", payload: order });
+  //       enqueueSnackbar(success, { variant: "success" });
+  //       window.location.assign(`/${order._id}/vieworder`);
+  //       // history.push(`/${order._id}/vieworder`);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
   return (
     <Container maxWidth="lg" className={classes.root}>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
@@ -143,7 +138,17 @@ const Cart = () => {
                     }}
                     variant="contained"
                     color="primary"
-                    onClick={() => handleOrder(cartstate.cart.price)}
+                    onClick={() =>
+                      handleOrder(
+                        cartstate.cart.price,
+                        cartItems,
+                        orderId,
+                        user,
+                        token,
+                        cartdispatch,
+                        enqueueSnackbar
+                      )
+                    }
                   >
                     <ShoppingBasketIcon style={{ marginRight: "10px" }} /> Place
                     Order

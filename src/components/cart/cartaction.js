@@ -105,3 +105,36 @@ export const addTocart = (
       console.log(err);
     });
 };
+export const handleOrder = (
+  price,
+  cartItems,
+  orderId,
+  user,
+  token,
+  cartdispatch,
+  enqueueSnackbar
+) => {
+  axios
+    .post(
+      `${BASE_URL}/order/api/${user._id}/createorder`,
+      { cartItems, price, orderId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+      const { order, user: updatedUser } = res.data;
+      const { success } = res.data;
+      console.log(user.history, typeof updatedUser);
+      user.history = updatedUser === "" ? orderId : updatedUser.history;
+      console.log(user.history);
+      cartdispatch({ type: "PLACE_ORDER", payload: order });
+      enqueueSnackbar(success, { variant: "success" });
+      window.location.assign(`/${order._id}/vieworder`);
+      // history.push(`/${order._id}/vieworder`);
+    })
+    .catch((err) => console.log(err));
+};

@@ -20,6 +20,7 @@ import Adminresource from "../user/adminresource";
 import { useSnackbar } from "notistack";
 import Productlist from "./productlist";
 import { CategoryContext } from "../category/categorycontext";
+import Productdetails from "./productdetails";
 
 const Createproducts = () => {
   const { catstate, catdispatch } = useContext(CategoryContext);

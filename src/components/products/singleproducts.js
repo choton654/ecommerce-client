@@ -43,7 +43,7 @@ import { useSnackbar } from "notistack";
 import { CartContext } from "../cart/cartcontext";
 import { AuthContext } from "../user/authcontext";
 import Slide from "@material-ui/core/Slide";
-
+import { getCartItems, handleOrder } from "../cart/cartaction";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -87,6 +87,7 @@ const Singleproduct = () => {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
+  const orderId = user ? user.history : undefined;
   const { productId, productname } = useParams();
   console.log(productname);
   const history = useHistory();
@@ -195,6 +196,7 @@ const Singleproduct = () => {
       .then((res) => {
         const { success } = res.data;
         enqueueSnackbar(success, { variant: "success" });
+        getCartItems(cartdispatch, token, userId);
         // history.push("/viewcart");
       })
       .catch((err) => {
@@ -205,10 +207,44 @@ const Singleproduct = () => {
         console.log(error);
       });
   };
-  const handleBuy = () => {
+  const cartItems = [productId];
+  const handleBuy = (price) => {
     addTocart();
-    // history.push("/vieworder");
+    handleOrder(
+      price,
+      cartItems,
+      orderId,
+      user,
+      token,
+      cartdispatch,
+      enqueueSnackbar
+    );
   };
+  // const handleOrder = (price) => {
+  //   axios
+  //     .post(
+  //       `${BASE_URL}/order/api/${userId}/createorder`,
+  //       { cartItems: [productId], price, orderId },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       const { order, user: updatedUser } = res.data;
+  //       const { success } = res.data;
+  //       console.log(user.history, typeof updatedUser);
+  //       user.history = updatedUser === "" ? orderId : updatedUser.history;
+  //       console.log(user.history);
+  //       cartdispatch({ type: "PLACE_ORDER", payload: order });
+  //       enqueueSnackbar(success, { variant: "success" });
+  //       window.location.assign(`/${order._id}/vieworder`);
+  //       // history.push(`/${order._id}/vieworder`);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
   return (
     <Container maxWidth="lg" className={classes.root}>
       {state.product ? (
@@ -310,7 +346,7 @@ const Singleproduct = () => {
                             marginTop: "50px",
                             justifyContent: "space-evenly",
                           }}
-                          onClick={handleBuy}
+                          onClick={() => handleBuy(state.product.price)}
                         >
                           <ShoppingBasketIcon
                             fontSize="small"

@@ -52,11 +52,6 @@ export const reducer = (state, action) => {
         ...state,
         user: action.payload,
       };
-    // case "UPDATE_ADDRESS":
-    //   return {
-    //     ...state,
-
-    //   }
     default:
       break;
   }

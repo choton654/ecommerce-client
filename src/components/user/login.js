@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -23,9 +23,10 @@ import { useSnackbar } from "notistack";
 import { AuthContext } from "./authcontext";
 import BASE_URL from "../../api";
 import { useStyles } from "../layout/theme";
-
-const Login = ({ openModal, close }) => {
+import firebase from "firebase";
+const Login = () => {
   const history = useHistory();
+  let data = null;
   const { state, dispatch } = useContext(AuthContext);
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -79,17 +80,118 @@ const Login = ({ openModal, close }) => {
       });
   };
   const handleFacebook = () => {
-    axios
-      .get(`${BASE_URL}/auth/facebook`)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+    facebookLogin();
+  };
+  const facebookLogin = () => {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        var user = result.user;
+        console.log(user, token);
+        // var name, email, photoUrl, uid;
+        // name = user.displayName;
+        // email = user.email;
+        // photoUrl = user.photoURL;
+        // uid = user.uid;
+        // data = {
+        //   name,
+        //   email,
+        //   uid,
+        // };
+        // console.log(data);
+        // axios
+        //   .post(`${BASE_URL}/user/api/login`, data)
+        //   .then((res) => {
+        //     const { token, user } = res.data;
+        //     console.log(res.data);
+        //     localStorage.setItem("token", token);
+        //     localStorage.setItem("user", JSON.stringify(user));
+        //     dispatch({ type: "ADD_USER", payload: user });
+        //     enqueueSnackbar("User has successfully logged in", {
+        //       variant: "success",
+        //     });
+        //     dispatch({ type: "LOGIN" });
+        //     history.push("/");
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //     const error = err.response.data;
+        //     console.log(error);
+        //     dispatch({ type: "ERROR", payload: error });
+        //   });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log("User is signed in");
+      } else {
+        console.log("User is not signed in");
+      }
+    });
   };
   const handleGoogle = () => {
-    axios
-      .get(`${BASE_URL}/auth/google`)
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+    googleLogin();
   };
+  const googleLogin = () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        var user = result.user;
+        console.log(user, token);
+        var name, email, photoUrl, uid;
+        name = user.displayName;
+        email = user.email;
+        photoUrl = user.photoURL;
+        uid = user.uid;
+        data = {
+          name,
+          email,
+          uid,
+        };
+        console.log(data);
+        axios
+          .post(`${BASE_URL}/user/api/login`, data)
+          .then((res) => {
+            const { token, user } = res.data;
+            console.log(res.data);
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+            dispatch({ type: "ADD_USER", payload: user });
+            enqueueSnackbar("User has successfully logged in", {
+              variant: "success",
+            });
+            dispatch({ type: "LOGIN" });
+            history.push("/");
+          })
+          .catch((err) => {
+            console.log(err);
+            const error = err.response.data;
+            console.log(error);
+            dispatch({ type: "ERROR", payload: error });
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log("User is signed in");
+      } else {
+        console.log("User is not signed in");
+      }
+    });
+  };
+
   return (
     <div>
       <Modal
@@ -168,18 +270,10 @@ const Login = ({ openModal, close }) => {
               </FormControl>
             </div>
             <br />
-            <IconButton
-              onClick={() => {
-                window.location.assign(`${BASE_URL}/auth/facebook`);
-              }}
-            >
+            <IconButton onClick={handleFacebook}>
               <FacebookIcon style={{ color: "#287aed" }} />
             </IconButton>
-            <IconButton
-              onClick={() => {
-                window.location.assign(`${BASE_URL}/auth/google`);
-              }}
-            >
+            <IconButton onClick={handleGoogle}>
               <VpnKeyIcon style={{ color: "#287aed" }} />
             </IconButton>
             <div className={classes.modalDiv2}>
@@ -196,6 +290,7 @@ const Login = ({ openModal, close }) => {
               >
                 Submit
               </Button>
+
               <Typography
                 variant="subtitle2"
                 style={{ marginLeft: "70px", marginTop: "10px" }}

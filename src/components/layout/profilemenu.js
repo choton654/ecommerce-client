@@ -1,19 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Menu, MenuItem } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { CartContext } from "../cart/cartcontext";
+import firebase from "firebase";
 const Profilemenu = ({ anchorEl, isMenuOpen, menuClose }) => {
   const { cartstate, cartdispatch } = useContext(CartContext);
-
   const user = JSON.parse(localStorage.getItem("user"));
   const history = useHistory();
-
   const handleClick1 = (menuClose) => {
     menuClose();
     history.push("/user");
   };
   const handleClick2 = (menuClose) => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        console.log("Sign-out successful");
+      })
+      .catch(function (error) {
+        console.log("An error happened");
+      });
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     cartdispatch({ type: "CLEAR_CART" });

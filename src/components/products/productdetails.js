@@ -23,7 +23,8 @@ import Editproduct from "./editproduct";
 import axios from "axios";
 import BASE_URL from "../../api";
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
-const Productdetails = () => {
+const Productdetails = (props) => {
+  // console.log(props.match.path === "/:productid/productdetails");
   const { productid } = useParams();
   const { state, dispatch } = useContext(ProductContext);
   useEffect(() => {
