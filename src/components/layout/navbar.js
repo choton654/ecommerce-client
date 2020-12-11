@@ -118,21 +118,7 @@ const Navbar = ({ searchitem, search }) => {
     }
     setState(!isOpen);
   };
-  // const [searchmenu, setSearchmenu] = useState(null);
-  // const [searchedProducts, setSearchedProducts] = useState([]);
-  // const handleSearch = (e) => {
-  //   setSearch(e.target.value);
-  //   setSearchmenu(e.currentTarget);
-  //   axios
-  //     .post(`${BASE_URL}/product/api/search`, { search })
-  //     .then((res) => {
-  //       const item = res.data.findProduct;
-  //       setSearchedProducts(item);
-  //       console.log(searchedProducts);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-  // console.log(searchedProducts);
+
   return (
     <div>
       <AppBar>
@@ -363,7 +349,20 @@ const Navbar = ({ searchitem, search }) => {
                 }}
               >
                 <IconButton color="inherit" onMouseOver={handleProfileMenuOpen}>
-                  {user.role === 1 ? <FaceIcon /> : <AccountCircle />}
+                  {user.role === 1 ? (
+                    <FaceIcon />
+                  ) : user.pic ? (
+                    <img
+                      src={user.pic}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <AccountCircle />
+                  )}
                 </IconButton>
                 <Typography variant="h6" style={{ paddingTop: "10px" }}>
                   <strong>{token && user.username}</strong>

@@ -147,7 +147,7 @@ const Login = () => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
         var user = result.user;
-        console.log(user, token);
+        console.log(user.photoURL);
         var name, email, photoUrl, uid;
         name = user.displayName;
         email = user.email;
@@ -157,6 +157,7 @@ const Login = () => {
           name,
           email,
           uid,
+          photoUrl,
         };
         console.log(data);
         axios

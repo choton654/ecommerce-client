@@ -22,6 +22,7 @@ import firebaseConfig from "./components/firebase/firebaseconfig";
 import { useSnackbar } from "notistack";
 import { AuthContext } from "./components/user/authcontext";
 import Login from "./components/user/login";
+import Footer from "./components/footer";
 
 function App() {
   const { state, dispatch } = useContext(AuthContext);
@@ -86,6 +87,7 @@ function App() {
         <Route exact path="/payment" component={Shipping} />
         <Route exact path="/allorders" component={Allorders} />
       </Switch>
+      <Footer />
     </div>
   );
 }

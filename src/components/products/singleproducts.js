@@ -86,7 +86,7 @@ const Singleproduct = () => {
   // console.log(state.product);
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user._id;
+  const userId = user ? user._id : "";
   const orderId = user ? user.history : undefined;
   const { productId, productname } = useParams();
   console.log(productname);

@@ -151,32 +151,44 @@ const User = () => {
             className={classes.paper}
             style={{
               background: "whitesmoke",
-              height: "50px",
+              height: "15%",
               border: "2px solid #287aed",
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <img
                 alt="Remy Sharp"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSLlQ9DL2jP_heI_mtZXdw8cxNdGunsejk7FQ&usqp=CAU"
-                style={{ width: "70px", height: "60px", marginLeft: "30px" }}
+                src={
+                  user.pic
+                    ? user.pic
+                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSLlQ9DL2jP_heI_mtZXdw8cxNdGunsejk7FQ&usqp=CAU"
+                }
+                style={{
+                  border: "2px solid #287aed",
+                  width: "70px",
+                  height: "65px",
+                  marginLeft: "30px",
+                  borderRadius: "50%",
+                }}
               />
               <div
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  marginRight: "130px",
+                  marginRight: "50px",
                 }}
               >
                 <Typography
                   variant="caption"
-                  align="right"
+                  align="center"
                   color="primary"
-                  style={{ textAlign: "initial" }}
+                  style={{ textAlign: "center" }}
                 >
                   Hello
                 </Typography>
-                <Typography variant="h6">{user.username}</Typography>
+                <Typography variant="subtitle1" style={{ width: "100%" }}>
+                  <strong>{user.username}</strong>
+                </Typography>
               </div>
             </div>
           </Paper>
@@ -185,7 +197,7 @@ const User = () => {
             className={classes.paper}
             style={{
               background: "whitesmoke",
-              height: "300px",
+              height: "60%",
               border: "2px solid #287aed",
               display: "flex",
               flexDirection: "column",
