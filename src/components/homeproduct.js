@@ -20,22 +20,22 @@ const tutorialSteps = [
   {
     label: "Bird",
     imgPath:
-      "https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60",
+      "https://rukminim1.flixcart.com/flap/50/50/image/1aa73400b5144b5e.jpg?q=50",
   },
   {
     label: "Bali, Indonesia",
     imgPath:
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250&q=80",
+      "https://rukminim1.flixcart.com/flap/50/50/image/0d78e0f21a4344aa.jpg?q=50",
   },
   {
     label: "NeONBRAND Digital Marketing, Las Vegas, United States",
     imgPath:
-      "https://images.unsplash.com/photo-1518732714860-b62714ce0c59?auto=format&fit=crop&w=400&h=250&q=60",
+      "https://rukminim1.flixcart.com/flap/50/50/image/0c074e23c3c798c0.jpg?q=50",
   },
   {
     label: "Goč, Serbia",
     imgPath:
-      "https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60",
+      "https://rukminim1.flixcart.com/flap/844/140/image/b12dcf5c49020730.jpg?q=50",
   },
 ];
 
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   img: {
-    height: 500,
+    height: 300,
     display: "block",
     maxWidth: "100%",
     overflow: "hidden",

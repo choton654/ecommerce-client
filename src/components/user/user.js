@@ -83,7 +83,11 @@ const User = () => {
       .then((res) => {
         console.log(res.data.updatedUser);
         const updatedUser = res.data.updatedUser;
+        // user = updatedUser;
+        localStorage.setItem("user", JSON.stringify(updatedUser));
         dispatch({ type: "EDIT_USER", payload: updatedUser });
+        setState1(false);
+        setState2(false);
       })
       .catch((err) => console.log(err));
   };
