@@ -36,5 +36,16 @@ export const reducer = (state, action) => {
         ...state,
         cart: {},
       };
+    case "EDIT_ORDER":
+      return {
+        ...state,
+        orders:state.orders.map((order)=> { if (order._id.toString() === action.payload.toString()) {
+          order.isDelivered = true
+          return order
+        } else {
+          return order
+        }
+        })
+      }
   }
 };

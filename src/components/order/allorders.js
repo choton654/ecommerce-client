@@ -87,7 +87,9 @@ const Allorders = () => {
     })
     .then((res)=> {
     console.log(res.data);
-    window.location.reload()
+    const {order} = res.data;
+    // window.location.reload();
+    cartdispatch({type:"EDIT_ORDER", payload:order._id})
     })
     .catch((err)=> console.log(err))
   }
