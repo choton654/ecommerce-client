@@ -1,12 +1,20 @@
-import React, { useEffect, useContext } from "react";
+import React, {
+  useEffect,
+  useContext,
+  useState
+} from "react";
 import axios from "axios";
 import BASE_URL from "../../api";
-import { CartContext } from "../cart/cartcontext";
-import { makeStyles } from "@material-ui/core/styles";
+import {
+  CartContext
+} from "../cart/cartcontext";
+import {
+  makeStyles
+} from "@material-ui/core/styles";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
+import {Typography, Switch} from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,49 +34,75 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Allorders = () => {
-  const { cartstate, cartdispatch } = useContext(CartContext);
+  const {
+    cartstate,
+    cartdispatch
+  } = useContext(CartContext);
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [orderStatus, setOrderstatus]= useState({
+    delivered:true,
+    notDelivered:false
+  })
   useEffect(() => {
     getAllOrders();
   }, []);
   const getAllOrders = () => {
     axios
-      .get(`${BASE_URL}/order/api/allorders`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        const { order } = res.data;
-        cartdispatch({ type: "PLACE_ORDER", payload: order });
-      })
-      .catch((err) => {
-        const error = err.response.err;
-        cartdispatch({ type: "ERROR", payload: error });
+    .get(`${BASE_URL}/order/api/allorders`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      const {
+        order
+      } = res.data;
+      cartdispatch({
+        type: "PLACE_ORDER", payload: order
       });
+    })
+    .catch((err) => {
+      const error = err.response.err;
+      cartdispatch({
+        type: "ERROR", payload: error
+      });
+    });
   };
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded,
+    setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+    setExpanded(isExpanded ? panel: false);
   };
+  
+  const handleChecked = (e, orderid)=>{
+    console.log(token, user._id)
+    axios.put(`${BASE_URL}/order/api/${orderid}/${user._id}/editorder`,{ headers: 
+     {
+      Authorization: `Bearer ${token}`,
+     },
+    })
+    .then((res)=> console.log(res.data))
+    .catch((err)=> console.log(err))
+  }
 
   return (
     <div className={classes.root}>
       {cartstate &&
-        cartstate.orders &&
-        cartstate.orders.map((order) => (
-          <Accordion
-            style={{ background: "#90caf9" }}
-            expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
+      cartstate.orders &&
+      cartstate.orders.map((order) => (
+        <Accordion
+          style={ { background: "#90caf9" }}
+          expanded={expanded === "panel1"}
+          onChange={handleChange("panel1")}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
             >
               <Typography className={classes.heading}>
                 {order.userId && order.userId.username}
@@ -76,22 +110,34 @@ const Allorders = () => {
               <Typography className={classes.secondaryHeading}>
                 orderid:<strong>{order._id}</strong>
               </Typography>
-              <Typography style={{ marginLeft: "auto" }}>
+              <Typography style={ { marginLeft: "auto" }}>
                 {order.isPaid === true ? (
-                  <strong style={{ color: "#1b5e20" }}>PAID</strong>
-                ) : (
-                  <strong style={{ color: "#c62828" }}>NOT PAID</strong>
-                )}
+              <strong style={ { color: "#1b5e20" }}>PAID</strong>
+            ): (
+              <strong style={ { color: "#c62828" }}>NOT PAID</strong>
+            )}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails style={{ background: "#fff3e0" }}>
-              <Typography>
-                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-                feugiat. Aliquam eget maximus est, id dignissim quam.
+            <AccordionDetails style={ { background: "#fff3e0" }}>
+            <div style={ { display: "flex" }}>
+              <Typography variant="subtitle1">
+                Change order status:
               </Typography>
+              <Typography variant="subtitle1">
+              {order.isDelivered === true ? "Delivered": "Not delivered"}
+              </Typography>
+             <Switch
+               checked={
+                order.isDelivered === true ? orderStatus.delivered: orderStatus.notDelivered
+              }
+              onChange={(e) => handleChecked(e, order._id)}
+              name={order._id}
+              inputProps={ { "aria-label": "secondary checkbox" }}
+              />
+            </div>
             </AccordionDetails>
           </Accordion>
-        ))}
+      ))}
     </div>
   );
 };
