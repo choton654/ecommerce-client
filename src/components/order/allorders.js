@@ -80,12 +80,15 @@ const Allorders = () => {
   
   const handleChecked = (e, orderid)=>{
     console.log(token, user._id)
-    axios.put(`${BASE_URL}/order/api/${orderid}/${user._id}/editorder`,{ headers: 
+    axios.put(`${BASE_URL}/order/api/${orderid}/${user._id}/editorder`,{},{ headers: 
      {
       Authorization: `Bearer ${token}`,
      },
     })
-    .then((res)=> console.log(res.data))
+    .then((res)=> {
+    console.log(res.data);
+    window.location.reload()
+    })
     .catch((err)=> console.log(err))
   }
 
@@ -128,7 +131,7 @@ const Allorders = () => {
               </Typography>
              <Switch
                checked={
-                order.isDelivered === true ? orderStatus.delivered: orderStatus.notDelivered
+                order.isDelivered
               }
               onChange={(e) => handleChecked(e, order._id)}
               name={order._id}
