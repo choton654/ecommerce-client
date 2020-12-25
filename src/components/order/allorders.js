@@ -125,13 +125,14 @@ const Allorders = () => {
             </AccordionSummary>
             <AccordionDetails style={ { background: "#fff3e0" }}>
             <div style={ { display: "flex" }}>
-              <Typography variant="subtitle1">
+              <Typography variant="subtitle1" style={{marginTop:"5px"}}>
                 Change order status:
               </Typography>
-              <Typography variant="subtitle1">
-              {order.isDelivered === true ? "Delivered": "Not delivered"}
+              <Typography variant="subtitle1" style={{marginLeft:"10px", marginTop:"5px"}}>
+              {order.isDelivered === true ? <strong style={{color:"green"}}>Delivered</strong> : <strong style={{color:"red"}}>Not delivered</strong>}
               </Typography>
              <Switch
+            // style={{marginLeft:"5px", marginBottom:"10px"}}
                checked={
                 order.isDelivered
               }

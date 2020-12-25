@@ -16,6 +16,10 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogActions
 } from "@material-ui/core";
 import { ProductContext } from "./productcontext";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
@@ -95,6 +99,7 @@ const Productlist = ({ editProduct, deleteProd, open, close }) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+  const [ delprodOpen, setDelprodOpen] = useState(false);
 
   return (
     <Paper className={classes.root}>
@@ -159,9 +164,38 @@ const Productlist = ({ editProduct, deleteProd, open, close }) => {
                                 backgroundColor: "lightpink",
                               }}
                               fontSize="small"
-                              onClick={deleteProd}
+                              onClick={()=> setDelprodOpen(true)}
                             />
                           </Tooltip>
+                           <Dialog
+                            open={delprodOpen}
+                            onClose={()=> setDelprodOpen(false)}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                          <DialogTitle id="alert-dialog-title">
+                            {"Do you want to delete address ?"}
+                          </DialogTitle>
+                          
+                          <DialogActions style={{ margin:"0px auto" }}>
+                            <Button
+                             onClick={()=> setDelprodOpen(false)}
+                             autoFocus
+                             variant="contained"
+                             style={{ background: "#8bc34a" }}
+                            >
+                            <strong style={{ color: "white" }}>Cancel</strong>
+                            </Button>
+                            <Button
+                             style={{ background: "#d32f2f" }}
+                             onClick={() => deleteProd(row.id)}
+                             variant="contained"
+                             autoFocus
+                            >
+                            <strong style={{ color: "white" }}>Delete</strong>
+                            </Button>
+                            </DialogActions>
+                        </Dialog>
                         </div>
                       </TableCell>
                     </TableRow>

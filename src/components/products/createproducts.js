@@ -322,7 +322,7 @@ const Createproducts = () => {
           >
             <Productlist
               editProduct={editProduct}
-              deleteProduct={deleteProd}
+              deleteProd={deleteProd}
               open={open}
               close={handleClose}
             />
