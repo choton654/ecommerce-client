@@ -47,7 +47,7 @@ const Productdetails = (props) => {
     );
   const useStyles = makeStyles((theme) => ({
     root: {
-      maxWidth: 400,
+      maxWidth: 600,
       flexGrow: 1,
       margin: "0px auto",
       border: "1px solid #1e88e5",
@@ -102,7 +102,8 @@ const Productdetails = (props) => {
     setOpen(true);
   };
   return (
-    <Paper className={classes.root}>
+    <div style={{display:"flex"}} className={classes.root}>
+    <Paper style={{width:"200px"}}>
       <Typography variant="h6">
         {" "}
         <ExtensionTwoToneIcon />
@@ -125,6 +126,7 @@ const Productdetails = (props) => {
           <ListItemText primary="Spam" />
         </ListItem>
       </List>
+      </Paper>
       <div>
         <Paper square elevation={0} className={classes.header}>
           <Typography variant="subtitle1">
@@ -206,7 +208,8 @@ const Productdetails = (props) => {
         />
         <Editproduct open={open} close={handleClose} productid={productid} />
       </div>
-    </Paper>
+      </div>
+    
   );
 };
 

@@ -29,6 +29,7 @@ import {
   DialogActions,
   TextField,
 } from "@material-ui/core";
+import MessageIcon from '@material-ui/icons/Message';
 import StarRateIcon from "@material-ui/icons/StarRate";
 import { useStyles } from "../layout/theme";
 import { ProductContext } from "./productcontext";
@@ -220,31 +221,7 @@ const Singleproduct = () => {
       enqueueSnackbar
     );
   };
-  // const handleOrder = (price) => {
-  //   axios
-  //     .post(
-  //       `${BASE_URL}/order/api/${userId}/createorder`,
-  //       { cartItems: [productId], price, orderId },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       const { order, user: updatedUser } = res.data;
-  //       const { success } = res.data;
-  //       console.log(user.history, typeof updatedUser);
-  //       user.history = updatedUser === "" ? orderId : updatedUser.history;
-  //       console.log(user.history);
-  //       cartdispatch({ type: "PLACE_ORDER", payload: order });
-  //       enqueueSnackbar(success, { variant: "success" });
-  //       window.location.assign(`/${order._id}/vieworder`);
-  //       // history.push(`/${order._id}/vieworder`);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+
   return (
     <Container maxWidth="lg" className={classes.root}>
       {state.product ? (
@@ -884,6 +861,18 @@ const Singleproduct = () => {
       ) : (
         <h1>Loading..</h1>
       )}
+      <Paper style={{border:"2px solid #0091ea"}}>
+      <div style={{marginLeft:"10px"}}>
+      <Typography variant="h6">Reviews of this product:</Typography>
+      {state.product && state.product.reviews && state.product.reviews.map((review)=>
+      <div style={{display:"flex"}}>
+      <MessageIcon fontSize="small" style={{marginTop:"5px"}}/>
+        <Typography style={{marginLeft:"10px"}} variant="subtitle1">{review.content}</Typography>
+        </div>
+      )}
+      </div>
+      </Paper>
+    
     </Container>
   );
 };
