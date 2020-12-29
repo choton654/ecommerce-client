@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Container,
@@ -29,7 +29,7 @@ import {
   DialogActions,
   TextField,
 } from "@material-ui/core";
-import MessageIcon from '@material-ui/icons/Message';
+import MessageIcon from "@material-ui/icons/Message";
 import StarRateIcon from "@material-ui/icons/StarRate";
 import { useStyles } from "../layout/theme";
 import { ProductContext } from "./productcontext";
@@ -861,18 +861,32 @@ const Singleproduct = () => {
       ) : (
         <h1>Loading..</h1>
       )}
-      <Paper style={{border:"2px solid #0091ea"}}>
-      <div style={{marginLeft:"10px"}}>
-      <Typography variant="h6">Reviews of this product:</Typography>
-      {state.product && state.product.reviews && state.product.reviews.map((review)=>
-      <div style={{display:"flex"}}>
-      <MessageIcon fontSize="small" style={{marginTop:"5px"}}/>
-        <Typography style={{marginLeft:"10px"}} variant="subtitle1">{review.content}</Typography>
+      <Paper style={{ border: "2px solid #0091ea" }}>
+        <div style={{ marginLeft: "10px" }}>
+          {state.product &&
+          state.product.reviews &&
+          state.product.reviews.length !== 0 ? (
+            <Fragment>
+              <Typography variant="h6">Reviews of this product:</Typography>
+              {state.product.reviews.map((review) => (
+                <div style={{ display: "flex" }}>
+                  <MessageIcon fontSize="small" style={{ marginTop: "5px" }} />
+                  <Typography
+                    style={{ marginLeft: "10px" }}
+                    variant="subtitle1"
+                  >
+                    {review.content}
+                  </Typography>
+                </div>
+              ))}
+            </Fragment>
+          ) : (
+            <Typography variant="h6">
+              There is no reviews of this product
+            </Typography>
+          )}
         </div>
-      )}
-      </div>
       </Paper>
-    
     </Container>
   );
 };
