@@ -28,7 +28,7 @@ const Cart = () => {
   const classes = useStyles();
   const { cartstate, cartdispatch } = useContext(CartContext);
   const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user")) || null;
   const userId = user ? user._id : "";
   const orderId = user ? user.history : undefined;
   console.log(orderId);
@@ -51,70 +51,45 @@ const Cart = () => {
     console.log(cartstate);
   }
 
-  // const handleOrder = (price) => {
-  //   axios
-  //     .post(
-  //       `${BASE_URL}/order/api/${userId}/createorder`,
-  //       { cartItems, price, orderId },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       const { order, user: updatedUser } = res.data;
-  //       const { success } = res.data;
-  //       console.log(user.history, typeof updatedUser);
-  //       user.history = updatedUser === "" ? orderId : updatedUser.history;
-  //       console.log(user.history);
-  //       cartdispatch({ type: "PLACE_ORDER", payload: order });
-  //       enqueueSnackbar(success, { variant: "success" });
-  //       window.location.assign(`/${order._id}/vieworder`);
-  //       // history.push(`/${order._id}/vieworder`);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
   return (
     <Container maxWidth="lg" className={classes.root}>
       <Grid container spacing={2} style={{ marginTop: "20px" }}>
         <Grid item xs={12} sm={8}>
           <Grid item sm={12}>
             {cartstate.cart &&
-            cartstate.cart.cartItem &&
-            cartstate.cart.quantity &&
-            cartstate.cart.quantity > 0 ? (
-              cartstate.cart.cartItem.map((item, idx) => (
-                <Cartitem key={idx} item2={item} />
-              ))
-            ) : (
-              <Paper
-                className={classes.paper}
-                style={{
-                  width: "100%",
-                  border: "2px solid lightblue",
-                  marginLeft: "100px",
-                }}
-              >
-                <img
-                  src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
-                  style={{ maxWidth: "30%" }}
-                />
-                <Typography variant="h6">Your cart is empty</Typography>
-                <Typography variant="subtitle1">
-                  It's good day to buy the items tou saved for latter!
+              cartstate.cart.cartItem &&
+              cartstate.cart.quantity &&
+              cartstate.cart.quantity > 0 ? (
+                cartstate.cart.cartItem.map((item, idx) => (
+                  <Cartitem key={idx} item2={item} />
+                ))
+              ) : (
+                <Paper
+                  className={classes.paper}
+                  style={{
+                    width: "100%",
+                    border: "2px solid lightblue",
+                    marginLeft: "100px",
+                  }}
+                >
+                  <img
+                    src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90"
+                    style={{ maxWidth: "30%" }}
+                  />
+                  <Typography variant="h6">Your cart is empty</Typography>
+                  <Typography variant="subtitle1">
+                    It's good day to buy the items tou saved for latter!
                 </Typography>
 
-                <Typography
-                  variant="subtitle2"
-                  color="primary"
-                  onClick={handleShopping}
-                >
-                  <strong style={{ cursor: "pointer" }}>Go to shopping</strong>
-                </Typography>
-              </Paper>
-            )}
+                  <Typography
+                    variant="subtitle2"
+                    color="primary"
+                    onClick={handleShopping}
+                  >
+                    <strong style={{ cursor: "pointer" }}>Go to shopping</strong>
+                  </Typography>
+                </Paper>
+              )}
             {cartstate.cart && cartstate.cart.quantity > 0 && (
               <div style={{ position: "sticky", bottom: "0" }}>
                 <div

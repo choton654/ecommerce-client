@@ -15,7 +15,7 @@ export const getCartItems = (cartdispatch, token, userId) => {
     })
     .then((res) => {
       console.log(res.data.cart);
-      const cart = res.data.cart;
+      const { cart } = res.data;
       cartdispatch({ type: "ADD_TO_CART", payload: cart });
     })
     .catch((err) => {
