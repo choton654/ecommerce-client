@@ -116,7 +116,7 @@ export const handleOrder = (
 ) => {
   axios
     .post(
-      `${BASE_URL}/order/api/${user._id}/createorder`,
+      `${BASE_URL}/order/api/${user && user._id}/createorder`,
       { cartItems, price, orderId },
       {
         headers: {

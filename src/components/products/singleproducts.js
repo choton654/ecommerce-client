@@ -87,7 +87,7 @@ const Singleproduct = () => {
   // console.log(state.product);
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user ? user._id : "";
+  const userId = user ? user._id : null;
   const orderId = user ? user.history : undefined;
   const { productId, productname } = useParams();
   console.log(productname);
@@ -271,8 +271,8 @@ const Singleproduct = () => {
                       />
                     ))
                   ) : (
-                    <h1>Loading..</h1>
-                  )}
+                      <h1>Loading..</h1>
+                    )}
                 </Tabs>
                 {state.product.photo ? (
                   state.product.photo.map((pic) => (
@@ -280,7 +280,7 @@ const Singleproduct = () => {
                       key={pic._id}
                       value={image}
                       index={state.product.photo.indexOf(pic)}
-                      // style={{ marginLeft: "2rem" }}
+                    // style={{ marginLeft: "2rem" }}
                     >
                       <img
                         src={`${BASE_URL}${pic.img}`}
@@ -327,7 +327,7 @@ const Singleproduct = () => {
                         >
                           <ShoppingBasketIcon
                             fontSize="small"
-                            // style={{ marginLeft: "20px" }}
+                          // style={{ marginLeft: "20px" }}
                           />
                           <strong>Buy Now</strong>
                         </Button>
@@ -335,8 +335,8 @@ const Singleproduct = () => {
                     </TabPanel>
                   ))
                 ) : (
-                  <h1>Loading..</h1>
-                )}
+                    <h1>Loading..</h1>
+                  )}
               </div>
             </Paper>
             <Paper className={classes.paper7}>
@@ -787,104 +787,111 @@ const Singleproduct = () => {
           </div>
         </Grid>
       ) : (
-        <h1>Loading...</h1>
-      )}
-      <Typography variant="h6" style={{ marginLeft: "20px" }}>
-        Similar products you can find
-      </Typography>
-      {state.diff_product ? (
-        <Tabs
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
-          onChange={handleChange}
-          value={value}
-        >
-          {" "}
+          <h1>Loading...</h1>
+        )}
+
+      {state.diff_product.length !== 0 ? (
+        <Paper style={{ marginTop: 20, borderTop: "2px solid #0091ea" }}>
+          <Typography variant="h6" style={{ marginLeft: "20px" }}>
+            Similar products you can find
+          </Typography>
+          <Tabs
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="scrollable auto tabs example"
+            onChange={handleChange}
+            value={value}
+          >
+            {" "}
           (
           {state.diff_product.map((prod) => (
-            <Tab
-              key={prod._id}
-              style={{
-                marginLeft: "10px",
-                opacity: 1,
-              }}
-              label={
-                <Card className={classes.cardroot}>
-                  <CardMedia
-                    className={classes.media}
-                    // style={{ width: "100px" }}
-                    image={`${BASE_URL}${prod.photo[0].img}`}
-                    onClick={(e) => {
-                      history.push(`/${prod._id}/product`);
-                      setImage(0);
-                    }}
-                    title="Product"
-                  />
-                  <CardContent
-                    style={{ padding: "0px", paddingBottom: "16px" }}
-                  >
-                    <div style={{ display: "flex" }}>
-                      <div className={classes.rating}>
-                        <Rating
-                          name="half-rating"
-                          defaultValue={prod.ratings}
-                          precision={0.5}
+              <Tab
+                key={prod._id}
+                style={{
+                  marginLeft: "10px",
+                  opacity: 1,
+                }}
+                label={
+                  <Card className={classes.cardroot}>
+                    <CardMedia
+                      className={classes.media}
+                      // style={{ width: "100px" }}
+                      image={`${BASE_URL}${prod.photo[0].img}`}
+                      onClick={(e) => {
+                        history.push(`/${prod._id}/product`);
+                        setImage(0);
+                      }}
+                      title="Product"
+                    />
+                    <CardContent
+                      style={{ padding: "0px", paddingBottom: "16px" }}
+                    >
+                      <div style={{ display: "flex" }}>
+                        <div className={classes.rating}>
+                          <Rating
+                            name="half-rating"
+                            defaultValue={prod.ratings}
+                            precision={0.5}
+                            style={{
+                              paddingTop: "10px",
+                              paddingLeft: "10px",
+                            }}
+                          />
+                        </div>
+                        <Typography
+                          variant="subtitle1"
+                          color="textSecondary"
+                          component="p"
                           style={{
                             paddingTop: "10px",
-                            paddingLeft: "10px",
+                            marginLeft: "30px",
                           }}
-                        />
+                        >
+                          <strong>₹{prod.price}</strong>
+                        </Typography>
                       </div>
-                      <Typography
-                        variant="subtitle1"
-                        color="textSecondary"
-                        component="p"
-                        style={{
-                          paddingTop: "10px",
-                          marginLeft: "30px",
-                        }}
-                      >
-                        <strong>₹{prod.price}</strong>
-                      </Typography>
-                    </div>
-                  </CardContent>
-                </Card>
-              }
-              value={prod._id}
-            />
-          ))}
+                    </CardContent>
+                  </Card>
+                }
+                value={prod._id}
+              />
+            ))}
           ){" "}
-        </Tabs>
+          </Tabs>
+        </Paper>
       ) : (
-        <h1>Loading..</h1>
-      )}
-      <Paper style={{ border: "2px solid #0091ea" }}>
+          <Typography variant="h6" style={{ marginTop: 20 }}>Products comming soon...</Typography>
+        )}
+      <Paper style={{ borderTop: "2px solid #0091ea", marginTop: 20 }}>
         <div style={{ marginLeft: "10px" }}>
           {state.product &&
-          state.product.reviews &&
-          state.product.reviews.length !== 0 ? (
-            <Fragment>
-              <Typography variant="h6">Reviews of this product:</Typography>
-              {state.product.reviews.map((review) => (
-                <div style={{ display: "flex" }}>
-                  <MessageIcon fontSize="small" style={{ marginTop: "5px" }} />
-                  <Typography
-                    style={{ marginLeft: "10px" }}
-                    variant="subtitle1"
-                  >
-                    {review.content}
-                  </Typography>
-                </div>
-              ))}
-            </Fragment>
-          ) : (
-            <Typography variant="h6">
-              There is no reviews of this product
-            </Typography>
-          )}
+            state.product.reviews &&
+            state.product.reviews.length !== 0 ? (
+              <Fragment>
+                <Typography variant="h6">Reviews of this product:</Typography>
+                {state.product.reviews.map((review) => (
+                  <div style={{ display: "flex" }}>
+                    <MessageIcon fontSize="small" style={{ marginTop: "5px" }} />
+                    <div style={{ display: "flex", flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+                      <Typography
+                        style={{ marginLeft: "10px" }}
+                        variant="subtitle1"
+                      >
+                        {review.content}
+                      </Typography>
+                      {review.userId !== null && <Typography variant="caption" style={{ marginTop: 5, marginRight: 20 }}>--posted by {review.userId.username}</Typography>}
+                    </div>
+
+                  </div>
+                ))}
+              </Fragment>
+            ) : (
+              <Typography variant="h6">
+                There is no reviews of this product
+              </Typography>
+            )}
         </div>
       </Paper>
     </Container>

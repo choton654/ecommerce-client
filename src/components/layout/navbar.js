@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   AppBar,
@@ -80,7 +80,7 @@ const useNavstyles = makeStyles((theme) => ({
     },
   },
 }));
-const Navbar = ({ searchitem, search }) => {
+const Navbar = ({ searchitem }) => {
   const { state, dispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
   const quantity = cartstate.cart && cartstate.cart.quantity;
@@ -118,7 +118,29 @@ const Navbar = ({ searchitem, search }) => {
     }
     setState(!isOpen);
   };
+  const [search, setSearch] = useState("");
 
+  useEffect(() => {
+    const itemSearch = () => {
+      axios
+        .post(`${BASE_URL}/product/api/search`, { search })
+        .then((res) => {
+          const item = res.data.findProduct;
+          console.log(item);
+          if (item.length !== 0) {
+            setSearchedProducts(item);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    itemSearch();
+  }, [search])
+  const [searchmenu, setSearchmenu] = useState(null);
+  const [searchedProducts, setSearchedProducts] = useState([]);
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setSearchmenu(e.currentTarget);
+  };
   return (
     <div>
       <AppBar>
@@ -307,7 +329,7 @@ const Navbar = ({ searchitem, search }) => {
             <InputBase
               placeholder="Search items"
               value={search}
-              onChange={searchitem}
+              onChange={handleSearch}
               classes={{
                 root: navclasses.inputRoot,
                 input: navclasses.inputInput,
@@ -319,7 +341,7 @@ const Navbar = ({ searchitem, search }) => {
             searchmenu={searchmenu}
             searchedProducts={searchedProducts}
           /> */}
-          {/* <Menu
+          <Menu
             id="simple-menu"
             anchorEl={searchmenu}
             open={Boolean(searchmenu)}
@@ -329,7 +351,7 @@ const Navbar = ({ searchitem, search }) => {
             }}
           >
             <MenuList>
-              {searchedProducts.map((item) => (
+              {searchedProducts !== null && searchedProducts.map((item) => (
                 <MenuItem onClose={() => setSearchmenu(null)}>
                   <Typography variant="subtitle1">
                     <Link to={`/${item._id}/product`}>{item.name}</Link>
@@ -337,7 +359,7 @@ const Navbar = ({ searchitem, search }) => {
                 </MenuItem>
               ))}
             </MenuList>
-          </Menu> */}
+          </Menu>
           <div className={classes.buttonWrapper}>
             {token ? (
               <div
@@ -361,8 +383,8 @@ const Navbar = ({ searchitem, search }) => {
                       }}
                     />
                   ) : (
-                    <AccountCircle />
-                  )}
+                        <AccountCircle />
+                      )}
                 </IconButton>
                 <Typography variant="h6" style={{ paddingTop: "10px" }}>
                   <strong>{token && user.username}</strong>
@@ -374,15 +396,15 @@ const Navbar = ({ searchitem, search }) => {
                 />
               </div>
             ) : (
-              <Button
-                style={{ background: "white", marginRight: "50px" }}
-                onClick={() => {
-                  dispatch({ type: "LOGIN" });
-                }}
-              >
-                <strong style={{ color: "#287aed" }}>Login</strong>
-              </Button>
-            )}
+                <Button
+                  style={{ background: "white", marginRight: "50px" }}
+                  onClick={() => {
+                    dispatch({ type: "LOGIN" });
+                  }}
+                >
+                  <strong style={{ color: "#287aed" }}>Login</strong>
+                </Button>
+              )}
             <Login
               openModal={state && state.loginOpen}
               close={() => dispatch({ type: "LOGIN" })}

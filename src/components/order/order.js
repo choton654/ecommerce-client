@@ -196,8 +196,8 @@ const Order = () => {
               {open1 ? (
                 <ExpandLess style={{ marginLeft: "auto" }} />
               ) : (
-                <ExpandMore style={{ marginLeft: "auto" }} />
-              )}
+                  <ExpandMore style={{ marginLeft: "auto" }} />
+                )}
             </ListItem>
             <Collapse in={open1} timeout="auto" unmountOnExit>
               <Paper
@@ -265,10 +265,10 @@ const Order = () => {
                 style={{ marginRight: "250px" }}
                 primary={
                   cartstate.orders.length === 0 &&
-                  cartstate.orders.shippingaddress === undefined
+                    cartstate.orders.shippingaddress === undefined
                     ? ""
                     : cartstate.orders.shippingaddress &&
-                      cartstate.orders.shippingaddress.address
+                    cartstate.orders.shippingaddress.address
                 }
               />
               {open2 ? <ExpandLess /> : <ExpandMore />}
@@ -437,7 +437,7 @@ const Order = () => {
                     label="Paytm"
                   />
                 </RadioGroup>
-                <Button
+                {deliveryAdd.addressid && <Button
                   style={{
                     background: "#fb641b",
                     boxShadow: "0 1px 2px 0 rgba(0,0,0,.2)",
@@ -457,7 +457,8 @@ const Order = () => {
                   }}
                 >
                   <strong>PAY ₹{cartstate.cart.price}</strong>
-                </Button>
+                </Button>}
+
               </FormControl>
             </Collapse>
           </List>

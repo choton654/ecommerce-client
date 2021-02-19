@@ -58,10 +58,10 @@ function App() {
   return (
     <div>
       <Home searchitem={handleSearch} search={search} />
-      <Searchitems
+      {/* <Searchitems
         searchmenu={searchmenu}
         searchedProducts={searchedProducts}
-      />
+      /> */}
       <Switch>
         <Route exact path="/" component={Homeproduct} />
         <Route exact path="/user" component={User} />

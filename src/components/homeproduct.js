@@ -81,7 +81,7 @@ function Homeproduct() {
 
   return (
     <div className={classes.root}>
-      <AutoPlaySwipeableViews
+      {/* <AutoPlaySwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={activeStep}
         onChangeIndex={handleStepChange}
@@ -123,7 +123,8 @@ function Homeproduct() {
             )}
           </Button>
         }
-      />
+      /> */}
+      <img src="https://wallpapercave.com/wp/wp3537541.jpg" style={{ maxWidth: "100%" }} />
     </div>
   );
 }
