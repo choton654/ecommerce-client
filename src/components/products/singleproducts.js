@@ -45,6 +45,7 @@ import { CartContext } from "../cart/cartcontext";
 import { AuthContext } from "../user/authcontext";
 import Slide from "@material-ui/core/Slide";
 import { getCartItems, handleOrder } from "../cart/cartaction";
+import CircularProgress from '@material-ui/core/CircularProgress'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -271,7 +272,7 @@ const Singleproduct = () => {
                       />
                     ))
                   ) : (
-                      <h1>Loading..</h1>
+                      <CircularProgress disableShrink />
                     )}
                 </Tabs>
                 {state.product.photo ? (
@@ -335,7 +336,7 @@ const Singleproduct = () => {
                     </TabPanel>
                   ))
                 ) : (
-                    <h1>Loading..</h1>
+                    <CircularProgress disableShrink />
                   )}
               </div>
             </Paper>
@@ -787,7 +788,7 @@ const Singleproduct = () => {
           </div>
         </Grid>
       ) : (
-          <h1>Loading...</h1>
+          <CircularProgress disableShrink />
         )}
 
       {state.diff_product.length !== 0 ? (

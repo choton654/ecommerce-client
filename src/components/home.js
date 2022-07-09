@@ -4,10 +4,10 @@ import Category from "../components/category/category";
 import Navbar from "./layout/navbar";
 import Searchitems from "./layout/searchitems";
 
-const Home = ({ searchitem, search }) => {
+const Home = () => {
   return (
     <div>
-      <Navbar searchitem={searchitem} search={search} />
+      <Navbar />
       <Category />
     </div>
   );

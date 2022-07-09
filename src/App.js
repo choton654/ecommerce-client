@@ -40,28 +40,10 @@ function App() {
     localStorage.removeItem("token");
     history.push("/");
   }
-  const [search, setSearch] = useState("");
-  const [searchmenu, setSearchmenu] = useState(null);
-  const [searchedProducts, setSearchedProducts] = useState([]);
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    setSearchmenu(e.currentTarget);
-    axios
-      .post(`${BASE_URL}/product/api/search`, { search })
-      .then((res) => {
-        const item = res.data.findProduct;
-        setSearchedProducts(item);
-        console.log(searchedProducts);
-      })
-      .catch((err) => console.log(err));
-  };
+
   return (
     <div>
-      <Home searchitem={handleSearch} search={search} />
-      {/* <Searchitems
-        searchmenu={searchmenu}
-        searchedProducts={searchedProducts}
-      /> */}
+      <Home />
       <Switch>
         <Route exact path="/" component={Homeproduct} />
         <Route exact path="/user" component={User} />

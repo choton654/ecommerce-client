@@ -80,7 +80,7 @@ const useNavstyles = makeStyles((theme) => ({
     },
   },
 }));
-const Navbar = ({ searchitem }) => {
+const Navbar = () => {
   const { state, dispatch } = useContext(AuthContext);
   const { cartstate, cartdispatch } = useContext(CartContext);
   const quantity = cartstate.cart && cartstate.cart.quantity;
@@ -127,9 +127,7 @@ const Navbar = ({ searchitem }) => {
         .then((res) => {
           const item = res.data.findProduct;
           console.log(item);
-          if (item.length !== 0) {
-            setSearchedProducts(item);
-          }
+          setSearchedProducts(item);
         })
         .catch((err) => console.log(err));
     }
@@ -351,13 +349,17 @@ const Navbar = ({ searchitem }) => {
             }}
           >
             <MenuList>
-              {searchedProducts !== null && searchedProducts.map((item) => (
-                <MenuItem onClose={() => setSearchmenu(null)}>
+              {searchedProducts.length > 0 ? searchedProducts.map((item, idx) => (
+                <MenuItem onClose={() => setSearchmenu(null)} key={idx}>
                   <Typography variant="subtitle1">
                     <Link to={`/${item._id}/product`}>{item.name}</Link>
                   </Typography>
                 </MenuItem>
-              ))}
+              )) : <MenuItem onClose={() => setSearchmenu(null)}>
+                  <Typography variant="subtitle1">
+                    Nothing found.. try more..
+              </Typography>
+                </MenuItem>}
             </MenuList>
           </Menu>
           <div className={classes.buttonWrapper}>
@@ -425,21 +427,6 @@ const Navbar = ({ searchitem }) => {
             )}
           </div>
         </Toolbar>
-        <div className={classes.search1}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <InputBase
-            placeholder="Search items"
-            value={search}
-            onChange={searchitem}
-            classes={{
-              root: navclasses.inputRoot,
-              input: navclasses.inputInput,
-            }}
-            inputProps={{ "aria-label": "search" }}
-          />
-        </div>
       </AppBar>
     </div>
   );
